@@ -1,0 +1,50 @@
+<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+	<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+		<a class="navbar-brand brand-logo" href="{{ path('app_tableaudebord') }}"><img src="{{asset('images/Logo-ia.png')}}" style="width:40px; height:40px;" alt="logo"/> <span style="font-size:0.5em;" class="text-primary">Paris Sportif Gagnant</span></a>
+		<a class="navbar-brand brand-logo-mini" href="{{ path('app_tableaudebord') }}"><img src="{{asset('images/Logo-ia.png')}}" style="width:40px; height:40px; margin-left:15px;" alt="logo"/></a>
+		<button class="navbar-toggler navbar-toggler align-self-center d-none d-lg-flex" type="button" data-toggle="minimize">
+			<span class="typcn typcn-th-menu"></span>
+		</button>
+	</div>
+	<div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+		<ul class="navbar-nav mr-lg-2">
+			<li class="nav-item  d-none d-lg-flex">
+				<a class="nav-link active" href="#">
+					{#{ (app_configuration())[1]|default('SIGLE') }#}
+					SIGLE
+				</a>
+			</li>
+			<li class="nav-item  d-none d-lg-flex">
+				<a class="nav-link" href="#">
+					Année académique : <strong>2025-2026{#{ (app_configuration())[4]|default('0000-0000')  }#}</strong>
+				</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav navbar-nav-right">			
+			<li class="nav-item nav-profile dropdown">
+				<a class="nav-link dropdown-toggle  pl-0 pr-0" href="#" data-toggle="dropdown" id="profileDropdown">
+					<i class="typcn typcn-user-outline mr-0"></i>
+					<span class="nav-profile-name">Utilisateur{#{app.user.getNomComplet()|default('Utilisateur')}#}</span>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">					
+					<a href="{#{ path('app_compte_reinitialiser_mot_de_passe') }#}" class="dropdown-item">
+						<i class="typcn typcn-eye text-primary"></i>
+						Mot de passe
+					</a>
+					<div>
+						<form method="post" action="{#{ path('app_logout') }#}">
+							<input type="hidden" name="_csrf_token" value="{{csrf_token('logout')}}">
+							<button class="dropdown-item">
+								<i class="typcn typcn-power text-primary"></i>
+								Déconnexion
+							</button>
+						</form>						
+					</div>
+				</div>
+			</li>
+		</ul>
+		<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+			<span class="typcn typcn-th-menu"></span>
+		</button>
+	</div>
+</nav>

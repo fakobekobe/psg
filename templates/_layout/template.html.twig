@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <!-- Entête de page  -->
+  {% include '_partials/_head.html.twig' with {'titre' : block ('title')} %}
+  <!-- Fin Entête de page  -->
+  <body>
+  
+    <!-- Page principale -->
+    <div class="container-scroller">
+
+      <!-- Loader -->
+      {% include '_includes/_include.html.twig' %}
+      <!-- Fin de Loader -->
+
+      <!-- Barre de navigation -->
+      {% include '_partials/_navbar.html.twig' %}
+      <!-- Fin de la barre de navigation -->
+ 
+      <!-- Début de la page centrale -->
+      <div class="container-fluid page-body-wrapper">
+
+        <!-- Début de la section de paramètre des couleur du thème -->
+        {% include '_partials/_reglage.html.twig' %}
+        <!-- Fin de la section de paramètre des couleur du thème -->
+
+        <!-- Début du menu latéral -->
+        {% include '_partials/_menu.html.twig' %}
+        <!-- Fin du menu latéral -->
+
+        <!-- Début du body -->
+        <div class="main-panel">
+
+          <!-- Message flash -->
+          {% for flash in app.flashes('success') %}
+            <div class="alert alert-success text-center" role="alert" class="">{{ flash }}</div>
+          {% endfor %}
+          <!-- Fin Message flash -->
+
+          <!-- Début du contenu -->
+          {% block body %}         
+          {% endblock %}
+          <!-- Fin du contenu -->
+
+          <!-- Début Pied de page -->
+          {% include '_partials/_piedpage.html.twig' %}
+          <!-- Fin du pied de page -->
+
+        </div>
+        <!-- Fin du body -->
+
+      </div>
+      <!-- Fin de la page centrale -->
+
+    </div>
+    <!-- Fin Page principale -->
+
+
+    <!-- Javascript principale de toutes les pages -->
+    {% include '_partials/_js.html.twig' %}
+    <!-- Fin du Javascript principale de toutes les pages -->
+    
+    {% block scripts %}
+    {% endblock %}
+
+  </body>
+</html>

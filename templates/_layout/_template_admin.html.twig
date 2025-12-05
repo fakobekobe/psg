@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>IA : {% block title %}{% endblock %}</title>
+		<link
+		rel="shortcut icon" href="{{ asset('images/favicon.png') }}"/>
+		<!-- DATABASE -->
+		<link rel="stylesheet" href="https://cdn.datatables.net/v/bs4/jszip-3.10.1/dt-2.1.8/b-3.2.0/b-html5-3.2.0/b-print-3.2.0/datatables.min.css">
+		<link rel="stylesheet" href="{{ asset('styles/typicons.font/font/typicons.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('styles/vendor.bundle.base.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('styles/vertical-layout-light/style.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('styles/sb-admin-2.min.css') }}"/>
+		<link rel="stylesheet" href="{{ asset('styles/app.css') }}"/>
+
+	</head>
+
+	<body class="bg-gradient-primary">
+
+		<div
+			class="container">
+			<!-- bloc de chargement -->
+			<div id="bloc-loader">
+				<div class="loader"></div>
+			</div>
+			<!-- Outer Row -->
+			<div class="row justify-content-center">
+
+				<div class="col-xl-10 col-lg-12 col-md-9">
+
+					<div class="card o-hidden border-0 shadow-lg my-5">
+						<div
+							class="card-body p-0">
+							<!-- Nested Row within Card Body -->
+							<div class="row">
+								{% block body %}{% endblock %}
+							</div>
+						</div>
+						{% include '_partials/_piedpage.html.twig' %}
+					</div>
+				</div>
+
+			</div>
+
+		</div>		
+
+		<!-- Javascript principale de toutes les pages -->
+		{% include '_partials/_js.html.twig' %}
+		<!-- Fin du Javascript principale de toutes les pages -->
+        {% block script %}{% endblock %}
+
+	</body>
+
+</html>

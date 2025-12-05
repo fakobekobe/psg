@@ -13,7 +13,6 @@ final class TableaudebordController extends AbstractController
     public function index(): Response
     {
         return $this->render('tableaudebord/index.html.twig', [
-            'controller_name' => 'TableaudebordController',
         ]);
     }
 }

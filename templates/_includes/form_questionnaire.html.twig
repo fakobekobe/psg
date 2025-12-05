@@ -1,0 +1,15 @@
+{{form_start(form, {
+    'attr' : {'enctype' : "multipart/form-data"}
+})}}
+{{form_row(form.professeur)}}
+{{form_row(form.filiere)}}
+{{form_row(form.typequestionnaire)}}
+{{form_row(form.question)}}
+<div class="form-group mt-3" id="champ_fichier" style="display:none;">
+	<label for="fichier" class="drop-container" id="dropcontainer">
+		<span class="drop-title">Déposez les fichiers ici</span>
+		ou
+		<input type="file" name="fichier[]" id="fichier" multiple>
+	</label>
+</div>
+{{form_end(form)}}

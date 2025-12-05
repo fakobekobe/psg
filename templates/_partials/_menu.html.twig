@@ -1,0 +1,93 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+	<ul class="nav">
+		<li class="nav-item">
+			<p class="sidebar-menu-title">Menu</p>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{#{ path('app_tableaudebord') }#}">
+				<i class="typcn typcn-device-desktop menu-icon"></i>
+				<span class="menu-title">Tableau de bord</span>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+				<i class="typcn typcn-briefcase menu-icon"></i>
+				<span class="menu-title">Gestion</span>
+				<i class="typcn typcn-chevron-right menu-arrow"></i>
+			</a>
+			<div class="collapse" id="ui-basic">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_inscription') }#}">Rencontre</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_questionnaire') }#}">Match</a>
+					</li>
+                    <li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_questionnaire') }#}">Bunker</a>
+					</li>
+				</ul>
+			</div>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+				<i class="typcn typcn-film menu-icon"></i>
+				<span class="menu-title">Configuration</span>
+				<i class="menu-arrow"></i>
+			</a>
+			<div class="collapse" id="form-elements">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_cycle') }#}">Championat</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_niveau') }#}">Saison</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_option') }#}">Joueur</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_filiere') }#}">Prépondérance</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_annee_courante') }#}">Période</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_filiere_annee_courante') }#}">Journée</a>
+					</li>
+				</ul>
+			</div>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
+				<i class="typcn typcn-cog menu-icon"></i>
+				<span class="menu-title">Organisation</span>
+				<i class="menu-arrow"></i>
+			</a>
+			<div class="collapse" id="tables">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_civilite') }#}">Equipe</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_genre') }#}">Equipe par saison</a>
+					</li>
+				</ul>
+			</div>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+				<i class="typcn typcn-chart-pie-outline menu-icon"></i>
+				<span class="menu-title">Paramètre</span>
+				<i class="menu-arrow"></i>
+			</a>
+			<div class="collapse" id="charts">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_discipline') }#}">Paramètre</a>
+					</li>
+				</ul>
+			</div>
+		</li>
+	</ul>
+</nav>
