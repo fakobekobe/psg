@@ -1,7 +1,7 @@
 // Les variables locales
-let P_URL = 'annee-academique', 
-NOM_FORM = "annee_academique_", 
-texteTitre = 'Ajouter une année academique';
+let P_URL = 'championnat', 
+NOM_FORM = P_URL + "_", 
+texteTitre = 'Ajouter un championnat';
 
 // Appel des fonctions d'action-------------
 
@@ -15,7 +15,7 @@ action_liste(P_URL);
 action_supprimer(P_URL);
 
 // Exécution de la fonction de l'action check
-action_check(P_URL, NOM_FORM, "Modifier une année academique"); 
+action_check(P_URL, NOM_FORM, "Modifier un championnat"); 
 
 // On exécute le traitement du bouton de fermeture
 fermer_formulaire();
