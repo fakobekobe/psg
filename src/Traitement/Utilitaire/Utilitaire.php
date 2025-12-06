@@ -459,10 +459,19 @@ abstract class Utilitaire
         return $tdata;
     }
 
-    public static function telecharger_fichier(string $path, string $url = "cours", string $texte = "", string $taille = "h1") : string
+    public static function telecharger_fichier(string $id, string $url = "joueur", string $texte = "", string $taille = "h1") : string
     {
         return <<<HTML
-        <a href="/{$url}/telecharger/{$path}" class="text-info {$taille}" title="Télécharger le fichier"><i class="typcn typcn-folder"></i> {$texte}</a>
+        <a href="/{$url}/telecharger/{$id}" class="text-info {$taille}" title="Télécharger le fichier"><i class="typcn typcn-folder"></i> {$texte}</a>
+HTML; 
+    }
+
+    public static function afficher_image(string $id, string $url = "joueur", string $path = "") : string
+    {
+        return <<<HTML
+        <a href="/{$url}/telecharger/{$id}" class="text-info" title="Télécharger l'image">
+            <img src="/images/{$path}" class="img_80" />
+        </a>
 HTML; 
     }
 

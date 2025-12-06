@@ -1,5 +1,5 @@
 // Les variables locales
-let P_URL = 'cours', 
+let P_URL = 'joueur', 
 NOM_FORM = P_URL + "_", 
 texteTitre = 'Ajouter un ' + P_URL;
 

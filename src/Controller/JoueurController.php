@@ -7,18 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
-use App\Repository\JourneeRepository;
+use App\Repository\JoueurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Form\JourneeType;
+use App\Form\JoueurType;
 use App\Traitement\Interface\ControlleurInterface;
 
-#[Route(path:'/journee')]
-final class JourneeController extends AbstractController
+#[Route(path:'/joueur')]
+final class JoueurController extends AbstractController
 {
-    private const PREFIX_NAME = 'app_journee';
-    private const TYPEFORM = JourneeType::class;
-    private JourneeRepository $repository;
+    private const PREFIX_NAME = 'app_joueur';
+    private const TYPEFORM = JoueurType::class;
+    private JoueurRepository $repository;
     private ControlleurInterface $controlleur;
 
     public function __construct(
@@ -27,7 +27,7 @@ final class JourneeController extends AbstractController
         private ManagerRegistry $registry,
         )
     {
-        $this->repository = new JourneeRepository(registry: $this->registry);
+        $this->repository = new JoueurRepository(registry: $this->registry);
         $this->repository->initialiserControlleur();
         $this->controlleur = $this->repository->getControlleur();
     }
@@ -38,20 +38,28 @@ final class JourneeController extends AbstractController
         /**
          * Cette fonction ajouter du controller permet l'affichage et l'ajout des données
          */
+        $data = null;
+        if($request->isMethod(method: 'POST'))
+        {            
+            $file = $request->files->all(); // Le tableau des fichiers
+            $data['image'] = $file['image'];
+        } 
+
         $contenu = $this->controlleur->ajouter(
             $this->repository, 
             $this->form,
             self::TYPEFORM,
             'form_type',
             $request,             
-            $this->em, 
+            $this->em,
+            $data, 
         );
 
         if($contenu['reponse'] instanceof Response)
         {
             return $contenu['reponse'];
         }else{
-            return $this->render(view: 'journee/index.html.twig', parameters: [
+            return $this->render(view: 'joueur/index.html.twig', parameters: [
             'form' => $contenu['form']->createView(),
         ]);
         }        
@@ -81,6 +89,13 @@ final class JourneeController extends AbstractController
         /**
          * Cette méthode modifier du controller permet la modification du formulaire
          */
+        $data = null;
+        if($request->isMethod(method: 'POST'))
+        {            
+            $file = $request->files->all(); // Le tableau des fichiers
+            $data['image'] = $file['image'];
+        }
+
         return $this->controlleur->modifier(
             $this->repository, 
             $id, 
@@ -88,7 +103,8 @@ final class JourneeController extends AbstractController
             self::TYPEFORM,
             "form_type",
             $request, 
-            $this->em,  
+            $this->em,
+            $data,  
         );       
     }
 
@@ -105,4 +121,16 @@ final class JourneeController extends AbstractController
         );
     }
 
+    #[Route(path:'/telecharger/{id}', name: self::PREFIX_NAME . "_telecharger", methods: ["GET", "POST"], requirements: ['id' => '[0-9]+'])]
+    public function telecharger(int $id): Response
+    {
+        /**
+         * Cette méthode du controller permet le téléchargement de fichier
+         * use Symfony\Component\HttpFoundation\BinaryFileResponse;
+         * $this->file() est une méthode de BinaryFileResponse
+         * $objet->getPathFichier() est le chemin absolu du fichier
+         */
+        $objet = $this->repository->findOneBy(criteria: ['id' => $id]);
+        return $this->file(file: $objet->getPathFichier());
+    }
 }

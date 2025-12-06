@@ -1,0 +1,59 @@
+<?php
+namespace App\Traitement\Controlleur;
+
+use App\Traitement\Abstrait\ControlleurAbstrait;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class ControlleurJoueur extends ControlleurAbstrait
+{
+    public function ajouter(mixed ...$donnees): array
+    {
+        $objet = ($donnees[0])->new();
+        $form = ($donnees[1])->create(type: $donnees[2], data: $objet, options: [
+            'attr' => ['id' => $donnees[3]],
+        ]);
+
+        $form->handleRequest(request: $donnees[4]);
+        $retour['form'] = $form;
+
+        if ($form->isSubmitted()) {
+            $objet = $donnees[6];
+            if ($form->get(name: 'nom')->getData()) {
+                $estValide = true;
+            }
+
+            // Initialisation du traitement
+            ($donnees[0])->initialiserTraitement(em: $donnees[5], form: $form, repository: $donnees[0]);           
+
+            // Appel et récupération des données de la méthode du traitement
+            $retour['reponse'] = (($donnees[0])->getTraitement())->actionAjouter($estValide, $objet);
+        } else {
+            $retour['reponse'] = null;
+        }
+
+        return $retour;
+    }
+
+    public function modifier(mixed ...$donnees): JsonResponse
+    {
+        $objet = ($donnees[0])->findOneBy(criteria: ['id' => $donnees[1]]);
+        $form = ($donnees[2])->create(type: $donnees[3], data: $objet, options: [
+            'attr' => ['id' => $donnees[4]]
+        ]);
+
+        $form->handleRequest(request: $donnees[5]);
+
+        $estValide = null;
+        // Gestion des cas avec fichier
+        if ($form->get(name: 'nom')->getData()) {
+            $estValide = true;
+        }
+        
+        // On instancie un objet qui hérite de TraitementInterface pour gérer le traitement
+        ($donnees[0])->initialiserTraitement(form: $form, em: $donnees[6]);
+
+        // On appelle la méthode getTraitement qui nous retourne un objet de type traitementInterface
+        // Ensuite on appelle la méthode appropriée pour traiter l'action
+        return ($donnees[0])->getTraitement()->actionModifier($estValide, $donnees[7]);
+    }
+}

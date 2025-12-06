@@ -110,3 +110,8 @@ transition: background .2s ease-in-out;
 input[type=file]::file-selector-button:hover {
 background: #000;
 }
+
+.img_80 {
+    width: 80px; 
+    height: 80px;
+}

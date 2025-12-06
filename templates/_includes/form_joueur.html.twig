@@ -1,12 +1,12 @@
 {{form_start(form, {
     'attr' : {'enctype' : "multipart/form-data"}
 })}}
-{{form_row(form.titre)}}
+{{form_row(form.nom)}}
 <div class="form-group mt-3">
 	<label for="image" class="drop-container" id="dropcontainer">
-		<span class="drop-title">Déposez le fichier ici</span>
+		<span class="drop-title">Déposez la photo ici</span>
 		ou
-		<input type="file" name="image" id="image" required>
+		<input type="file" name="image" id="image">
 	</label>
 </div>
 {{form_end(form)}}
