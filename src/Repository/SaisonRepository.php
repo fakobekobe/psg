@@ -2,29 +2,29 @@
 
 namespace App\Repository;
 
-use App\Entity\Championnat;
+use App\Entity\Saison;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Trait\TraitementTrait;
-use App\Traitement\Model\TraitementChampionnat;
-use App\Traitement\Controlleur\ControlleurChampionnat;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Traitement\Model\TraitementSaison;
+use App\Traitement\Controlleur\ControlleurSaison;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * @extends ServiceEntityRepository<Championnat>
+ * @extends ServiceEntityRepository<Saison>
  */
-class ChampionnatRepository extends ServiceEntityRepository
+class SaisonRepository extends ServiceEntityRepository
 {
     use TraitementTrait;
     public function __construct(private ManagerRegistry $registry)
-    {        
-        parent::__construct($registry, Championnat::class);
+    {
+        parent::__construct($registry, Saison::class);
     }
 
-    public function new(): Championnat
+    public function new(): Saison
     {
-        return new Championnat;
+        return new Saison;
     }
 
     public function initialiserTraitement(
@@ -32,14 +32,13 @@ class ChampionnatRepository extends ServiceEntityRepository
         ?FormInterface $form = null, 
         ?ServiceEntityRepository $repository = null): void
     {
-        $objet = new TraitementChampionnat(em: $em, form: $form, repository: $repository); 
+        $objet = new TraitementSaison(em: $em, form: $form, repository: $repository); 
         $this->setTraitement(traitement: $objet);
     }
 
     public function initialiserControlleur(): void  
     {
-        $objet = new ControlleurChampionnat; 
+        $objet = new ControlleurSaison; 
         $this->setControlleur(controlleur: $objet);
     }
-    
 }

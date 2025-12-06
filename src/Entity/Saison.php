@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\ChampionnatRepository;
+use App\Repository\SaisonRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[ORM\Entity(repositoryClass: ChampionnatRepository::class)]
-#[UniqueEntity(fields:"nom")]
-class Championnat
+#[ORM\Entity(repositoryClass: SaisonRepository::class)]
+#[UniqueEntity(fields:"libelle")]
+class Saison
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,21 +18,21 @@ class Championnat
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    private ?string $nom = null;
+    private ?string $libelle = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getLibelle(): ?string
     {
-        return $this->nom;
+        return $this->libelle;
     }
 
-    public function setNom(?string $nom): static
+    public function setLibelle(?string $libelle): static
     {
-        $this->nom = $nom;
+        $this->libelle = $libelle;
 
         return $this;
     }
