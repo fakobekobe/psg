@@ -5,7 +5,7 @@ use App\Traitement\Abstrait\ControlleurAbstrait;
 use App\Traitement\Utilitaire\Utilitaire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ControlleurJoueur extends ControlleurAbstrait
+class ControlleurEquipe extends ControlleurAbstrait
 {
     public function ajouter(mixed ...$donnees): array
     {

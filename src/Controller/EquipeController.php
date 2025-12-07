@@ -7,18 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
-use App\Repository\JoueurRepository;
+use App\Repository\EquipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Form\JoueurType;
+use App\Form\EquipeType;
 use App\Traitement\Interface\ControlleurInterface;
 
-#[Route(path:'/joueur')]
-final class JoueurController extends AbstractController
+#[Route(path:'/equipe')]
+final class EquipeController extends AbstractController
 {
-    private const PREFIX_NAME = 'app_joueur';
-    private const TYPEFORM = JoueurType::class;
-    private JoueurRepository $repository;
+    private const PREFIX_NAME = 'app_equipe';
+    private const TYPEFORM = EquipeType::class;
+    private EquipeRepository $repository;
     private ControlleurInterface $controlleur;
 
     public function __construct(
@@ -27,7 +27,7 @@ final class JoueurController extends AbstractController
         private ManagerRegistry $registry,
         )
     {
-        $this->repository = new JoueurRepository(registry: $this->registry);
+        $this->repository = new EquipeRepository(registry: $this->registry);
         $this->repository->initialiserControlleur();
         $this->controlleur = $this->repository->getControlleur();
     }
@@ -59,7 +59,7 @@ final class JoueurController extends AbstractController
         {
             return $contenu['reponse'];
         }else{
-            return $this->render(view: 'joueur/index.html.twig', parameters: [
+            return $this->render(view: 'equipe/index.html.twig', parameters: [
             'form' => $contenu['form']->createView(),
         ]);
         }        

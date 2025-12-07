@@ -5,39 +5,40 @@ namespace App\Repository;
 use App\Entity\Equipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Trait\TraitementTrait;
+use App\Traitement\Model\TraitementEquipe;
+use App\Traitement\Controlleur\ControlleurEquipe;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * @extends ServiceEntityRepository<Equipe>
  */
 class EquipeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    use TraitementTrait;
+    public function __construct(private ManagerRegistry $registry)
     {
         parent::__construct($registry, Equipe::class);
     }
 
-    //    /**
-    //     * @return Equipe[] Returns an array of Equipe objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function new(): Equipe
+    {
+        return new Equipe;
+    }
 
-    //    public function findOneBySomeField($value): ?Equipe
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function initialiserTraitement(
+        ?EntityManagerInterface $em = null, 
+        ?FormInterface $form = null, 
+        ?ServiceEntityRepository $repository = null): void
+    {
+        $objet = new TraitementEquipe(em: $em, form: $form, repository: $repository); 
+        $this->setTraitement(traitement: $objet);
+    }
+
+    public function initialiserControlleur(): void  
+    {
+        $objet = new ControlleurEquipe; 
+        $this->setControlleur(controlleur: $objet);
+    }
 }
