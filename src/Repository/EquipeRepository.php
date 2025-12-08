@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Trait\TraitementTrait;
+use App\Trait\TraitementTraitSelect;
 use App\Traitement\Model\TraitementEquipe;
 use App\Traitement\Controlleur\ControlleurEquipe;
 use Symfony\Component\Form\FormInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\Form\FormInterface;
 class EquipeRepository extends ServiceEntityRepository
 {
     use TraitementTrait;
+    use TraitementTraitSelect;
     public function __construct(private ManagerRegistry $registry)
     {
         parent::__construct($registry, Equipe::class);
@@ -40,5 +42,17 @@ class EquipeRepository extends ServiceEntityRepository
     {
         $objet = new ControlleurEquipe; 
         $this->setControlleur(controlleur: $objet);
+    }
+
+    public function findOptionsById(int $id) : array
+    {
+        return $this->createQueryBuilder(alias: 'x')
+            ->select(['x.id', 'x.nom as libelle'])            
+            ->andWhere('x.championnat = :id')
+            ->setParameter( 'id',  $id)
+            ->orderBy(sort: 'x.championnat', order: 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

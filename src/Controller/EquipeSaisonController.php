@@ -7,18 +7,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
-use App\Repository\EquipeRepository;
+use App\Repository\EquipeSaisonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Form\EquipeType;
+use App\Form\EquipeSaisonType;
 use App\Traitement\Interface\ControlleurInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
-#[Route(path:'/equipe')]
-final class EquipeController extends AbstractController
+#[Route(path:'/equipe-saison')]
+final class EquipeSaisonController extends AbstractController
 {
-    private const PREFIX_NAME = 'app_equipe';
-    private const TYPEFORM = EquipeType::class;
-    private EquipeRepository $repository;
+    private const PREFIX_NAME = 'app_equipe_saison';
+    private const TYPEFORM = EquipeSaisonType::class;
+    private EquipeSaisonRepository $repository;
     private ControlleurInterface $controlleur;
 
     public function __construct(
@@ -27,7 +28,7 @@ final class EquipeController extends AbstractController
         private ManagerRegistry $registry,
         )
     {
-        $this->repository = new EquipeRepository(registry: $this->registry);
+        $this->repository = new EquipeSaisonRepository(registry: $this->registry);
         $this->repository->initialiserControlleur();
         $this->controlleur = $this->repository->getControlleur();
     }
@@ -38,12 +39,9 @@ final class EquipeController extends AbstractController
         /**
          * Cette fonction ajouter du controller permet l'affichage et l'ajout des données
          */
-        $data = null;
-        if($request->isMethod(method: 'POST'))
-        {            
-            $file = $request->files->all(); // Le tableau des fichiers
-            $data['image'] = $file['image'];
-        } 
+        // Gestion du cas du champ select ----------------------
+        $select = $this->getObjetSelect(request: $request, repo: $this->repository, formType: 'equipe_saison', champ: 'equipe');         
+        //-----------------------------------------------------------------
 
         $contenu = $this->controlleur->ajouter(
             $this->repository, 
@@ -51,15 +49,15 @@ final class EquipeController extends AbstractController
             self::TYPEFORM,
             'form_type',
             $request,             
-            $this->em,
-            $data, 
+            $this->em, 
+            $select,
         );
 
         if($contenu['reponse'] instanceof Response)
         {
             return $contenu['reponse'];
         }else{
-            return $this->render(view: 'equipe/index.html.twig', parameters: [
+            return $this->render(view: 'equipe_saison/index.html.twig', parameters: [
             'form' => $contenu['form']->createView(),
         ]);
         }        
@@ -89,12 +87,10 @@ final class EquipeController extends AbstractController
         /**
          * Cette méthode modifier du controller permet la modification du formulaire
          */
-        $data = null;
-        if($request->isMethod(method: 'POST'))
-        {            
-            $file = $request->files->all(); // Le tableau des fichiers
-            $data['image'] = $file['image'];
-        }
+
+        // Gestion du cas du champ select ----------------------
+        $select = $this->getObjetSelect(request: $request, repo: $this->repository, formType: 'equipe_saison', champ: 'equipe');         
+        //-----------------------------------------------------------------
 
         return $this->controlleur->modifier(
             $this->repository, 
@@ -103,8 +99,8 @@ final class EquipeController extends AbstractController
             self::TYPEFORM,
             "form_type",
             $request, 
-            $this->em,
-            $data,  
+            $this->em, 
+            $select, 
         );       
     }
 
@@ -121,28 +117,30 @@ final class EquipeController extends AbstractController
         );
     }
 
-    #[Route(path:'/telecharger/{id}', name: self::PREFIX_NAME . "_telecharger", methods: ["GET"], requirements: ['id' => '[0-9]+'])]
-    public function telecharger(int $id): Response
+    /**
+     * Fonction Interne permettant la création du tableau de gestion du select
+     */
+    private function getObjetSelect(Request $request, ServiceEntityRepository $repo, string $formType, string $champ): ?array
     {
-        /**
-         * Cette méthode du controller permet le téléchargement de fichier
-         * use Symfony\Component\HttpFoundation\BinaryFileResponse;
-         * $this->file() est une méthode de BinaryFileResponse
-         * $objet->getPathFichier() est le chemin absolu du fichier
-         */
-        $objet = $this->repository->findOneBy(criteria: ['id' => $id]);
-        return $this->file(file: $objet->getPathFichier());
-    }
+        $objet = null; // La variable contenu l'objet
+        if($request->isMethod(method: 'POST'))
+        {
+            // On récupère l'id du champ select
+            $id_objet = (int)(($request->request->all())[$formType][$champ]);   
 
-    #[Route(path: "/select", name: self::PREFIX_NAME . "_select", methods: ["POST"])]
-    public function select(Request $request): Response
-    {
-        /**
-         * Cette méthode du controller permet la sélection des options d'un select
-         */
-        return $this->controlleur->select(
-            $request,
-            $this->repository
-        );
+            // On récupère l'objet 
+            $objet = $repo->findSelect(id: $id_objet);
+
+            // On définit les données à retourner
+            if($objet)
+            {
+                $objet = [
+                'libelle' => $champ,
+                'objet' => $objet
+                ];
+            }
+            
+        } 
+        return $objet;
     }
 }

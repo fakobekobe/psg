@@ -2,9 +2,10 @@
 namespace App\Traitement\Controlleur;
 
 use App\Traitement\Abstrait\ControlleurAbstrait;
+use App\Traitement\Utilitaire\Utilitaire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ControlleurJoueur extends ControlleurAbstrait
+class ControlleurEquipeSaison extends ControlleurAbstrait
 {
     public function ajouter(mixed ...$donnees): array
     {
@@ -17,8 +18,14 @@ class ControlleurJoueur extends ControlleurAbstrait
         $retour['form'] = $form;
 
         if ($form->isSubmitted()) {
-            $objet = $donnees[6];
-            $estValide = $form->isValid();
+            $estValide = false;
+
+            $erreur = Utilitaire::getErreur(form: $form);
+            // Gestion d'un seul select
+            if (count(value: $erreur) <= 1 && $erreur[$donnees[6]['libelle']] && $donnees[6]['objet']) {
+                $estValide = true;
+                $objet = $donnees[6]['objet'];
+            }
 
             // Initialisation du traitement
             ($donnees[0])->initialiserTraitement(em: $donnees[5], form: $form, repository: $donnees[0]);           
@@ -41,13 +48,23 @@ class ControlleurJoueur extends ControlleurAbstrait
 
         $form->handleRequest(request: $donnees[5]);
 
-        $estValide = $form->isValid();
+        $estValide = false;
+        if($form->isSubmitted())
+        {
+            $erreur = Utilitaire::getErreur(form: $form);
+            // Gestion d'un seul select
+            if (count(value: $erreur) <= 1 && $erreur[$donnees[7]['libelle']] && $donnees[7]['objet']) {
+                $objet->setEquipe($donnees[7]['objet']);
+                $estValide = true;
+            }
+            
+        }        
         
         // On instancie un objet qui hérite de TraitementInterface pour gérer le traitement
-        ($donnees[0])->initialiserTraitement(form: $form, em: $donnees[6]);
+        ($donnees[0])->initialiserTraitement(form: $form, em: $donnees[6], repository: $donnees[0]);
 
         // On appelle la méthode getTraitement qui nous retourne un objet de type traitementInterface
         // Ensuite on appelle la méthode appropriée pour traiter l'action
-        return ($donnees[0])->getTraitement()->actionModifier($estValide, $donnees[7]);
+        return ($donnees[0])->getTraitement()->actionModifier($estValide, $objet, $donnees[1]);
     }
 }

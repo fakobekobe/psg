@@ -3,9 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\EntraineurRepository;
+use App\Traitement\Utilitaire\Utilitaire;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: EntraineurRepository::class)]
+#[UniqueEntity(fields:"nom")]
 class Entraineur
 {
     #[ORM\Id]
@@ -14,6 +18,7 @@ class Entraineur
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -29,7 +34,7 @@ class Entraineur
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): static
     {
         $this->nom = $nom;
 
@@ -46,5 +51,10 @@ class Entraineur
         $this->photo = $photo;
 
         return $this;
+    }
+
+    public function getPathFichier() : string
+    {
+        return Utilitaire::getPathImage() . DIRECTORY_SEPARATOR . $this->getPhoto();
     }
 }

@@ -5,39 +5,40 @@ namespace App\Repository;
 use App\Entity\Entraineur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Trait\TraitementTrait;
+use App\Traitement\Model\TraitementEntraineur;
+use App\Traitement\Controlleur\ControlleurEntraineur;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * @extends ServiceEntityRepository<Entraineur>
  */
 class EntraineurRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    use TraitementTrait;
+    public function __construct(private ManagerRegistry $registry)
     {
         parent::__construct($registry, Entraineur::class);
     }
 
-    //    /**
-    //     * @return Entraineur[] Returns an array of Entraineur objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function new(): Entraineur
+    {
+        return new Entraineur;
+    }
 
-    //    public function findOneBySomeField($value): ?Entraineur
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function initialiserTraitement(
+        ?EntityManagerInterface $em = null, 
+        ?FormInterface $form = null, 
+        ?ServiceEntityRepository $repository = null): void
+    {
+        $objet = new TraitementEntraineur(em: $em, form: $form, repository: $repository); 
+        $this->setTraitement(traitement: $objet);
+    }
+
+    public function initialiserControlleur(): void  
+    {
+        $objet = new ControlleurEntraineur; 
+        $this->setControlleur(controlleur: $objet);
+    }
 }

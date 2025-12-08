@@ -132,7 +132,18 @@ abstract class ControlleurAbstrait implements ControlleurInterface
 
     public function select(mixed ...$donnees): JsonResponse
     {
-        return new JsonResponse(data: []);
+        // On récupère les paramètres du formulaire envoyé depuis le js
+        $id = ($donnees[0])->request->get(key: 'id');
+        $id = $id ?: 0;
+        $label = ($donnees[0])->request->get(key: 'label');
+
+        // On instancie un objet qui hérite de TraitementInterface pour gérer le traitement
+        ($donnees[1])->initialiserTraitement(repository: $donnees[1]);
+
+        // On appelle la méthode getTraitement qui nous retourne un objet de type traitementInterface
+        // Ensuite on appelle la méthode appropriée pour traiter l'action
+
+        return ($donnees[1])->actionSelect(label: $label, mixe: $id);
     }
 
     public function imprimer(mixed ...$donnees): JsonResponse

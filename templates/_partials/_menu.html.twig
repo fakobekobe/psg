@@ -30,6 +30,23 @@
 			</div>
 		</li>
 		<li class="nav-item">
+			<a class="nav-link" data-toggle="collapse" href="#staff" aria-expanded="false" aria-controls="staff">
+				<i class="typcn typcn-group menu-icon"></i>
+				<span class="menu-title">Staff</span>
+				<i class="menu-arrow"></i>
+			</a>
+			<div class="collapse" id="staff">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('app_entraineur') }}">Entraineur</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('app_joueur') }}">Joueur</a>
+					</li>					
+				</ul>
+			</div>
+		</li>
+		<li class="nav-item">
 			<a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
 				<i class="typcn typcn-film menu-icon"></i>
 				<span class="menu-title">Configuration</span>
@@ -42,10 +59,7 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_saison') }}">Saison</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_joueur') }}">Joueur</a>
-					</li>
+					</li>					
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_preponderance') }}">Prépondérance</a>
 					</li>
@@ -70,7 +84,7 @@
 						<a class="nav-link" href="{{ path('app_equipe') }}">Equipe</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="{#{ path('app_genre') }#}">Equipe par saison</a>
+						<a class="nav-link" href="{{ path('app_equipe_saison') }}">Equipe par saison</a>
 					</li>
 				</ul>
 			</div>

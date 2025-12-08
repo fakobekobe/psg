@@ -7,18 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
-use App\Repository\EquipeRepository;
+use App\Repository\EntraineurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Form\EquipeType;
+use App\Form\EntraineurType;
 use App\Traitement\Interface\ControlleurInterface;
 
-#[Route(path:'/equipe')]
-final class EquipeController extends AbstractController
+#[Route(path:'/entraineur')]
+final class EntraineurController extends AbstractController
 {
-    private const PREFIX_NAME = 'app_equipe';
-    private const TYPEFORM = EquipeType::class;
-    private EquipeRepository $repository;
+    private const PREFIX_NAME = 'app_entraineur';
+    private const TYPEFORM = EntraineurType::class;
+    private EntraineurRepository $repository;
     private ControlleurInterface $controlleur;
 
     public function __construct(
@@ -27,7 +27,7 @@ final class EquipeController extends AbstractController
         private ManagerRegistry $registry,
         )
     {
-        $this->repository = new EquipeRepository(registry: $this->registry);
+        $this->repository = new EntraineurRepository(registry: $this->registry);
         $this->repository->initialiserControlleur();
         $this->controlleur = $this->repository->getControlleur();
     }
@@ -59,7 +59,7 @@ final class EquipeController extends AbstractController
         {
             return $contenu['reponse'];
         }else{
-            return $this->render(view: 'equipe/index.html.twig', parameters: [
+            return $this->render(view: 'entraineur/index.html.twig', parameters: [
             'form' => $contenu['form']->createView(),
         ]);
         }        
@@ -132,17 +132,5 @@ final class EquipeController extends AbstractController
          */
         $objet = $this->repository->findOneBy(criteria: ['id' => $id]);
         return $this->file(file: $objet->getPathFichier());
-    }
-
-    #[Route(path: "/select", name: self::PREFIX_NAME . "_select", methods: ["POST"])]
-    public function select(Request $request): Response
-    {
-        /**
-         * Cette méthode du controller permet la sélection des options d'un select
-         */
-        return $this->controlleur->select(
-            $request,
-            $this->repository
-        );
     }
 }

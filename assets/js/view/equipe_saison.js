@@ -1,10 +1,10 @@
 // Les variables locales
-let P_URL = 'discipline-filiere-professeur', 
-NOM_FORM = "discipline_filiere_professeur_", 
-texteTitre = 'Ajouter une discipline par professeur';
-const URL_SELECT = "discipline-filiere";
-const PLACEHOLDER = "Discipline",
-    LABEL_SELECT = ['filiere', 'professeur'];
+let P_URL = 'equipe-saison', 
+NOM_FORM = "equipe_saison_", 
+texteTitre = 'Ajouter une équipe par saison';
+const URL_SELECT = "equipe";
+const PLACEHOLDER = "Equipe",
+    LABEL_SELECT = ['saison', 'championnat', 'entraineur'];
 
 
 // Appel des fonctions d'action-------------
@@ -19,7 +19,7 @@ action_liste(P_URL);
 action_supprimer(P_URL);
 
 // Exécution de la fonction de l'action check
-action_check(P_URL, NOM_FORM, "Modifier une discipline par professeur", check_select, LABEL_SELECT); // A modifier *******
+action_check(P_URL, NOM_FORM, "Modifier une équipe par saison", check_select, LABEL_SELECT); // A modifier *******
 
 // On exécute le traitement du bouton de fermeture
 fermer_formulaire();
@@ -28,5 +28,5 @@ fermer_formulaire();
 close_formulaire();
 
 // On initialise le contenu du champ select
-initialiser_select("discipline_filiere_professeur_filiere", "discipline_filiere_professeur_discipline", URL_SELECT, PLACEHOLDER);
+initialiser_select("equipe_saison_championnat", "equipe_saison_equipe", URL_SELECT, PLACEHOLDER);
 
