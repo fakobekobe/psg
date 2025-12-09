@@ -6,6 +6,7 @@ use App\Traitement\Abstrait\TraitementAbstrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TraitementCalendrier extends TraitementAbstrait
 {
@@ -49,5 +50,32 @@ class TraitementCalendrier extends TraitementAbstrait
         }
 
         return $tab;
+    }
+
+    protected function actionAjouterSucces(mixed ...$donnees) : JsonResponse
+    {
+        $objet = $this->form->getData();
+        $id_championnat = $objet->getChampionnat()->getId();
+        $championnat = $objet->getChampionnat();
+
+        foreach($donnees['donnees'][1] as $id_journee)
+        {
+            if(!$this->repository->calendrierExiste(id_championnat: $id_championnat, id_journee: $id_journee))
+            {
+                $journee = $this->repository->getJournee($id_journee);
+                if($journee)
+                {
+                    $calendrier = $this->repository->new();
+                    $calendrier->setChampionnat($championnat);
+                    $calendrier->setJournee($journee);
+                    $this->em->persist(object: $calendrier);
+                    $this->em->flush();
+                }
+            }
+        }
+        
+        return new JsonResponse(data: [
+            'code' => self::SUCCES,
+        ]);
     }
 }

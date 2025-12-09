@@ -31,8 +31,9 @@ class CalendrierType extends AbstractType
             ->add(child: 'journee', type: EntityType::class, options: [
                 'class' => Journee::class,
                 'choice_label' => 'numero',
-                'label' => false,
-                'placeholder' => '--- Journée ---',
+                'mapped' => false,
+                'label' => "Journée",
+                'multiple' => true,
                 'attr' => [
                     'class' => 'form-control',
                 ],

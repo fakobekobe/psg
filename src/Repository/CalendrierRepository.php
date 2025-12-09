@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Calendrier;
+use App\Entity\Journee;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,5 +41,17 @@ class CalendrierRepository extends ServiceEntityRepository
     {
         $objet = new ControlleurCalendrier; 
         $this->setControlleur(controlleur: $objet);
+    }
+
+    public function getJournee(int $id) : ?Journee
+    {
+        $this->setRepository(repository: new JourneeRepository(registry: $this->registry));
+        return $this->getRepository()->findOneBy(criteria: ['id' => $id]);
+    }
+
+    public function calendrierExiste(int $id_championnat, int $id_journee) : int
+    {
+        $calendrier = $this->findOneBy(criteria: ['championnat' => $id_championnat, 'journee' => $id_journee]);
+        return $calendrier ? $calendrier->getId() : 0;
     }
 }

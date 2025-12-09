@@ -487,7 +487,7 @@ function action_ajouter(
         suppressionErreurs();
 
         switch (data.code) {
-            case 'SUCCES':                             
+            case 'SUCCES':                      
                 traitement_succes();
                 break;
 
