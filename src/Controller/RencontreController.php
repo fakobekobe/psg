@@ -7,18 +7,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
-use App\Repository\CalendrierRepository;
+use App\Repository\RencontreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Form\CalendrierType;
+use App\Form\RencontreType;
 use App\Traitement\Interface\ControlleurInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
-#[Route(path:'/calendrier')]
-final class CalendrierController extends AbstractController
+#[Route(path:'/rencontre')]
+final class RencontreController extends AbstractController
 {
-    private const PREFIX_NAME = 'app_calendrier';
-    private const TYPEFORM = CalendrierType::class;
-    private CalendrierRepository $repository;
+    private const PREFIX_NAME = 'app_rencontre';
+    private const TYPEFORM = RencontreType::class;
+    private RencontreRepository $repository;
     private ControlleurInterface $controlleur;
 
     public function __construct(
@@ -27,7 +28,7 @@ final class CalendrierController extends AbstractController
         private ManagerRegistry $registry,
         )
     {
-        $this->repository = new CalendrierRepository(registry: $this->registry);
+        $this->repository = new RencontreRepository(registry: $this->registry);
         $this->repository->initialiserControlleur();
         $this->controlleur = $this->repository->getControlleur();
     }
@@ -38,6 +39,10 @@ final class CalendrierController extends AbstractController
         /**
          * Cette fonction ajouter du controller permet l'affichage et l'ajout des données
          */
+        // Gestion du cas du champ select ----------------------
+        $select = $this->getObjetSelect(request: $request, repo: $this->repository, formType: 'rencontre', champ: 'calendrier');         
+        //-----------------------------------------------------------------
+
         $contenu = $this->controlleur->ajouter(
             $this->repository, 
             $this->form,
@@ -45,13 +50,14 @@ final class CalendrierController extends AbstractController
             'form_type',
             $request,             
             $this->em, 
+            $select,
         );
 
         if($contenu['reponse'] instanceof Response)
         {
             return $contenu['reponse'];
         }else{
-            return $this->render(view: 'calendrier/index.html.twig', parameters: [
+            return $this->render(view: 'rencontre/index.html.twig', parameters: [
             'form' => $contenu['form']->createView(),
         ]);
         }        
@@ -81,6 +87,11 @@ final class CalendrierController extends AbstractController
         /**
          * Cette méthode modifier du controller permet la modification du formulaire
          */
+
+        // Gestion du cas du champ select ----------------------
+        $select = $this->getObjetSelect(request: $request, repo: $this->repository, formType: 'rencontre', champ: 'calendrier');         
+        //-----------------------------------------------------------------
+
         return $this->controlleur->modifier(
             $this->repository, 
             $id, 
@@ -88,7 +99,8 @@ final class CalendrierController extends AbstractController
             self::TYPEFORM,
             "form_type",
             $request, 
-            $this->em,  
+            $this->em, 
+            $select, 
         );       
     }
 
@@ -105,15 +117,30 @@ final class CalendrierController extends AbstractController
         );
     }
 
-    #[Route(path: "/select", name: self::PREFIX_NAME . "_select", methods: ["POST"])]
-    public function select(Request $request): Response
+    /**
+     * Fonction Interne permettant la création du tableau de gestion du select
+     */
+    private function getObjetSelect(Request $request, ServiceEntityRepository $repo, string $formType, string $champ): ?array
     {
-        /**
-         * Cette méthode du controller permet la sélection des options d'un select
-         */
-        return $this->controlleur->select(
-            $request,
-            $this->repository
-        );
+        $objet = null; // La variable contenu l'objet
+        if($request->isMethod(method: 'POST'))
+        {
+            // On récupère l'id du champ select
+            $id_objet = (int)(($request->request->all())[$formType][$champ]);   
+
+            // On récupère l'objet 
+            $objet = $repo->findSelect(id: $id_objet);
+
+            // On définit les données à retourner
+            if($objet)
+            {
+                $objet = [
+                'libelle' => $champ,
+                'objet' => $objet
+                ];
+            }
+            
+        } 
+        return $objet;
     }
 }

@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Trait\TraitementTrait;
+use App\Trait\TraitementTraitSelect;
 use App\Traitement\Model\TraitementCalendrier;
 use App\Traitement\Controlleur\ControlleurCalendrier;
 use Symfony\Component\Form\FormInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\Form\FormInterface;
 class CalendrierRepository extends ServiceEntityRepository
 {
     use TraitementTrait;
+    use TraitementTraitSelect;
     public function __construct(private ManagerRegistry $registry)
     {
         parent::__construct($registry, Calendrier::class);
@@ -53,5 +55,18 @@ class CalendrierRepository extends ServiceEntityRepository
     {
         $calendrier = $this->findOneBy(criteria: ['championnat' => $id_championnat, 'journee' => $id_journee]);
         return $calendrier ? $calendrier->getId() : 0;
+    }
+
+    public function findOptionsById(int $id) : array
+    {
+        return $this->createQueryBuilder(alias: 'x')
+            ->select(['x.id', 'j.numero as libelle'])  
+            ->leftJoin('x.journee', 'j')          
+            ->andWhere('x.championnat = :id')
+            ->setParameter( 'id',  $id)
+            ->orderBy(sort: 'x.journee', order: 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

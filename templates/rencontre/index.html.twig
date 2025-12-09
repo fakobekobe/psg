@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title 'Club' %}
+{% block title 'Rencontre' %}
 
 {% block body %}
 	<div
@@ -8,8 +8,8 @@
 		
 		<div class="row">
 			<div class="col-sm-6">
-				<h5 class="mb-0 font-weight-bold">Organisation > Club</h5>
-				<p>Gestion des cubs</p>
+				<h5 class="mb-0 font-weight-bold">Gestion > Rencontre</h5>
+				<p>Gestion des rencontres</p>
 			</div>
 		</div>
 
@@ -18,15 +18,15 @@
 				<div class="card">
 					<div class="card-body">
 						<div class="d-flex flex-wrap justify-content-between">
-							<h4 class="card-title mb-3">Liste des clubs</h4>
+							<h4 class="card-title mb-3">Liste des rencontres</h4>
 							<div class="mb-3">
 								<button class="m-0 font-weight-bold btn btn-secondary btn-sm" data-toggle="modal" data-target="#ajouterBackdrop">
 									<i class="typcn typcn-plus"></i>
-									Ajouter un club
+									Ajouter une rencontre
 								</button>
 
 								<!-- Appel de la fonction d'extension de twig -->
-								{{app_modal_btn(form: form, titre: 'Ajouter un club') | raw }}
+								{{app_modal_btn(form: form, titre: 'Ajouter une rencontre') | raw }}
 								<!-- -->
 
 							</div>
@@ -38,10 +38,11 @@
 								<thead>
 									<tr>
 										<th>N°</th>
-										<th>Saison</th>
 										<th>Championnat</th>
-										<th>Equipe</th>
-										<th>Entraineur</th>
+										<th>Calendrier</th>
+										<th>Température</th>
+										<th>Date</th>
+										<th>Heure</th>
 										<th>Actions</th>
 									</tr>
 								</thead>
@@ -58,5 +59,5 @@
 {% endblock %}
 
 {% block scripts %}
-	<script src="{{ asset('js/view/equipe_saison.js') }}"></script>
+	<script src="{{ asset('js/view/rencontre.js') }}"></script>
 {% endblock %}

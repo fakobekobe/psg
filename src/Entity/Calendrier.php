@@ -51,5 +51,5 @@ class Calendrier
         $this->journee = $journee;
 
         return $this;
-    }
+    }    
 }

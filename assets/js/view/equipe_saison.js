@@ -1,7 +1,7 @@
 // Les variables locales
 let P_URL = 'equipe-saison', 
 NOM_FORM = "equipe_saison_", 
-texteTitre = 'Ajouter une équipe par saison';
+texteTitre = 'Ajouter un club';
 const URL_SELECT = "equipe";
 const PLACEHOLDER = "Equipe",
     LABEL_SELECT = ['saison', 'championnat', 'entraineur'];
@@ -19,7 +19,7 @@ action_liste(P_URL);
 action_supprimer(P_URL);
 
 // Exécution de la fonction de l'action check
-action_check(P_URL, NOM_FORM, "Modifier une équipe par saison", check_select, LABEL_SELECT); // A modifier *******
+action_check(P_URL, NOM_FORM, "Modifier un club", check_select, LABEL_SELECT); // A modifier *******
 
 // On exécute le traitement du bouton de fermeture
 fermer_formulaire();

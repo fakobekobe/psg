@@ -36,4 +36,9 @@ class Journee
 
         return $this;
     }
+
+    public function getDescription(): string
+    {
+        return $this->numero == 1 ? $this->numero . 'ère journée' : $this->numero . 'e journée';
+    }
 }
