@@ -11,6 +11,8 @@ use App\Trait\TraitementTrait;
 use App\Traitement\Model\TraitementEquipeSaison;
 use App\Traitement\Controlleur\ControlleurEquipeSaison;
 use Symfony\Component\Form\FormInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 
 /**
  * @extends ServiceEntityRepository<EquipeSaison>
@@ -59,6 +61,21 @@ class EquipeSaisonRepository extends ServiceEntityRepository
     {
         $objet = $this->findOneBy(criteria: ['saison' => $id_saison, 'equipe' => $id_equipe]);
         return $objet ? $objet->getId() : 0;
+    }
+
+    public function findListeClubs(int $id_saison, int $id_championnat) : array
+    {
+        return $this->createQueryBuilder(alias: 'x')
+            ->leftJoin('x.equipe', 'e')          
+            ->andWhere('x.saison = :id_saison AND e.championnat = :id_championnat')
+            ->setParameters(parameters: new ArrayCollection(elements: [
+                new Parameter(name: 'id_saison', value: $id_saison),
+                new Parameter(name: 'id_championnat', value: $id_championnat),
+            ]))
+            ->orderBy('e.nom', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 }

@@ -58,13 +58,13 @@ final class MatchDisputeController extends AbstractController
         }        
     }
 
-    #[Route(path:'/liste', name: self::PREFIX_NAME . "_liste", methods:["GET"])]
-    public function liste(): Response
+    #[Route(path:'/liste/{id}', name: self::PREFIX_NAME . "_liste", methods:["GET"], requirements: ['id' => '[0-9]+'])]
+    public function liste(int $id): Response
     {        
         /**
          * Cette fonction liste du controller permet la gestion du retour de la liste des objets
          */
-        return $this->controlleur->lister($this->repository);
+        return $this->controlleur->lister($this->repository, $id);
     }
 
     #[Route(path: '/rencontre_equipe', name: self::PREFIX_NAME . '_rencontre_equipe', methods: ["POST"])]

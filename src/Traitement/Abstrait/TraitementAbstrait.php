@@ -101,7 +101,7 @@ abstract class TraitementAbstrait implements TraitementInterface
     {
         if(count(value: $donnees[0]) > 0)
         {
-            return $this->actionListerSucces($donnees[0], $donnees[1]);
+            return $this->actionListerSucces($donnees[0], $donnees[1] ?? null);
         }else{
             return $this->actionListerEchec();
         }

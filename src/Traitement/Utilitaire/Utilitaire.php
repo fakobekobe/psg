@@ -400,6 +400,14 @@ HTML;
 HTML; 
     }
 
+    public static function afficher_image_circulaire(string $path = "", string $class ="img_30") : string
+    {
+        $path = $path ?? self::logo_defaut();
+        return <<<HTML
+        <img src="/images/{$path}" class="{$class}" />
+HTML; 
+    }
+
     public static function checkbox_rencontre(array $datas) : string
     {
         $retour = "";
@@ -413,7 +421,7 @@ HTML;
                 <div class="col-lg-4">
                     <div class="form-group m-0 p-0">
                         <div class="custom-control custom-checkbox small">
-                            <input type="radio" class="custom-control-input rencontre" name="rencontre" id="check{$data->getId()}">
+                            <input type="radio" class="custom-control-input rencontre" name="rencontre" id="check{$data->getId()}" value="{$data->getId()}">
                             <label class="custom-control-label" for="check{$data->getId()}">
                                 {$data->getCalendrier()->getJournee()->getDescription()}
                             </label>
@@ -436,6 +444,46 @@ HTML;
         }
 
         return $retour;        
+    }
+
+    public static function checkbox_club(array $datas, string $name) : string
+    {
+        $retour = "";
+        $cpt = 1;
+        $total = count(value: $datas);
+        $logo = "";
+
+        foreach($datas as $data)
+        {
+            $logo = Utilitaire::afficher_image_circulaire(path: $data->getEquipe()->getLogo());
+
+            $retour .= <<<HTML
+            <div class="row pt-2">
+                <div class="col-lg-6">
+                    <div class="form-group m-0 p-0">
+                        <div class="custom-control custom-checkbox small">
+                            <input type="radio" class="custom-control-input {$name}" name="{$name}" id="check{$name}{$cpt}" value="{$data->getId()}">
+                            <label class="custom-control-label" for="check{$name}{$cpt}">
+                                {$data->getEquipe()->getNom()}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    {$logo}
+                </div>
+            </div>            
+HTML;
+            ($cpt == $total) ? '' : $retour .= '<hr class="m-0 p-0" />';
+            $cpt++;
+        }
+
+        return $retour;        
+    }
+
+    private static function logo_defaut() : string
+    {
+        return "logo_defaut.png";
     }
 
 }
