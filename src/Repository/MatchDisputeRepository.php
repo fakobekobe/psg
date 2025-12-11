@@ -3,31 +3,31 @@
 namespace App\Repository;
 
 use App\Entity\EquipeSaison;
-use App\Entity\Transfert;
+use App\Entity\MatchDispute;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Trait\TraitementTrait;
-use App\Traitement\Model\TraitementTransfert;
-use App\Traitement\Controlleur\ControlleurTransfert;
+use App\Traitement\Model\TraitementMatchDispute;
+use App\Traitement\Controlleur\ControlleurMatchDispute;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * @extends ServiceEntityRepository<Transfert>
+ * @extends ServiceEntityRepository<MatchDispute>
  */
-class TransfertRepository extends ServiceEntityRepository
+class MatchDisputeRepository extends ServiceEntityRepository
 {
     use TraitementTrait;
     public function __construct(private ManagerRegistry $registry)
     {
-        parent::__construct($registry, Transfert::class);
+        parent::__construct($registry, MatchDispute::class);
     }
 
-    public function new(): Transfert
+    public function new(): MatchDispute
     {
-        return new Transfert;
+        return new MatchDispute;
     }
 
     public function initialiserTraitement(
@@ -35,13 +35,13 @@ class TransfertRepository extends ServiceEntityRepository
         ?FormInterface $form = null, 
         ?ServiceEntityRepository $repository = null): void
     {
-        $objet = new TraitementTransfert(em: $em, form: $form, repository: $repository); 
+        $objet = new TraitementMatchDispute(em: $em, form: $form, repository: $repository); 
         $this->setTraitement(traitement: $objet);
     }
 
     public function initialiserControlleur(): void  
     {
-        $objet = new ControlleurTransfert; 
+        $objet = new ControlleurMatchDispute; 
         $this->setControlleur(controlleur: $objet);
     }
 
@@ -78,5 +78,11 @@ class TransfertRepository extends ServiceEntityRepository
         ;
 
         return $retour ? $retour[0]['id'] : 0;
+    }
+
+    public function getListeRencontres(int $id_calendrier) : array
+    {
+        $this->setRepository(repository: new RencontreRepository(registry: $this->registry));
+        return $this->getRepository()->findBy(criteria: ['calendrier' => $id_calendrier]);
     }
 }

@@ -56,7 +56,7 @@ class Rencontre
 
     public function getHeure(): string
     {
-        return $this->dateHeureRencontre->format(format:"H:i:s");
+        return $this->dateHeureRencontre->format(format:"H:i");
     }
 
     public function getTemperature(): ?int

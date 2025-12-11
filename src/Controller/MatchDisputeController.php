@@ -7,18 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
-use App\Repository\TransfertRepository;
+use App\Repository\MatchDisputeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Form\TransfertType;
+use App\Form\MatchDisputeType;
 use App\Traitement\Interface\ControlleurInterface;
 
-#[Route(path:'/transfert')]
-final class TransfertController extends AbstractController
+#[Route(path:'/match')]
+final class MatchDisputeController extends AbstractController
 {
-    private const PREFIX_NAME = 'app_transfert';
-    private const TYPEFORM = TransfertType::class;
-    private TransfertRepository $repository;
+    private const PREFIX_NAME = 'app_match';
+    private const TYPEFORM = MatchDisputeType::class;
+    private MatchDisputeRepository $repository;
     private ControlleurInterface $controlleur;
 
     public function __construct(
@@ -27,7 +27,7 @@ final class TransfertController extends AbstractController
         private ManagerRegistry $registry,
         )
     {
-        $this->repository = new TransfertRepository(registry: $this->registry);
+        $this->repository = new MatchDisputeRepository(registry: $this->registry);
         $this->repository->initialiserControlleur();
         $this->controlleur = $this->repository->getControlleur();
     }
@@ -52,7 +52,7 @@ final class TransfertController extends AbstractController
         {
             return $contenu['reponse'];
         }else{
-            return $this->render(view: 'transfert/index.html.twig', parameters: [
+            return $this->render(view: 'match/index.html.twig', parameters: [
             'form' => $contenu['form']->createView(),
         ]);
         }        
@@ -67,13 +67,13 @@ final class TransfertController extends AbstractController
         return $this->controlleur->lister($this->repository);
     }
 
-    #[Route(path: '/check/{id}', name: self::PREFIX_NAME . '_check', methods: ["POST"] , requirements: ['id' => '[0-9]+'])]
-    public function check(int $id) : Response
+    #[Route(path: '/rencontre_equipe', name: self::PREFIX_NAME . '_rencontre_equipe', methods: ["POST"])]
+    public function rencontre_equipe(Request $request) : Response
     {
         /**
          * Cette méthode liste du controller permet la gestion du chargement des données de la modification du formulaire
          */
-        return $this->controlleur->check( $this->repository, $id);
+        return $this->controlleur->rencontre_equipe($request, $this->repository);
     }
 
     #[Route(path:'/modifier/{id}', name: self::PREFIX_NAME . "_modifier", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
@@ -105,5 +105,4 @@ final class TransfertController extends AbstractController
             $id,
         );
     }
-
 }

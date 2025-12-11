@@ -3,10 +3,27 @@
 namespace App\Traitement\Controlleur;
 
 use App\Traitement\Abstrait\ControlleurAbstrait;
+use App\Traitement\Utilitaire\Utilitaire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ControlleurTransfert extends ControlleurAbstrait
+class ControlleurMatchDispute extends ControlleurAbstrait
 {
+    public function rencontre_equipe(mixed ...$donnees) : JsonResponse
+    {
+        // Les variables
+        $t_rencontres = [];
+        $id_saison = ($donnees[0])->request->all()['match_dispute']['saison'];
+        $id_calendrier = ($donnees[0])->request->all()['match_dispute']['calendrier'];
+        $lisre_rencontres = ($donnees[1])->getListeRencontres(id_calendrier: $id_calendrier);
+
+        if(!$lisre_rencontres)
+        {
+            return new JsonResponse(data:['code' => 'ECHEC', 'erreur' => "Cette rencontre n'existe pas."]);
+        }
+
+        return new JsonResponse(data:['code' => 'SUCCES', 'data' => Utilitaire::checkbox_rencontre(datas: $lisre_rencontres)]);
+    }
+
     public function ajouter(mixed ...$donnees): array
     {
         $objet = ($donnees[0])->new();

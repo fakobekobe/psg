@@ -297,81 +297,6 @@ abstract class Utilitaire
 
     //--------------------------------------------
 
-
-    public static function chaine_tableau_js(array $tableau): string
-    {        
-        $tab = "";
-        $i = 0;
-        $separateur = ';x;';
-        $nb = count(value: $tableau);
-
-        foreach($tableau as $data)
-        {
-            $nomComplet = strtoupper(string: htmlspecialchars(string: $data['nomComplet']));
-            $matricule = htmlspecialchars(string: $data['matricule']);
-            $classe = htmlspecialchars(string: $data['classe']);
-            $utilisateur = strtoupper(string: htmlspecialchars(string: $data['utilisateur']));
-            $montant = number_format(
-                    num: $data['montant'], 
-                    decimals:0, 
-                    decimal_separator:'', 
-                    thousands_separator:' '
-                );
-            $date = ($data['dateVersement'])->format(format:'d/m/Y H:i:s');
-
-            // Les données des versements
-            $totalversement = "";
-            $remise = "";
-            $restepayer = "";
-
-            if(!empty($data['scolariteTotal']))
-            {
-                $totalversement = number_format(
-                    num: $data['scolariteTotal'], 
-                    decimals:0, 
-                    decimal_separator:'', 
-                    thousands_separator:' '
-                );
-
-                $remise = number_format(
-                    num: $data['remise'], 
-                    decimals:0, 
-                    decimal_separator:'', 
-                    thousands_separator:' '
-                );
-
-                $restepayer = number_format(
-                    num: $data['restePayer'], 
-                    decimals:0, 
-                    decimal_separator:'', 
-                    thousands_separator:' '
-                );
-
-                $montant = number_format(
-                    num: $data['totalVerse'], 
-                    decimals:0, 
-                    decimal_separator:'', 
-                    thousands_separator:' '
-                );
-            }             
-
-            $i++;
-            $v = ($i != $nb) ? '!x!':'';
-            $tab .=  $i . $separateur . 
-            $nomComplet . $separateur . 
-            $matricule . $separateur . 
-            $classe . $separateur . 
-            $montant . $separateur . 
-            $restepayer . $separateur . 
-            $remise . $separateur . 
-            $totalversement . $separateur . 
-            $date . $separateur . 
-            $utilisateur . $v;
-        }
-
-        return $tab;
-    }
-
     /**
      * csv_tableau permet de traitement un fichier csv pour retourner une liste de tableaux 
      * La première ligne du fichier csv sera supprimer si elle contient le titre
@@ -473,6 +398,44 @@ HTML;
             <img src="/images/{$path}" class="img_80" />
         </a>
 HTML; 
+    }
+
+    public static function checkbox_rencontre(array $datas) : string
+    {
+        $retour = "";
+        $cpt = 1;
+        $total = count(value: $datas);
+
+        foreach($datas as $data)
+        {
+            $retour .= <<<HTML
+            <div class="row pt-2">
+                <div class="col-lg-4">
+                    <div class="form-group m-0 p-0">
+                        <div class="custom-control custom-checkbox small">
+                            <input type="radio" class="custom-control-input rencontre" name="rencontre" id="check{$data->getId()}">
+                            <label class="custom-control-label" for="check{$data->getId()}">
+                                {$data->getCalendrier()->getJournee()->getDescription()}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center">
+                    {$data->getDate()}
+                </div>
+                <div class="col-lg-2 text-center">
+                    {$data->getHeure()}
+                </div>
+                <div class="col-lg-2 text-center">
+                    {$data->getTemperatureAfficher()}
+                </div>
+            </div>            
+HTML;
+            ($cpt == $total) ? '' : $retour .= '<hr class="m-0 p-0" />';
+            $cpt++;
+        }
+
+        return $retour;        
     }
 
 }
