@@ -8,25 +8,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ControlleurMatchDispute extends ControlleurAbstrait
 {
-    public function rencontre_equipe(mixed ...$donnees) : JsonResponse
+    public function rencontre_equipe(mixed ...$donnees): JsonResponse
     {
         // Les variables
         $rencontre = "";
         $domicile = "";
         $exterieur = "";
-        $t_clubs = [];
         $data = [];
         $id_saison = ($donnees[0])->request->all()['match_dispute']['saison'];
         $id_calendrier = ($donnees[0])->request->all()['match_dispute']['calendrier'];
-        $lisre_rencontres = ($donnees[1])->getListeRencontres(id_calendrier: $id_calendrier);
 
-        if(!$lisre_rencontres)
-        {
-            return new JsonResponse(data:['code' => 'ECHEC', 'erreur' => "Cette rencontre n'existe pas."]);
+        // On récupère la liste des rencontres
+        $liste_rencontres = $this->liste_rencontre($donnees[1], $id_calendrier);
+        if (!$liste_rencontres[0]) {
+            return new JsonResponse(data: ['code' => 'ECHEC', 'erreur' => "Cette rencontre n'existe pas."]);
         }
 
         // On récupère les rencontres
-        $rencontre = Utilitaire::checkbox_rencontre(datas: $lisre_rencontres);
+        $rencontre = Utilitaire::checkbox_rencontre(datas: $liste_rencontres[1]);
 
         // On récupère le championnat
         $id_championnat = ($donnees[1])->getCalendrier($id_calendrier)->getChampionnat()->getId();
@@ -43,7 +42,7 @@ class ControlleurMatchDispute extends ControlleurAbstrait
         ];
 
 
-        return new JsonResponse(data:['code' => 'SUCCES', 'data' => $data]);
+        return new JsonResponse(data: ['code' => 'SUCCES', 'data' => $data]);
     }
 
     public function ajouter(mixed ...$donnees): array
@@ -56,7 +55,7 @@ class ControlleurMatchDispute extends ControlleurAbstrait
         $form->handleRequest(request: $donnees[4]);
         $retour['form'] = $form;
 
-        if (($donnees[4])->request->get('rencontre') ?? null){
+        if (($donnees[4])->request->get('rencontre') ?? null) {
             $estValide = true;
 
             $id_rencontre = ($donnees[4])->request->get('rencontre');
@@ -84,7 +83,7 @@ class ControlleurMatchDispute extends ControlleurAbstrait
     public function lister(mixed ...$donnees): JsonResponse
     {
         // On instancie un objet qui hérite de TraitementInterface pour gérer le traitement
-        ($donnees[0])->initialiserTraitement(repository: $donnees[0]); 
+        ($donnees[0])->initialiserTraitement(repository: $donnees[0]);
 
         // On récupère la liste des objets
         $liste = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1]);
@@ -92,4 +91,46 @@ class ControlleurMatchDispute extends ControlleurAbstrait
         return (($donnees[0])->getTraitement())->actionLister($liste);
     }
 
+    public function supprimer(mixed ...$donnees): JsonResponse
+    {
+        // On instancie un objet qui hérite de TraitementInterface pour gérer le traitement
+        ($donnees[0])->initialiserTraitement(em: $donnees[1], repository: $donnees[0]);        
+
+        // On appelle la méthode getTraitement qui nous retourne un objet de type traitementInterface
+        // Ensuite on appelle la méthode appropriée pour traiter l'action
+        return ($donnees[0])->getTraitement()->actionSupprimer($donnees[2]);
+    }
+
+    private function liste_rencontre(mixed ...$donnees): array
+    {
+        $retour = [];
+
+        $liste_rencontres = ($donnees[0])->getListeRencontres(id_calendrier: $donnees[1]);
+        $liste_matchs = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1]);
+        $t_rencontres = [];
+        $r_trouve = false;
+
+        // On conserve les rencontres qui n'ont fait l'objet de match
+        foreach ($liste_rencontres as $rencontre) {
+            $r_trouve = false;
+            foreach ($liste_matchs as $match) {
+                if ($rencontre->getId() == $match->getRencontre()->getId()) {
+                    $r_trouve = true;
+                    break;
+                }
+            }
+
+            // On conserve la rencontre
+            if (!$r_trouve) {
+                $t_rencontres[] = $rencontre;
+            }
+        }
+
+        $retour = [
+            0 => $liste_rencontres,
+            1 => $t_rencontres,
+        ];
+
+        return $retour;
+    }
 }

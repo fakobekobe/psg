@@ -76,23 +76,6 @@ final class MatchDisputeController extends AbstractController
         return $this->controlleur->rencontre_equipe($request, $this->repository);
     }
 
-    #[Route(path:'/modifier/{id}', name: self::PREFIX_NAME . "_modifier", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
-    public function modifier(Request $request, int $id) : Response
-    {
-        /**
-         * Cette méthode modifier du controller permet la modification du formulaire
-         */     
-        return $this->controlleur->modifier(
-            $this->repository, 
-            $id, 
-            $this->form,       
-            self::TYPEFORM,
-            "form_type",
-            $request, 
-            $this->em, 
-        );       
-    }
-
     #[Route(path:'/supprimer/{id}', name: self::PREFIX_NAME . "_supprimer", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
     public function supprimer(int $id): Response
     {

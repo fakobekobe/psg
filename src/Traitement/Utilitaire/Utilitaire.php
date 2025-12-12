@@ -400,7 +400,7 @@ HTML;
 HTML; 
     }
 
-    public static function afficher_image_circulaire(string $path = "", string $class ="img_30") : string
+    public static function afficher_image_circulaire(?string $path = "", string $class ="img_30") : string
     {
         $path = $path ?? self::logo_defaut();
         return <<<HTML

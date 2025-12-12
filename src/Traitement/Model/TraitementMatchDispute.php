@@ -40,7 +40,7 @@ class TraitementMatchDispute extends TraitementAbstrait
         $tab = "";
         $i = 0;
         $separateur = ';x;';
-        $nb = count(value: $donnees[0]);
+        $nb = (int)(count(value: $donnees[0]) / 2);
         $id_rencontre = 0;
         $journee = "";
         $club_domicile = "";
@@ -49,11 +49,11 @@ class TraitementMatchDispute extends TraitementAbstrait
         $heure = "";
         $temperature = "";
 
-        
         foreach ($donnees[0] as $data) {
 
             // On récupère le club à domicile
             if ($data->getPreponderance()->getId() == $id_preponderance_domicile) {
+
                 $id_rencontre = $data->getRencontre()->getId();
                 $journee = $data->getRencontre()->getCalendrier()->getJournee()->getDescription();
                 $club_domicile = ucfirst(string: htmlspecialchars(string: $data->getEquipeSaison()->getEquipe()->getNom()));
@@ -85,7 +85,6 @@ class TraitementMatchDispute extends TraitementAbstrait
                     $this->lien_a(id: $data->getId(), nom: $nom) . $v;
             }
         }
-
         return $tab;
     }
 
@@ -124,7 +123,7 @@ HTML;
         // On récupère la prépondérance à l'extérieur
         $preponderance_exterieur = $this->repository->getPreponderance(id_preponderance: $id_preponderance_exterieur);
 
-        /**
+        /*
          * On vérifie si les 2 clubs (selon le championnat) n'ont pas été déjà enregistré dans la saison
          * soit à domicile vs extérieur
          */
@@ -158,6 +157,20 @@ HTML;
             }
         }
 
+        /*
+         * On vérifie le club a déjà un match selon le calendrier à domicile
+         */
+        if ($this->repository->findMatchByCalendrierByCubByPreponderance(
+            $rencontre->getCalendrier()->getId(),
+            $id_domicile,
+            $id_preponderance_domicile
+        )) {
+            return new JsonResponse(data: [
+                'code' => self::ECHEC,
+                'erreur' => "Le club [" . $club_domicile->getEquipe()->getNom() . "] a déjà un match à [domicile] dans la [" . $rencontre->getCalendrier()->getJournee()->getDescription() . "]"
+            ]);
+        }
+
         // On ajoute le match à domicile
         $match_domicile = $this->repository->new();
         $match_domicile->setRencontre($rencontre);
@@ -174,8 +187,13 @@ HTML;
         $this->em->persist(object: $match_exterieur);
         $this->em->flush();
 
+        // On récupère la liste des rencontres pour l'affichage dans le contenu_rencontre
+        $d_rencontre = $this->repository->getRencontre($id_rencontre);
+        $liste_rencontres = $this->liste_rencontre($this->repository, $d_rencontre->getCalendrier()->getId());
+
         return new JsonResponse(data: [
             'code' => self::SUCCES,
+            'data' => Utilitaire::checkbox_rencontre(datas: $liste_rencontres[1]),
         ]);
     }
 
@@ -200,5 +218,73 @@ HTML;
 
         $this->em->flush();
         return new JsonResponse(data: ['code' => self::SUCCES]);
+    }
+
+    public function actionSupprimer(mixed ...$donnees): JsonResponse
+    {
+        $objet = $this->repository->findOneBy(criteria: ['id' => $donnees[0]]);
+        if ($objet !== null) {
+            return $this->actionSupprimerSucces(objet: $objet);
+        } else {
+            return $this->actionSupprimerEchec();
+        }
+    }
+
+    protected function actionSupprimerSucces(mixed $objet): JsonResponse
+    {
+        // On récupère les match selon la rencontre
+        $liste_match = $this->repository->findBy(criteria: ['rencontre' => $objet->getRencontre()->getId()]);
+
+        foreach ($liste_match as $match) {
+            $this->em->remove(object: $match);
+        }
+        $this->em->flush();
+
+        // On récupère la liste des rencontres pour l'affichage dans le contenu_rencontre
+        $id_calendrier = $objet->getRencontre()->getCalendrier()->getId();
+        $liste_rencontres = $this->liste_rencontre($this->repository, $id_calendrier);
+
+        $data = [
+            'message' => 'Votre données a bien été supprimée.',
+            'html' => Utilitaire::checkbox_rencontre(datas: $liste_rencontres[1]),
+        ];
+
+        return new JsonResponse(data: [
+            'code' => self::SUCCES,
+            'data' => $data,
+        ]);
+    }
+
+    private function liste_rencontre(mixed ...$donnees): array
+    {
+        $retour = [];
+
+        $liste_rencontres = ($donnees[0])->getListeRencontres(id_calendrier: $donnees[1]);
+        $liste_matchs = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1]);
+        $t_rencontres = [];
+        $r_trouve = false;
+
+        // On conserve les rencontres qui n'ont fait l'objet de match
+        foreach ($liste_rencontres as $rencontre) {
+            $r_trouve = false;
+            foreach ($liste_matchs as $match) {
+                if ($rencontre->getId() == $match->getRencontre()->getId()) {
+                    $r_trouve = true;
+                    break;
+                }
+            }
+
+            // On conserve la rencontre
+            if (!$r_trouve) {
+                $t_rencontres[] = $rencontre;
+            }
+        }
+
+        $retour = [
+            0 => $liste_rencontres,
+            1 => $t_rencontres,
+        ];
+
+        return $retour;
     }
 }

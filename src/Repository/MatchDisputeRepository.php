@@ -153,6 +153,22 @@ class MatchDisputeRepository extends ServiceEntityRepository
             ->leftJoin('x.rencontre', 'r')          
             ->andWhere('r.calendrier = :id_calendrier')
             ->setParameter(key: 'id_calendrier', value: $id_calendrier)
+            ->orderBy(sort: 'x.id', order: 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findMatchByCalendrierByCubByPreponderance(int $id_calendrier, int $id_club, int $id_preponderance) : array
+    {
+        return $this->createQueryBuilder(alias: 'x')
+            ->leftJoin('x.rencontre', 'r')          
+            ->andWhere('r.calendrier = :id_calendrier AND x.equipeSaison = :id_club AND x.preponderance = :id_preponderance')
+            ->setParameters(parameters: new ArrayCollection(elements: [
+                new Parameter(name: 'id_calendrier', value: $id_calendrier),
+                new Parameter(name: 'id_club', value: $id_club),
+                new Parameter(name: 'id_preponderance', value: $id_preponderance),
+            ]))
             ->getQuery()
             ->getResult()
         ;
