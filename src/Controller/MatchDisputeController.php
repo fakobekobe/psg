@@ -96,11 +96,20 @@ final class MatchDisputeController extends AbstractController
     public function periode(int $id): Response
     {
         /**
-         * Cette méthode du controller permet la suppression d'un objet
+         * Cette méthode du controller permet le chargement des équipes
          */
         return $this->controlleur->periode(
             $this->repository, 
             $id,
         );
+    }
+
+    #[Route(path: '/statistique', name: self::PREFIX_NAME . '_statistique', methods: ["POST"])]
+    public function statistique(Request $request) : Response
+    {
+        /**
+         * Cette méthode statistique du controller permet l'ajout des statistiques
+         */
+        return $this->controlleur->statistique($request, $this->repository, $this->em);
     }
 }

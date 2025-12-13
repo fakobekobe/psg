@@ -151,6 +151,12 @@ HTML;
         ]);
     }
 
+    public function statistique(mixed ...$donnees): JsonResponse
+    {
+        
+        return new JsonResponse(data:['code' => 'SUCCES', 'data' => 'ok']);
+    }
+
     private function liste_rencontre(mixed ...$donnees): array
     {
         $retour = [];
