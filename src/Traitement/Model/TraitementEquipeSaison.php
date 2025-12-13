@@ -54,7 +54,7 @@ class TraitementEquipeSaison extends TraitementAbstrait
             $championnat . $separateur . 
             $equipe . $separateur . 
             $entraineur . $separateur . 
-            $this->lien_a(id: $data->getId(), nom: $nom) . $v;
+            $this->lien_a($data->getId(), $nom) . $v;
         }
 
         return $tab;

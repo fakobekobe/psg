@@ -1,6 +1,7 @@
 // Les variables locales
 let P_URL = 'match',
-    NOM_FORM = "match_dispute_";
+    NOM_FORM = "match_dispute_",
+    ID_RENCONTRE = 0;
 const URL_SELECT = "calendrier";
 const PLACEHOLDER = "Calendrier";
 
@@ -160,7 +161,7 @@ function action_ajouter(
             icon: "success",
             timer: 1500
         });
-        console.log(data);
+
         // On recharge le contenu
         contenu_rencontre.html(data);
 
@@ -342,7 +343,6 @@ function action_supprimer(
         });
 
         // On recharge le contenu des rencontres
-        console.log(data.html);
         contenu_rencontre.html(data.html);
 
         // On charge les nouvelles données avec la fonction de l'action liste
@@ -360,6 +360,68 @@ function action_supprimer(
     };
 }
 
+// Rédéfinition de la Fonction de ciblage d'onglet
+function cible_onglet(P_BTN, P_SOURCE, P_CIBLE, NOM_TABLEAU, URL) {
+    // Les variables globales
+    let table = $('#' + NOM_TABLEAU);
+
+    table.on('click', '.' + P_BTN + 'Btn', function (e) {
+        e.preventDefault();
+        
+        // On change d'onglet
+        let source_tab = $('#' + P_SOURCE + '-tab'),
+            cible_tab = $('#' + P_CIBLE + '-tab'),
+            source = $('#' + P_SOURCE),
+            cible = $('#' + P_CIBLE); 
+
+        source_tab.removeClass('active');
+        source_tab.attr('aria-selected', 'false');
+        source.removeClass('show active');
+
+        cible_tab.addClass('active');
+        cible_tab.attr('aria-selected', 'true');
+        cible.addClass('show active');
+
+        // On charge les données des équipes
+        let url_fetch = "/" + URL + "/periode/" + this.dataset.id;
+
+        fetch(url_fetch)
+        .then(reponse => reponse.json())
+        .then(json => traitementJson(json));
+    });
+
+    const traitementJson = function (data) {
+        switch (data.code) {
+            case 'SUCCES':
+                traitement_succes(data.data);
+                break;
+
+            case 'ECHEC':
+                traitement_echec(data.message);
+                break;
+        }
+    };
+
+    const traitement_succes = function (data) {
+         // On recharge le contenu des rencontres
+         let stat_contenu_domicile = $('#stat_contenu_domicile'),
+            stat_contenu_exterieur = $('#stat_contenu_exterieur');
+        stat_contenu_domicile.html(data.domicile);
+        stat_contenu_exterieur.html(data.exterieur);
+        ID_RENCONTRE = this.dataset.id; 
+    };
+
+    const traitement_echec = function (message) {
+        Swal.fire({
+            title: "Erreur !",
+            text: message,
+            icon: "erreur",
+            timer: 3000
+        });
+    };
+
+}
+
 // Appel des fonctions d'action-------------
 
 // Exécution de la fonction de l'action ajouter
@@ -373,3 +435,81 @@ valider1(P_URL);
 
 // action Supprimer
 action_supprimer(P_URL);
+
+//-------------- GESTION DU VOLET STATISTIQUES -----------------------
+
+// Définition des fonctions
+function select_periode()
+{
+    let periode = $('#match_periode'),
+        score_d = $('#score_d'),
+        score_e = $('#score_e'),
+        possession_d = $('#possession_d'),
+        possession_e = $('#possession_e'),
+        total_tir_d = $('#total_tir_d'),
+        total_tir_e = $('#total_tir_e'),
+        tir_cadre_d = $('#tir_cadre_d'),
+        tir_cadre_e = $('#tir_cadre_e'),
+        grosse_chance_d = $('#grosse_chance_d'),
+        grosse_chance_e = $('#grosse_chance_e'),
+        corner_d = $('#corner_d'),
+        corner_e = $('#corner_e'),
+        carton_jaune_d = $('#carton_jaune_d'),
+        carton_jaune_e = $('#carton_jaune_e'),
+        carton_rouge_d = $('#carton_rouge_d'),
+        carton_rouge_e = $('#carton_rouge_e'),
+        hors_jeu_d = $('#hors_jeu_d'),
+        hors_jeu_e = $('#hors_jeu_e'),
+        coup_franc_d = $('#coup_franc_d'),
+        coup_franc_e = $('#coup_franc_e'),
+        touche_d = $('#touche_d'),
+        touche_e = $('#touche_e'),
+        faute_d = $('#faute_d'),
+        faute_e = $('#faute_e'),
+        tacle_d = $('#tacle_d'),
+        tacle_e = $('#tacle_e'),
+        arret_d = $('#arret_d'),
+        arret_e = $('#arret_e');
+    ;
+
+    periode.on('change', function(e){
+        score_d.val(0);
+        score_e.val(0);
+        possession_d.val(0);
+        possession_e.val(0);
+        total_tir_d.val(0);
+        total_tir_e.val(0);
+        tir_cadre_d.val(0);
+        tir_cadre_e.val(0);
+        grosse_chance_d.val(0);
+        grosse_chance_e.val(0);
+        corner_d.val(0);
+        corner_e.val(0);
+        carton_jaune_d.val(0);
+        carton_jaune_e.val(0);
+        carton_rouge_d.val(0);
+        carton_rouge_e.val(0);
+        hors_jeu_d.val(0);
+        hors_jeu_e.val(0);
+        coup_franc_d.val(0);
+        coup_franc_e.val(0);
+        touche_d.val(0);
+        touche_e.val(0);
+        faute_d.val(0);
+        faute_e.val(0);
+        tacle_d.val(0);
+        tacle_e.val(0);
+        arret_d.val(0);
+        arret_e.val(0);
+    });
+
+    
+}
+//--------------------
+
+
+// On cible l'onglet statistique
+cible_onglet('stat', P_URL, 'statistique', 'dataTable', P_URL);
+
+// appel de ma fonction select période
+select_periode();

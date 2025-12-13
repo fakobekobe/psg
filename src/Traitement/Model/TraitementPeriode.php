@@ -41,7 +41,7 @@ class TraitementPeriode extends TraitementAbstrait
             $v = ($i != $nb) ? '!x!':'';
             $tab .=  $i . $separateur . 
             $libelle . $separateur . 
-            $this->lien_a(id: $data->getId(), nom: $libelle) . $v;
+            $this->lien_a($data->getId(), $libelle) . $v;
         }
 
         return $tab;

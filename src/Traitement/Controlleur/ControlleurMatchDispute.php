@@ -52,8 +52,11 @@ class ControlleurMatchDispute extends ControlleurAbstrait
             'attr' => ['id' => $donnees[3]],
         ]);
 
+        $periode = ($donnees[1])->create(type: $donnees[6]);
+
         $form->handleRequest(request: $donnees[4]);
         $retour['form'] = $form;
+        $retour['periode'] = $periode;
 
         if (($donnees[4])->request->get('rencontre') ?? null) {
             $estValide = true;
@@ -99,6 +102,53 @@ class ControlleurMatchDispute extends ControlleurAbstrait
         // On appelle la méthode getTraitement qui nous retourne un objet de type traitementInterface
         // Ensuite on appelle la méthode appropriée pour traiter l'action
         return ($donnees[0])->getTraitement()->actionSupprimer($donnees[2]);
+    }
+
+    public function periode(mixed ...$donnees): JsonResponse
+    {
+        // Les variables à charger avec les valeurs de la configuration depuis le repository
+        $id_preponderance_domicile = 1;
+        $id_preponderance_exterieur = 2;
+        $data = [];
+
+        // On récupère la liste des matchs selon l'id_rencontre
+        $liste_match = ($donnees[0])->findBy(['rencontre' => $donnees[1]]); 
+
+        if(!$liste_match)
+        {
+            return new JsonResponse(data: [
+                'code' => 'ECHEC',
+                'data' => "Cette rencontre n'existe pas."
+            ]);
+        }
+        
+        foreach($liste_match as $match)
+        {
+            if($match->getPreponderance()->getId() == $id_preponderance_domicile)
+            {
+                $logo = Utilitaire::afficher_image_circulaire(path: $match->getEquipeSaison()->getEquipe()->getLogo());
+                $equipe = $match->getEquipeSaison()->getEquipe()->getNom();
+
+                $data['domicile'] = <<<HTML
+                {$logo}
+				<h4>{$equipe}</h4>
+HTML;
+            }else if($match->getPreponderance()->getId() == $id_preponderance_exterieur)
+            {
+                $logo = Utilitaire::afficher_image_circulaire(path: $match->getEquipeSaison()->getEquipe()->getLogo());
+                $equipe = $match->getEquipeSaison()->getEquipe()->getNom();
+
+                $data['exterieur'] = <<<HTML
+                {$logo}
+				<h4>{$equipe}</h4>
+HTML;
+            }
+        }
+
+        return new JsonResponse(data: [
+            'code' => 'SUCCES',
+            'data' => $data
+        ]);
     }
 
     private function liste_rencontre(mixed ...$donnees): array

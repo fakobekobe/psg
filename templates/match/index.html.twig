@@ -12,78 +12,327 @@
 			</div>
 		</div>
 
+		<!-- Les onglets -->
 		<div class="row">
-			<div class="col-lg-12 d-flex grid-margin stretch-card">
-				<div class="card">
-					<div class="card-body">
-						<h3 class="text-center bg-info p-0 p-2 m-0">Sélectionner les champs pour déterminer la rencontre et les équipes</h4>
-							{{form_start(form)}}
-						<div class="row mb-3 bg-info pt-3">
-                            <div class="col-lg-3">
-								{{form_row(form.saison)}}
+			<div class="card col-lg-12">
+				<div class="card-header">
+					<ul class="nav nav-tabs card-header-tabs pull-right" id="myTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="match-tab" data-toggle="tab" href="#match" role="tab" aria-controls="match" aria-selected="true">Match</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" id="statistique-tab" data-toggle="tab" href="#statistique" role="tab" aria-controls="statistique" aria-selected="false">Statistique</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="card-body p-0">
+					<div
+						class="tab-content" id="myTabContent">
+						<!-- Match -->
+						<div class="tab-pane fade show active" id="match" role="tabpanel" aria-labelledby="match-tab">
+
+							<div class="row">
+								<div class="col-lg-12 d-flex grid-margin stretch-card">
+									<div class="card">
+										<div class="card-body">
+											<h3 class="text-center bg-info p-0 p-2 m-0">Sélectionner les champs pour déterminer la rencontre et les équipes</h3>
+											{{form_start(form)}}
+											<div class="row mb-3 bg-info pt-3">
+												<div class="col-lg-3">
+													{{form_row(form.saison)}}
+												</div>
+												<div class="col-lg-3">
+													{{form_row(form.championnat)}}
+												</div>
+												<div class="col-lg-3">
+													{{form_row(form.calendrier)}}
+												</div>
+												<div class="col-lg-3">
+													<button class="btn btn-primary btn-block p-0" id="valider_1" style="font-size:1.4em;">
+														<i class="typcn typcn-input-checked" style="font-size:1.6em;"></i>
+														Valider</button>
+												</div>
+											</div>
+											{{form_end(form)}}
+
+											<div
+												class="row mt-3 mb-5">
+												<!-- Liste des Rencontres -->
+												<div class="col-lg-6">
+													<h3 class="text-center">Cocher une rencontre</h3>
+													<div id="contenu_rencontre"></div>
+												</div>
+
+												<!-- Liste des équipes à domicile -->
+												<div class="col-lg-3">
+													<h3 class="text-center">Equipe à domicile</h3>
+													<div id="contenu_domicile"></div>
+												</div>
+
+												<!-- Liste des à l'extérieur -->
+												<div class="col-lg-3">
+													<h3 class="text-center">Equipe à l'extérieur</h3>
+													<div id="contenu_exterieur"></div>
+												</div>
+											</div>
+
+											<!-- BTN Enregister -->
+											<div class="row justify-content-center">
+												<div class="col-lg-4">
+													<button class="btn btn-success btn-block p-0" id="enregistrer" style="font-size:1.4em;">
+														<i class="typcn typcn-export" style="font-size:1.6em;"></i>
+														Enregistrer</button>
+												</div>
+											</div>
+											<div class="row mb-5">
+												<div class="col-lg-12">
+													<hr/>
+												</div>
+											</div>
+
+											<!-- Début du Tableau -->
+											<div class="table-responsive">
+												<table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+													<thead>
+														<tr>
+															<th>N°</th>
+															<th>Calendrier</th>
+															<th>Equipe à domicile</th>
+															<th>Equipe à l'extérieur</th>
+															<th>Date</th>
+															<th>Heure</th>
+															<th>Température</th>
+															<th>Actions</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<!-- FIn du Tableau -->
+
+										</div>
+									</div>
+								</div>
 							</div>
-							<div class="col-lg-3">
-								{{form_row(form.championnat)}}
-							</div>
-							<div class="col-lg-3">
-								{{form_row(form.calendrier)}}
-							</div>							
-							<div class="col-lg-3">
-								<button class="btn btn-primary btn-block p-0" id="valider_1" style="font-size:1.4em;" ><i class="typcn typcn-input-checked" style="font-size:1.6em;"></i> Valider</button>
-							</div>
+
 						</div>
-							{{form_end(form)}}
 
-                        <div class="row mt-3 mb-5">
-                            <!-- Liste des Rencontres -->
-                            <div class="col-lg-6" >
-                                <h3 class="text-center">Cocher une rencontre</h3>
-                                <div id="contenu_rencontre"></div>
+						<!-- statistique -->
+						<div class="tab-pane fade" id="statistique" role="tabpanel" aria-labelledby="statistique-tab">
+
+							<div class="row">
+								<div class="col-lg-12 d-flex grid-margin stretch-card">
+									<div class="card">
+										<div class="card-body">
+											<h3 class="text-center bg-warning p-2">STATISTIQUES DU MATCH</h3>
+											<div class="row mb-3 pt-3 justify-content-center">
+
+												<div class="col-lg-4">
+													<h4 class="text-center">Equipe à domicile</h4>
+													<div id="stat_contenu_domicile" class="text-center">														
+													</div>
+												</div>
+
+												<div class="col-lg-4 text-center" >
+													<h4 class="text-center">Période</h4>
+													{{form(periode)}}
+												</div>
+
+												<div class="col-lg-4">
+													<h4 class="text-center">Equipe à l'extérieur</h4>
+													<div id="stat_contenu_exterieur" class="text-center">
+													</div>
+												</div>
+											</div>
+											<div
+												class="row mt-3 mb-5 justify-content-center">
+												<!-- Tableau des Stats -->
+												<div class="table-responsive">
+													<table class="table table-bordered table-striped" id="tStat" width="100%" cellspacing="0">
+														<tbody>
+															<tr>
+																<td>
+																	<input type="number" name="score_d" id="score_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">SCORES</td>
+																<td>
+																	<input type="number" name="score_e" id="score_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="possession_d" id="possession_d" class="form-control" min="0" step="0.1"  value="0">
+																</td>
+																<td class="text-center">POSSESSIONS</td>
+																<td>
+																	<input type="number" name="possession_e" id="possession_e"class="form-control" min="0" step="0.1" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="total_tir_d" id="total_tir_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">TOTAL DE TIRS</td>
+																<td>
+																	<input type="number" name="total_tir_e" id="total_tir_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="tir_cadre_d" id="tir_cadre_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">TIRS CADRES</td>
+																<td>
+																	<input type="number" name="tir_cadre_e" id="tir_cadre_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="grosse_chance_d" id="grosse_chance_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">GROSSES CHANCES</td>
+																<td>
+																	<input type="number" name="grosse_chance_e" id="grosse_chance_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="corner_d" id="corner_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">CORNERS</td>
+																<td>
+																	<input type="number" name="corner_e" id="corner_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="carton_jaune_d" id="carton_jaune_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">CARTONS JAUNES</td>
+																<td>
+																	<input type="number" name="carton_jaune_e" id="carton_jaune_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="carton_rouge_d" id="carton_rouge_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">CARTONS ROUGES</td>
+																<td>
+																	<input type="number" name="carton_rouge_e" id="carton_rouge_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="hors_jeu_d" id="hors_jeu_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">HORS-JEU</td>
+																<td>
+																	<input type="number" name="hors_jeu_e" id="hors_jeu_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="coup_franc_d" id="coup_franc_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">COUPS FRANCS</td>
+																<td>
+																	<input type="number" name="coup_franc_e" id="coup_franc_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="touche_d" id="touche_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">TOUCHES</td>
+																<td>
+																	<input type="number" name="touche_e" id="touche_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="faute_d" id="faute_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">FAUTES</td>
+																<td>
+																	<input type="number" name="faute_e" id="faute_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="tacle_d" id="tacle_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">TACLES</td>
+																<td>
+																	<input type="number" name="tacle_e" id="tacle_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+															<tr>
+																<td>
+																	<input type="number" name="arret_d" id="arret_d" class="form-control" min="0" value="0">
+																</td>
+																<td class="text-center">ARRÊTS</td>
+																<td>
+																	<input type="number" name="arret_e" id="arret_e" class="form-control" min="0" value="0">
+																</td>																
+															</tr>
+
+														</tbody>
+													</table>
+												</div>
+											</div>
+
+											<!-- BTN Enregister -->
+											<div class="row justify-content-center">
+												<div class="col-lg-4">
+													<button class="btn btn-success btn-block p-0" id="enregistrer_stat" style="font-size:1.4em;">
+														<i class="typcn typcn-export" style="font-size:1.6em;"></i>
+														Enregistrer</button>
+												</div>
+											</div>
+											<div class="row mb-5">
+												<div class="col-lg-12">
+													<hr/>
+												</div>
+											</div>
+
+											<!-- Début du Tableau -->
+											<div class="table-responsive">
+												<table class="table table-bordered table-striped" id="dataTableStat" width="100%" cellspacing="0">
+													<thead>
+														<tr>
+															<th>N°</th>
+															<th>Calendrier</th>
+															<th>Equipe à domicile</th>
+															<th>Equipe à l'extérieur</th>
+															<th>Période</th>
+															<th>Score</th>
+															<th>Actions</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<!-- FIn du Tableau -->
+
+										</div>
+									</div>
+								</div>
 							</div>
 
-                            <!-- Liste des équipes à domicile -->
-                            <div class="col-lg-3">
-							<h3 class="text-center">Equipe à domicile</h3>
-                                <div id="contenu_domicile"></div>
-							</div>
-
-                            <!-- Liste des à l'extérieur -->
-                            <div class="col-lg-3">
-							<h3 class="text-center">Equipe à l'extérieur</h3>
-                                <div id="contenu_exterieur"></div>
-							</div>
-                        </div>
-
-						<!-- BTN Enregister -->
-						<div class="row justify-content-center">
-							<div class="col-lg-4">
-								<button class="btn btn-success btn-block p-0" id="enregistrer" style="font-size:1.4em;" ><i class="typcn typcn-export" style="font-size:1.6em;"></i> Enregistrer</button>
-							</div>
 						</div>
-						<div class="row mb-5">
-							<div class="col-lg-12">
-								<hr />
-							</div>
-						</div>
-
-						<!-- Début du Tableau -->
-						<div class="table-responsive">
-							<table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
-								<thead>
-									<tr>
-										<th>N°</th>
-										<th>Calendrier</th>
-										<th>Equipe à domicile</th>
-										<th>Equipe à l'extérieur</th>
-										<th>Date</th>
-										<th>Heure</th>
-										<th>Température</th>
-										<th>Actions</th>
-									</tr>
-								</thead>
-							</table>
-						</div>
-						<!-- FIn du Tableau -->
 
 					</div>
 				</div>

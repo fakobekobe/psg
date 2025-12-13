@@ -41,7 +41,7 @@ class TraitementChampionnat extends TraitementAbstrait
             $v = ($i != $nb) ? '!x!':'';
             $tab .=  $i . $separateur . 
             $nom . $separateur . 
-            $this->lien_a(id: $data->getId(), nom: $nom) . $v;
+            $this->lien_a($data->getId(), $nom) . $v;
         }
 
         return $tab;

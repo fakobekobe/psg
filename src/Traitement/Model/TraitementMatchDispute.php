@@ -82,18 +82,18 @@ class TraitementMatchDispute extends TraitementAbstrait
                     $date . $separateur .
                     $heure . $separateur .
                     $temperature . $separateur .
-                    $this->lien_a(id: $data->getId(), nom: $nom) . $v;
+                    $this->lien_a($data->getId(), $id_rencontre, $nom) . $v;
             }
         }
         return $tab;
     }
 
-    protected function lien_a(int $id, string $nom): string
+    protected function lien_a(mixed ...$donnees): string
     {
         return <<<HTML
     <div class="d-sm-inline-flex">
-        <a href="#" class="text-white mr-1 text-success statBtn h1" title="Statistiques" data-id="$id"><i class="typcn typcn-chart-bar"></i></a>
-        <a href="#" class="text-white text-danger deleteBtn h1" title="Supprimer" data-id="$id" data-nom="$nom"><i class="typcn typcn-trash"></i></a>
+        <a href="#" class="text-white mr-1 text-success statBtn h1" title="Statistiques" data-id="{$donnees[1]}"><i class="typcn typcn-chart-bar"></i></a>
+        <a href="#" class="text-white text-danger deleteBtn h1" title="Supprimer" data-id="{$donnees[0]}" data-nom="{$donnees[2]}"><i class="typcn typcn-trash"></i></a>
     </div>
 HTML;
     }

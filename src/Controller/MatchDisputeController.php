@@ -11,6 +11,7 @@ use App\Repository\MatchDisputeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Form\MatchDisputeType;
+use App\Form\MatchType;
 use App\Traitement\Interface\ControlleurInterface;
 
 #[Route(path:'/match')]
@@ -46,6 +47,7 @@ final class MatchDisputeController extends AbstractController
             'form_type',
             $request,             
             $this->em, 
+            MatchType::class,
         );
 
         if($contenu['reponse'] instanceof Response)
@@ -54,6 +56,7 @@ final class MatchDisputeController extends AbstractController
         }else{
             return $this->render(view: 'match/index.html.twig', parameters: [
             'form' => $contenu['form']->createView(),
+            'periode' => $contenu['periode']->createView(),
         ]);
         }        
     }
@@ -85,6 +88,18 @@ final class MatchDisputeController extends AbstractController
         return $this->controlleur->supprimer(
             $this->repository, 
             $this->em,  
+            $id,
+        );
+    }
+
+    #[Route(path:'/periode/{id}', name: self::PREFIX_NAME . "_periode", methods: ["GET"], requirements: ['id' => '[0-9]+'])]
+    public function periode(int $id): Response
+    {
+        /**
+         * Cette méthode du controller permet la suppression d'un objet
+         */
+        return $this->controlleur->periode(
+            $this->repository, 
             $id,
         );
     }

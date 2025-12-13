@@ -41,7 +41,7 @@ class TraitementJournee extends TraitementAbstrait
             $v = ($i != $nb) ? '!x!':'';
             $tab .=  $i . $separateur . 
             $numero . $separateur . 
-            $this->lien_a(id: $data->getId(), nom: $numero) . $v;
+            $this->lien_a($data->getId(), $numero) . $v;
         }
 
         return $tab;

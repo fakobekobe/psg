@@ -236,12 +236,12 @@ abstract class TraitementAbstrait implements TraitementInterface
         return $tab;
     }
 
-    protected function lien_a(int $id, string $nom): string
+    protected function lien_a(mixed ...$donnees): string
     {
         return <<<HTML
     <div class="d-sm-inline-flex">
-        <a href="#" class="text-white mr-1 text-success editBtn h1" title="Modifier" data-id="$id" data-toggle="modal" data-target="#ajouterBackdrop"><i class="typcn typcn-edit"></i></a>
-        <a href="#" class="text-white text-danger deleteBtn h1" title="Supprimer" data-id="$id" data-nom="$nom"><i class="typcn typcn-trash"></i></a>
+        <a href="#" class="text-white mr-1 text-success editBtn h1" title="Modifier" data-id="{$donnees[0]}" data-toggle="modal" data-target="#ajouterBackdrop"><i class="typcn typcn-edit"></i></a>
+        <a href="#" class="text-white text-danger deleteBtn h1" title="Supprimer" data-id="{$donnees[0]}" data-nom="{$donnees[1]}"><i class="typcn typcn-trash"></i></a>
     </div>
 HTML;
     }
