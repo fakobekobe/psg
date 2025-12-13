@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormInterface;
 class PeriodeRepository extends ServiceEntityRepository
 {
     use TraitementTrait;
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private ManagerRegistry $registry)
     {
         parent::__construct($registry, Periode::class);
     }

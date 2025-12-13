@@ -607,6 +607,38 @@ function action_check_direct(PARM_URL, NOM_CHAMP, P_TABLE = "dataTableStat", NOM
     };
 }
 
+// Function liste des statistiques
+// Rédéfinition de l'Action liste
+function action_liste_stat(URL, NOM_TABLEAU, ID_RENCONTRE, ID_PERIODE) {
+    // Les variables globales
+    let URL_FETCH = "/" + URL + "/liste_statistique/" + ID_RENCONTRE + '/' + ID_PERIODE;
+    let table = $('#' + NOM_TABLEAU);
+
+    fetch(URL_FETCH)
+        .then(reponse => reponse.json())
+        .then(json => traitementJson(json));
+
+    const traitementJson = function (data) {
+        switch (data.code) {
+            case 'SUCCES':
+                traitement_succes(data.html);
+                break;
+
+            case 'ECHEC':
+                traitement_echec();
+                break;
+        }
+    };
+
+    const traitement_succes = function (html) {
+        tableau_data(table, html);
+    };
+
+    const traitement_echec = function () {
+        tableau_vide(NOM_TABLEAU, table)
+    };
+}
+
 // Fonction ajouter  statistique
 function action_ajouter_stat(
     PREFIX_URL,
@@ -617,7 +649,9 @@ function action_ajouter_stat(
     const URL_LISTE = PREFIX_URL;
     let PREFIX_URL_U = '/' + PREFIX_URL + '/modifier/',
         URL = '/' + PREFIX_URL + '/statistique',
-        loader = $('#bloc-loader');
+        loader = $('#bloc-loader'),
+        periode = $('#match_periode');
+
 
     let btn = $('#' + NOM_BTN_AJOUTER);
 
@@ -636,7 +670,6 @@ function action_ajouter_stat(
 
         // Les variables
         let data = new FormData();
-        periode = $('#match_periode');
 
         if(!periode.val())
         {
@@ -736,8 +769,6 @@ function action_ajouter_stat(
 
         switch (data.code) {
             case 'SUCCES':
-                alert(data.data);
-                return;
                 traitement_succes();
                 break;
 
@@ -771,7 +802,7 @@ function action_ajouter_stat(
         }
 
         // On charge les nouvelles données avec la fonction de l'action liste
-        //action_liste_stat(URL_LISTE, NOM_TABLEAU);
+        action_liste_stat(URL_LISTE, NOM_TABLEAU, ID_RENCONTRE, periode.val());
     };
 
     const traitement_echec = function (erreur) {

@@ -5,8 +5,10 @@ namespace App\Repository;
 use App\Entity\Calendrier;
 use App\Entity\EquipeSaison;
 use App\Entity\MatchDispute;
+use App\Entity\Periode;
 use App\Entity\Preponderance;
 use App\Entity\Rencontre;
+use App\Entity\Statistique;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -178,5 +180,17 @@ class MatchDisputeRepository extends ServiceEntityRepository
     {
         $this->setRepository(repository: new StatistiqueRepository(registry: $this->registry));
         return $this->getRepository()->findStatistiqueByMatchByPeriode(id_match: $id_match, id_periode: $id_periode);
+    }
+
+    public function statistique(): ?Statistique
+    {
+        $this->setRepository(repository: new StatistiqueRepository(registry: $this->registry));
+        return $this->getRepository()->new();
+    }
+
+    public function periode(int $id_periode): ?Periode
+    {
+        $this->setRepository(repository: new PeriodeRepository(registry: $this->registry));
+        return $this->getRepository()->findOneBy(criteria: ['id' => $id_periode]);
     }
 }

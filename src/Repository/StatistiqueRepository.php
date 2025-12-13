@@ -21,6 +21,11 @@ class StatistiqueRepository extends ServiceEntityRepository
         parent::__construct($registry, Statistique::class);
     }
 
+    public function new(): Statistique
+    {
+        return new Statistique;
+    }
+
     public function findStatistiqueByMatchByPeriode(int $id_match, int $id_periode) : int
     {
         $retour = $this->createQueryBuilder(alias: 'x')
