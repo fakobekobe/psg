@@ -176,7 +176,7 @@ class MatchDisputeRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findStatistiqueByMatchByPeriode(int $id_match, int $id_periode) : int
+    public function findStatistiqueByMatchByPeriode(int $id_match, int $id_periode) : ?Statistique
     {
         $this->setRepository(repository: new StatistiqueRepository(registry: $this->registry));
         return $this->getRepository()->findStatistiqueByMatchByPeriode(id_match: $id_match, id_periode: $id_periode);
@@ -192,5 +192,11 @@ class MatchDisputeRepository extends ServiceEntityRepository
     {
         $this->setRepository(repository: new PeriodeRepository(registry: $this->registry));
         return $this->getRepository()->findOneBy(criteria: ['id' => $id_periode]);
+    }
+
+    public function periodes(): array
+    {
+        $this->setRepository(repository: new PeriodeRepository(registry: $this->registry));
+        return $this->getRepository()->findAll();
     }
 }

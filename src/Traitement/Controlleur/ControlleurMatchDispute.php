@@ -154,48 +154,46 @@ HTML;
         $id_preponderance_exterieur = 2;
 
         // Les variables
-        $score_d = ($donnees[0])->request->get('score_d');
-        $score_e = ($donnees[0])->request->get('score_e');
-        $possession_d = ($donnees[0])->request->get('possession_d');
-        $possession_e = ($donnees[0])->request->get('possession_e');
-        $total_tir_d = ($donnees[0])->request->get('total_tir_d');
-        $total_tir_e = ($donnees[0])->request->get('total_tir_e');
-        $tir_cadre_d = ($donnees[0])->request->get('tir_cadre_d');
-        $tir_cadre_e = ($donnees[0])->request->get('tir_cadre_e');
-        $grosse_chance_d = ($donnees[0])->request->get('grosse_chance_d');
-        $grosse_chance_e = ($donnees[0])->request->get('grosse_chance_e');
-        $corner_d = ($donnees[0])->request->get('corner_d');
-        $corner_e = ($donnees[0])->request->get('corner_e');
-        $carton_jaune_d = ($donnees[0])->request->get('carton_jaune_d');
-        $carton_jaune_e = ($donnees[0])->request->get('carton_jaune_e');
-        $carton_rouge_d = ($donnees[0])->request->get('carton_rouge_d');
-        $carton_rouge_e = ($donnees[0])->request->get('carton_rouge_e');
-        $hors_jeu_d = ($donnees[0])->request->get('hors_jeu_d');
-        $hors_jeu_e = ($donnees[0])->request->get('hors_jeu_e');
-        $coup_franc_d = ($donnees[0])->request->get('coup_franc_d');
-        $coup_franc_e = ($donnees[0])->request->get('coup_franc_e');
-        $touche_d = ($donnees[0])->request->get('touche_d');
-        $touche_e = ($donnees[0])->request->get('touche_e');
-        $faute_d = ($donnees[0])->request->get('faute_d');
-        $faute_e = ($donnees[0])->request->get('faute_e');
-        $tacle_d = ($donnees[0])->request->get('tacle_d');
-        $tacle_e = ($donnees[0])->request->get('tacle_e');
-        $arret_d = ($donnees[0])->request->get('arret_d');
-        $arret_e = ($donnees[0])->request->get('arret_e');
+        $score_d = (int)($donnees[0])->request->get('score_d');
+        $score_e = (int)($donnees[0])->request->get('score_e');
+        $possession_d = (float)($donnees[0])->request->get('possession_d');
+        $possession_e = (int)($donnees[0])->request->get('possession_e');
+        $total_tir_d = (int)($donnees[0])->request->get('total_tir_d');
+        $total_tir_e = (int)($donnees[0])->request->get('total_tir_e');
+        $tir_cadre_d = (int)($donnees[0])->request->get('tir_cadre_d');
+        $tir_cadre_e = (int)($donnees[0])->request->get('tir_cadre_e');
+        $grosse_chance_d = (int)($donnees[0])->request->get('grosse_chance_d');
+        $grosse_chance_e = (int)($donnees[0])->request->get('grosse_chance_e');
+        $corner_d = (int)($donnees[0])->request->get('corner_d');
+        $corner_e = (int)($donnees[0])->request->get('corner_e');
+        $carton_jaune_d = (int)($donnees[0])->request->get('carton_jaune_d');
+        $carton_jaune_e = (int)($donnees[0])->request->get('carton_jaune_e');
+        $carton_rouge_d = (int)($donnees[0])->request->get('carton_rouge_d');
+        $carton_rouge_e = (int)($donnees[0])->request->get('carton_rouge_e');
+        $hors_jeu_d = (int)($donnees[0])->request->get('hors_jeu_d');
+        $hors_jeu_e = (int)($donnees[0])->request->get('hors_jeu_e');
+        $coup_franc_d = (int)($donnees[0])->request->get('coup_franc_d');
+        $coup_franc_e = (int)($donnees[0])->request->get('coup_franc_e');
+        $touche_d = (int)($donnees[0])->request->get('touche_d');
+        $touche_e = (int)($donnees[0])->request->get('touche_e');
+        $faute_d = (int)($donnees[0])->request->get('faute_d');
+        $faute_e = (int)($donnees[0])->request->get('faute_e');
+        $tacle_d = (int)($donnees[0])->request->get('tacle_d');
+        $tacle_e = (int)($donnees[0])->request->get('tacle_e');
+        $arret_d = (int)($donnees[0])->request->get('arret_d');
+        $arret_e = (int)($donnees[0])->request->get('arret_e');
 
-        $id_periode = ($donnees[0])->request->get('periode');
-        $id_rencontre = ($donnees[0])->request->get('rencontre');
-
-        $periode = ($donnees[0])->periode($id_periode);
+        $id_periode = (int)($donnees[0])->request->get('periode');
+        $id_rencontre = (int)($donnees[0])->request->get('rencontre');
+        $periode = ($donnees[1])->periode($id_periode);
 
         // Liste des matchs selon la rencontre
         $liste_match = ($donnees[1])->findBy(['rencontre' => $id_rencontre]);
-        //findStatistiqueByMatchByPeriode(int $id_match, int $id_periode)
 
         foreach ($liste_match as $match) {
             // On vérifie si cette équipe (MatchDispute) possède déjà des statistiques dans la période
             if (($donnees[1])->findStatistiqueByMatchByPeriode(id_match: $match->getId(), id_periode: $id_periode)) {
-                return new JsonResponse(data: ['code' => 'ECHEC', 'erreur' => 'Cette rencontre possède déjà des statistiques.']);
+                return new JsonResponse(data: ['code' => 'ECHEC', 'erreur' => "Ce match possède déjà des statistiques de la [{$periode->getLibelle()}]."]);
             }
 
             // Pas de statistique
@@ -239,7 +237,7 @@ HTML;
                 ($donnees[2])->persist($statistique);
             }
 
-            ($donnees[2])->flus();
+            ($donnees[2])->flush();
         }
 
         return new JsonResponse(data: ['code' => 'SUCCES']);
@@ -249,7 +247,7 @@ HTML;
     {
         $retour = [];
 
-        $liste_rencontres = ($donnees[1])->getListeRencontres(id_calendrier: $donnees[1]);
+        $liste_rencontres = ($donnees[0])->getListeRencontres(id_calendrier: $donnees[1]);
         $liste_matchs = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1]);
         $t_rencontres = [];
         $r_trouve = false;
@@ -276,5 +274,84 @@ HTML;
         ];
 
         return $retour;
+    }
+
+    public function liste_statistique(mixed ...$donnees): JsonResponse
+    {
+        // Les variables à charger avec les valeurs de la configuration depuis le repository
+        $id_preponderance_domicile = 1;
+        $id_preponderance_exterieur = 2;
+
+        $statistique = null;
+        $data = [];
+        $cpt = 0;
+
+        // On récupère la liste des matchs
+        $liste_match = ($donnees[0])->findBy(['rencontre' => $donnees[1]]);
+        $periodes = ($donnees[0])->periodes();
+
+        // On parcours les périodes
+        foreach ($periodes as $periode) {
+
+            // On récutère le tableau des statistiques des 2 clubs
+            foreach ($liste_match as $match) {
+                $statistique = ($donnees[0])->findStatistiqueByMatchByPeriode(id_match: $match->getId(), id_periode: $periode->getId());
+                if ($statistique) {
+                    if ($match->getPreponderance()->getId() == $id_preponderance_domicile) {
+                        $data[$cpt]['domicile'] = $statistique;
+                    } else if ($match->getPreponderance()->getId() == $id_preponderance_exterieur) {
+                        $data[$cpt]['exterieur'] = $statistique;
+                    }
+                }
+            }
+            $cpt++;
+        }
+
+        // On charge les données de retour 
+        if ($data) {
+            return new JsonResponse(data: ['code' => 'SUCCES', 'html' => $this->chaine_data(donnees: $data)]);
+        } else {
+            return new JsonResponse(data: ['code' => 'ECHEC']);
+        }
+    }
+
+    private function chaine_data(mixed ...$donnees): string
+    {
+        $tab = "";
+        $i = 0;
+        $separateur = ';x;';
+        $nb = count(value: $donnees['donnees']);
+
+        foreach ($donnees['donnees'] as $data) {
+
+            $calendrier = ($data['domicile'])->getMatchDispute()->getRencontre()->getCalendrier()->getJournee()->getDescription();
+            $club_domicile = ($data['domicile'])->getMatchDispute()->getEquipeSaison()->getEquipe()->getNom();
+            $club_exterieur  = ($data['exterieur'])->getMatchDispute()->getEquipeSaison()->getEquipe()->getNom();
+            $periode = ($data['exterieur'])->getPeriode()->getLibelle();
+            $score = ($data['domicile'])->getScore() . ' - ' . ($data['exterieur'])->getScore();
+
+            $nom = $calendrier . ' => ' . $club_domicile . ' VS ' . $club_exterieur . ' => ' . $periode . ' => ' . $score;
+
+            $i++;
+            $v = ($i != $nb) ? '!x!' : '';
+            $tab .=  $i . $separateur .
+                $calendrier . $separateur .
+                $club_domicile . $separateur .
+                $club_exterieur . $separateur .
+                $periode . $separateur .
+                $score . $separateur .
+                $this->lien_a(($data['domicile'])->getMatchDispute()->getRencontre()->getId(), ($data['exterieur'])->getPeriode()->getId(), $nom) . $v;
+        }
+        return $tab;
+    }
+
+    private function lien_a(mixed ...$donnees): string
+    {
+        return <<<HTML
+    <div class="d-sm-inline-flex">
+        <a href="#" class="text-white mr-1 text-success editStatBtn h1" title="Statistiques" data-id_rencontre="{$donnees[0]}" data-id_periode="{$donnees[1]}"><i class="typcn typcn-edit"></i></a>
+        <a href="#" class="text-white text-danger deleteStatBtn h1" title="Supprimer" data-id_rencontre="{$donnees[0]}" data-id_periode="{$donnees[1]}" data-nom="{$donnees[2]}"><i class="typcn typcn-trash"></i></a>
+    </div>
+HTML;
     }
 }

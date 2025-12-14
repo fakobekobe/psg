@@ -26,19 +26,18 @@ class StatistiqueRepository extends ServiceEntityRepository
         return new Statistique;
     }
 
-    public function findStatistiqueByMatchByPeriode(int $id_match, int $id_periode) : int
+    public function findStatistiqueByMatchByPeriode(int $id_match, int $id_periode) : ?Statistique
     {
         $retour = $this->createQueryBuilder(alias: 'x')
-            ->select(['x.id'])        
             ->andWhere('x.matchDispute = :id_match AND x.periode = :id_periode')
             ->setParameters(parameters: new ArrayCollection(elements: [
                 new Parameter(name: 'id_match', value: $id_match),
                 new Parameter(name: 'id_periode', value: $id_periode),
             ]))
             ->getQuery()
-            ->getResult()
+            ->getResult()            
         ;
 
-        return $retour ? $retour[0]['id'] : 0;
+        return $retour ? $retour[0] : null;
     }
 }

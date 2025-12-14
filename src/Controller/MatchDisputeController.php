@@ -112,4 +112,27 @@ final class MatchDisputeController extends AbstractController
          */
         return $this->controlleur->statistique($request, $this->repository, $this->em);
     }
+
+    #[Route(path:'/liste_statistique/{id_rencontre}', name: self::PREFIX_NAME . "_liste_statistique", methods:["GET"], requirements: ['id_rencontre' => '[0-9]+'])]
+    public function liste_statistique(int $id_rencontre): Response
+    {        
+        /**
+         * Cette fonction liste_statistique du controller permet la gestion du retour de la liste des objets selon les variables
+         */
+        return $this->controlleur->liste_statistique($this->repository, $id_rencontre);
+    }
+
+    #[Route(path:'/supprimer_statistique/{id_rencontre}/{id_periode}', name: self::PREFIX_NAME . "_supprimer_statistique", methods: ["POST"], requirements: ['id_rencontre' => '[0-9]+', 'id_periode' => '[0-9]+'])]
+    public function supprimer_statistique(int $id_rencontre, int $id_periode): Response
+    {
+        /**
+         * Cette méthode du controller permet la suppression d'un objet
+         */
+        return $this->controlleur->supprimer_statistique(
+            $this->repository, 
+            $this->em,  
+            $id_rencontre,
+            $id_periode,
+        );
+    }
 }

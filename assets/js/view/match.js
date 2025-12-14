@@ -362,7 +362,7 @@ function action_supprimer(
 }
 
 // Rédéfinition de la Fonction de ciblage d'onglet
-function cible_onglet(P_BTN, P_SOURCE, P_CIBLE, NOM_TABLEAU, URL) {
+function cible_onglet(P_BTN, P_SOURCE, P_CIBLE, NOM_TABLEAU, URL, NOM_TABLEAU_STAT) {
     // Les variables globales
     let table = $('#' + NOM_TABLEAU),
         id = 0;
@@ -411,6 +411,9 @@ function cible_onglet(P_BTN, P_SOURCE, P_CIBLE, NOM_TABLEAU, URL) {
         stat_contenu_domicile.html(data.domicile);
         stat_contenu_exterieur.html(data.exterieur);
         ID_RENCONTRE = id;
+
+        // On charge les nouvelles données avec la fonction de l'action liste
+        action_liste_stat(URL, NOM_TABLEAU_STAT, ID_RENCONTRE);
     };
 
     const traitement_echec = function (message) {
@@ -609,9 +612,9 @@ function action_check_direct(PARM_URL, NOM_CHAMP, P_TABLE = "dataTableStat", NOM
 
 // Function liste des statistiques
 // Rédéfinition de l'Action liste
-function action_liste_stat(URL, NOM_TABLEAU, ID_RENCONTRE, ID_PERIODE) {
+function action_liste_stat(URL, NOM_TABLEAU, ID_RENCONTRE) {
     // Les variables globales
-    let URL_FETCH = "/" + URL + "/liste_statistique/" + ID_RENCONTRE + '/' + ID_PERIODE;
+    let URL_FETCH = "/" + URL + "/liste_statistique/" + ID_RENCONTRE;
     let table = $('#' + NOM_TABLEAU);
 
     fetch(URL_FETCH)
@@ -714,41 +717,38 @@ function action_ajouter_stat(
             arret_d = $('#arret_d'),
             arret_e = $('#arret_e');
 
-        data.append('score_d', score_d.val(0));
-        data.append('score_e', score_e.val(0));
-        data.append('possession_d', possession_d.val(0));
-        data.append('possession_e', possession_e.val(0));
-        data.append('total_tir_d', total_tir_d.val(0));
-        data.append('total_tir_e', total_tir_e.val(0));
-        data.append('tir_cadre_d', tir_cadre_d.val(0));
-        data.append('tir_cadre_e', tir_cadre_e.val(0));
-        data.append('grosse_chance_d', grosse_chance_d.val(0));
-        data.append('grosse_chance_e', grosse_chance_e.val(0));
-        data.append('corner_d', corner_d.val(0));
-        data.append('corner_e', corner_e.val(0));
-        data.append('carton_jaune_d', carton_jaune_d.val(0));
-        data.append('carton_jaune_e', carton_jaune_e.val(0));
-        data.append('carton_rouge_d', carton_rouge_d.val(0));
-        data.append('carton_rouge_e', carton_rouge_e.val(0));
-        data.append('hors_jeu_d', hors_jeu_d.val(0));
-        data.append('hors_jeu_e', hors_jeu_e.val(0));
-        data.append('coup_franc_d', coup_franc_d.val(0));
-        data.append('coup_franc_e', coup_franc_e.val(0));
-        data.append('touche_d', touche_d.val(0));
-        data.append('touche_e', touche_e.val(0));
-        data.append('faute_d', faute_d.val(0));
-        data.append('faute_e', faute_e.val(0));
-        data.append('tacle_d', tacle_d.val(0));
-        data.append('tacle_e', tacle_e.val(0));
-        data.append('arret_d', arret_d.val(0));
-        data.append('arret_e', arret_e.val(0));
-
-        data.append('periode', periode.val(0));
-        data.append('rencontre', ID_RENCONTRE);
-
-
         // On enregistre les données
+        data.append('score_d', score_d.val());
+        data.append('score_e', score_e.val());
+        data.append('possession_d', possession_d.val());
+        data.append('possession_e', possession_e.val());
+        data.append('total_tir_d', total_tir_d.val());
+        data.append('total_tir_e', total_tir_e.val());
+        data.append('tir_cadre_d', tir_cadre_d.val());
+        data.append('tir_cadre_e', tir_cadre_e.val());
+        data.append('grosse_chance_d', grosse_chance_d.val());
+        data.append('grosse_chance_e', grosse_chance_e.val());
+        data.append('corner_d', corner_d.val());
+        data.append('corner_e', corner_e.val());
+        data.append('carton_jaune_d', carton_jaune_d.val());
+        data.append('carton_jaune_e', carton_jaune_e.val());
+        data.append('carton_rouge_d', carton_rouge_d.val());
+        data.append('carton_rouge_e', carton_rouge_e.val());
+        data.append('hors_jeu_d', hors_jeu_d.val());
+        data.append('hors_jeu_e', hors_jeu_e.val());
+        data.append('coup_franc_d', coup_franc_d.val());
+        data.append('coup_franc_e', coup_franc_e.val());
+        data.append('touche_d', touche_d.val());
+        data.append('touche_e', touche_e.val());
+        data.append('faute_d', faute_d.val());
+        data.append('faute_e', faute_e.val());
+        data.append('tacle_d', tacle_d.val());
+        data.append('tacle_e', tacle_e.val());
+        data.append('arret_d', arret_d.val());
+        data.append('arret_e', arret_e.val());
 
+        data.append('periode', periode.val());
+        data.append('rencontre', ID_RENCONTRE);
 
         if (id_modifier) {
             URL = PREFIX_URL_U + id_modifier;
@@ -802,7 +802,7 @@ function action_ajouter_stat(
         }
 
         // On charge les nouvelles données avec la fonction de l'action liste
-        action_liste_stat(URL_LISTE, NOM_TABLEAU, ID_RENCONTRE, periode.val());
+        action_liste_stat(URL_LISTE, NOM_TABLEAU, ID_RENCONTRE);
     };
 
     const traitement_echec = function (erreur) {
@@ -810,16 +810,89 @@ function action_ajouter_stat(
             title: "Erreur",
             text: erreur,
             icon: "error",
-            timer: 3000
+            timer: 5000
         });
         return;
+    };
+}
+
+// Action supprimer
+function action_supprimer_stat(URL, NOM_TABLEAU = 'dataTableStat') {
+    // Les variables globales
+    let table = $('#' + NOM_TABLEAU),
+        id_rencontre = 0;
+    const URL_LISTE = URL;
+
+    table.on('click', '.deleteStatBtn', function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: "Voulez-vous supprimer cette ligne ?",
+            text: this.dataset.nom,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Oui, j\'en suis sûre !",
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                let URL_FETCH = "/" + URL + "/supprimer_statistique/" + this.dataset.id_rencontre + '/' + this.dataset.id_periode,
+                    data = new FormData();
+                    
+                id_rencontre = this.dataset.id_rencontre;
+                data.append('id_rencontre', this.dataset.id_rencontre);
+                data.append('id_periode', this.dataset.id_periode);
+
+                fetch(URL_FETCH, {
+                    method: 'POST',
+                    body: data
+                })
+                    .then(reponse => reponse.json())
+                    .then(json => traitementJson(json));
+            }
+        });
+    });
+
+    const traitementJson = function (data) {
+        switch (data.code) {
+            case 'SUCCES':
+                traitement_succes(data.message);
+                break;
+
+            case 'ECHEC':
+                traitement_echec(data.message);
+                break;
+        }
+    };
+
+    const traitement_succes = function (message) {
+        Swal.fire({
+            title: "Supression !",
+            text: message,
+            icon: "success",
+            timer: 1500
+        });
+
+        // On charge les nouvelles données avec la fonction de l'action liste
+        action_liste_stat(URL_LISTE, NOM_TABLEAU, id_rencontre);
+
+    };
+
+    const traitement_echec = function (message) {
+        Swal.fire({
+            title: "Supression !",
+            text: message,
+            icon: "danger",
+            timer: 3000
+        });
     };
 }
 //--------------------
 
 
 // On cible l'onglet statistique
-cible_onglet('stat', P_URL, 'statistique', 'dataTable', P_URL);
+cible_onglet('stat', P_URL, 'statistique', 'dataTable', P_URL, 'dataTableStat');
 
 // appel de ma fonction select période
 select_periode();
