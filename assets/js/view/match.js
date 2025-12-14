@@ -1,10 +1,12 @@
 // Les variables locales
 let P_URL = 'match',
+    P_URL_STATISTIQUE = 'statistique',
     NOM_FORM = "match_dispute_",
-    ID_RENCONTRE = 0,
-    texteTitre = 'Enregistrer';
-const URL_SELECT = "calendrier";
-const PLACEHOLDER = "Calendrier";
+    ID_RENCONTRE = 0;
+const URL_SELECT = "calendrier",
+    PLACEHOLDER = "Calendrier";
+    texteBtn = '<i class="typcn typcn-export" style="font-size:1.6em;"></i>	Enregistrer';
+
 
 // Rédéfinition de la méthode Action ajouter
 // Rédéfinition de l'Action liste
@@ -362,9 +364,10 @@ function action_supprimer(
 }
 
 // Rédéfinition de la Fonction de ciblage d'onglet
-function cible_onglet(P_BTN, P_SOURCE, P_CIBLE, NOM_TABLEAU, URL, NOM_TABLEAU_STAT) {
+function cible_onglet(P_BTN, P_SOURCE, P_CIBLE, NOM_TABLEAU, URL, URL_STAT, NOM_TABLEAU_STAT, BTN_STAT = "enregistrer_stat") {
     // Les variables globales
     let table = $('#' + NOM_TABLEAU),
+        BTN_ENRE_STAT = $('#' + BTN_STAT),
         id = 0;
 
     table.on('click', '.' + P_BTN + 'Btn', function (e) {
@@ -407,13 +410,18 @@ function cible_onglet(P_BTN, P_SOURCE, P_CIBLE, NOM_TABLEAU, URL, NOM_TABLEAU_ST
     const traitement_succes = function (data) {
         // On recharge le contenu des rencontres
         let stat_contenu_domicile = $('#stat_contenu_domicile'),
-            stat_contenu_exterieur = $('#stat_contenu_exterieur');
+            stat_contenu_exterieur = $('#stat_contenu_exterieur'),
+            periode = $('#match_periode');
+
         stat_contenu_domicile.html(data.domicile);
         stat_contenu_exterieur.html(data.exterieur);
         ID_RENCONTRE = id;
+        id_modifier = 0;
+        BTN_ENRE_STAT.html(texteBtn);
 
         // On charge les nouvelles données avec la fonction de l'action liste
-        action_liste_stat(URL, NOM_TABLEAU_STAT, ID_RENCONTRE);
+        action_liste_stat(URL_STAT, NOM_TABLEAU_STAT, ID_RENCONTRE);        
+        periode.focus();
     };
 
     const traitement_echec = function (message) {
@@ -426,7 +434,6 @@ function cible_onglet(P_BTN, P_SOURCE, P_CIBLE, NOM_TABLEAU, URL, NOM_TABLEAU_ST
     };
 
 }
-
 
 // Appel des fonctions d'action-------------
 
@@ -511,14 +518,21 @@ function select_periode() {
 }
 
 // Rédéfinition de l'Action check
-function action_check_direct(PARM_URL, NOM_CHAMP, P_TABLE = "dataTableStat", NOM_BTN = 'enregistrer_stat') {
-    let table = $('#' + P_TABLE);
+function action_check_direct(PARM_URL, P_TABLE = "dataTableStat", NOM_BTN = 'enregistrer_stat') {
+    let table = $('#' + P_TABLE),
+        loader = $('#bloc-loader');
 
-    table.on('click', '.statEditBtn', function (e) {
+    table.on('click', '.editStatBtn', function (e) {
+        e.preventDefault();
+        // Affichage du chargement
+        imageChargement(loader, 'flex');
+
         let $form = new FormData();
-        const id = this.dataset.id;
-        $form.append('id', id);
-        let URL_FETCH = "/" + PARM_URL + "/check/" + id;
+        const id_rencontre = this.dataset.id_rencontre,
+            id_periode = this.dataset.id_periode;
+        $form.append('id_rencontre', id_rencontre);
+        $form.append('id_periode', id_periode);
+        let URL_FETCH = "/" + PARM_URL + "/check/" + id_rencontre + '/' + id_periode;
 
         // On sauvegarde et on modifie le bouton du formulaire
         let Btn = $('#' + NOM_BTN);
@@ -533,6 +547,9 @@ function action_check_direct(PARM_URL, NOM_CHAMP, P_TABLE = "dataTableStat", NOM
             .then(json => traitementJson(json));
 
         const traitementJson = function (data) {
+            // Annulation du chargement
+            imageChargement(loader, 'none');
+        
             switch (data.code) {
                 case 'SUCCES':
                     traitement_succes(data.objet);
@@ -614,7 +631,7 @@ function action_check_direct(PARM_URL, NOM_CHAMP, P_TABLE = "dataTableStat", NOM
 // Rédéfinition de l'Action liste
 function action_liste_stat(URL, NOM_TABLEAU, ID_RENCONTRE) {
     // Les variables globales
-    let URL_FETCH = "/" + URL + "/liste_statistique/" + ID_RENCONTRE;
+    let URL_FETCH = "/" + URL + "/liste/" + ID_RENCONTRE;
     let table = $('#' + NOM_TABLEAU);
 
     fetch(URL_FETCH)
@@ -623,7 +640,7 @@ function action_liste_stat(URL, NOM_TABLEAU, ID_RENCONTRE) {
 
     const traitementJson = function (data) {
         switch (data.code) {
-            case 'SUCCES':
+            case 'SUCCES':    
                 traitement_succes(data.html);
                 break;
 
@@ -651,7 +668,7 @@ function action_ajouter_stat(
     // Les variables globales    
     const URL_LISTE = PREFIX_URL;
     let PREFIX_URL_U = '/' + PREFIX_URL + '/modifier/',
-        URL = '/' + PREFIX_URL + '/statistique',
+        URL = '',
         loader = $('#bloc-loader'),
         periode = $('#match_periode');
 
@@ -750,8 +767,9 @@ function action_ajouter_stat(
         data.append('periode', periode.val());
         data.append('rencontre', ID_RENCONTRE);
 
+        URL = '/' + PREFIX_URL;
         if (id_modifier) {
-            URL = PREFIX_URL_U + id_modifier;
+            URL = PREFIX_URL_U + ID_RENCONTRE + '/' + periode.val();
         }
 
         fetch(URL, {
@@ -787,6 +805,8 @@ function action_ajouter_stat(
         if (id_modifier) {
             title = 'Modification !';
             text = 'Votre modification a été effectuée avec succès.';
+            btn.html(texteBtn);
+            id_modifier = 0;
         }
 
         Swal.fire({
@@ -795,11 +815,6 @@ function action_ajouter_stat(
             icon: "success",
             timer: 1500
         });
-
-        if (id_modifier) {
-            btn.html(texteBtn);
-            id_modifier = 0;
-        }
 
         // On charge les nouvelles données avec la fonction de l'action liste
         action_liste_stat(URL_LISTE, NOM_TABLEAU, ID_RENCONTRE);
@@ -837,7 +852,7 @@ function action_supprimer_stat(URL, NOM_TABLEAU = 'dataTableStat') {
         }).then((result) => {
             if (result.isConfirmed) {
 
-                let URL_FETCH = "/" + URL + "/supprimer_statistique/" + this.dataset.id_rencontre + '/' + this.dataset.id_periode,
+                let URL_FETCH = "/" + URL + "/supprimer/" + this.dataset.id_rencontre + '/' + this.dataset.id_periode,
                     data = new FormData();
                     
                 id_rencontre = this.dataset.id_rencontre;
@@ -875,7 +890,7 @@ function action_supprimer_stat(URL, NOM_TABLEAU = 'dataTableStat') {
         });
 
         // On charge les nouvelles données avec la fonction de l'action liste
-        action_liste_stat(URL_LISTE, NOM_TABLEAU, id_rencontre);
+        action_liste_stat(URL, NOM_TABLEAU, id_rencontre);
 
     };
 
@@ -892,10 +907,16 @@ function action_supprimer_stat(URL, NOM_TABLEAU = 'dataTableStat') {
 
 
 // On cible l'onglet statistique
-cible_onglet('stat', P_URL, 'statistique', 'dataTable', P_URL, 'dataTableStat');
+cible_onglet('stat', P_URL, P_URL_STATISTIQUE, 'dataTable', P_URL, P_URL_STATISTIQUE, 'dataTableStat');
 
 // appel de ma fonction select période
 select_periode();
 
 // appel de la fonction ajouter statistique
-action_ajouter_stat(P_URL);
+action_ajouter_stat(P_URL_STATISTIQUE);
+
+// Appel de l'action check
+action_check_direct(P_URL_STATISTIQUE);
+
+// Appel de la fonction supprimer statistique
+action_supprimer_stat(P_URL_STATISTIQUE);

@@ -22,13 +22,7 @@ class TraitementMatchDispute extends TraitementAbstrait
 
     protected function getObjet(mixed ...$donnees): array
     {
-        $objet['id'] = ($donnees[0])->getId();
-        $objet['saison'] = ($donnees[0])->getEquipeSaison()->getSaison()->getId();
-        $objet['championnat'] = ($donnees[0])->getEquipeSaison()->getEquipe()->getChampionnat()->getId();
-        $objet['joueur'] = ($donnees[0])->getJoueur()->getId();
-        $liste = $this->repository->getListeEquipes(id_championnat: $objet['championnat']);
-        $objet['equipe'] = $liste ? Utilitaire::getOptionsSelect(objet: $liste, label: 'Equipe', index: ($donnees[0])->getEquipeSaison()->getEquipe()->getId()) : "<option value=\"\">--- Equipe ---</option>";
-        return $objet;
+        return [];
     }
 
     protected function chaine_data(mixed ...$donnees): string

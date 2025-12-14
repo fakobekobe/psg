@@ -137,7 +137,7 @@ abstract class TraitementAbstrait implements TraitementInterface
     {
         return new JsonResponse(data: [
             'code' => static::SUCCES,
-            'objet' => $this->getObjet($donnees[0], $donnees[1]) // Méthode abstraite définie dans les classes dérivées
+            'objet' => $this->getObjet($donnees[0], $donnees[1] ?? null) // Méthode abstraite définie dans les classes dérivées
         ]);
     }
 
