@@ -156,6 +156,7 @@ HTML;
          */
         if ($this->repository->findMatchByCalendrierByCubByPreponderance(
             $rencontre->getCalendrier()->getId(),
+            $rencontre->getSaison()->getId(),
             $id_domicile,
             $id_preponderance_domicile
         )) {
@@ -183,7 +184,7 @@ HTML;
 
         // On récupère la liste des rencontres pour l'affichage dans le contenu_rencontre
         $d_rencontre = $this->repository->getRencontre($id_rencontre);
-        $liste_rencontres = $this->liste_rencontre($this->repository, $d_rencontre->getCalendrier()->getId());
+        $liste_rencontres = $this->liste_rencontre($this->repository, $d_rencontre->getCalendrier()->getId(), $d_rencontre->getSaison()->getId());
 
         return new JsonResponse(data: [
             'code' => self::SUCCES,
@@ -236,7 +237,7 @@ HTML;
 
         // On récupère la liste des rencontres pour l'affichage dans le contenu_rencontre
         $id_calendrier = $objet->getRencontre()->getCalendrier()->getId();
-        $liste_rencontres = $this->liste_rencontre($this->repository, $id_calendrier);
+        $liste_rencontres = $this->liste_rencontre($this->repository, $id_calendrier, $objet->getRencontre()->getSaison()->getId());
 
         $data = [
             'message' => 'Votre données a bien été supprimée.',
@@ -253,8 +254,8 @@ HTML;
     {
         $retour = [];
 
-        $liste_rencontres = ($donnees[0])->getListeRencontres(id_calendrier: $donnees[1]);
-        $liste_matchs = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1]);
+        $liste_rencontres = ($donnees[0])->getListeRencontres(id_calendrier: $donnees[1], id_saison: $donnees[2]);
+        $liste_matchs = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1], id_saison: $donnees[2]);
         $t_rencontres = [];
         $r_trouve = false;
 

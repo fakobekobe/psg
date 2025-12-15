@@ -19,7 +19,7 @@ class ControlleurMatchDispute extends ControlleurAbstrait
         $id_calendrier = ($donnees[0])->request->all()['match_dispute']['calendrier'];
 
         // On récupère la liste des rencontres
-        $liste_rencontres = $this->liste_rencontre($donnees[1], $id_calendrier);
+        $liste_rencontres = $this->liste_rencontre($donnees[1], $id_calendrier, $id_saison);
         if (!$liste_rencontres[0]) {
             return new JsonResponse(data: ['code' => 'ECHEC', 'erreur' => "Cette rencontre n'existe pas."]);
         }
@@ -89,7 +89,7 @@ class ControlleurMatchDispute extends ControlleurAbstrait
         ($donnees[0])->initialiserTraitement(repository: $donnees[0]);
 
         // On récupère la liste des objets
-        $liste = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1]);
+        $liste = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1], id_saison: $donnees[2]);
 
         return (($donnees[0])->getTraitement())->actionLister($liste);
     }
@@ -150,8 +150,8 @@ HTML;
     {
         $retour = [];
 
-        $liste_rencontres = ($donnees[0])->getListeRencontres(id_calendrier: $donnees[1]);
-        $liste_matchs = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1]);
+        $liste_rencontres = ($donnees[0])->getListeRencontres(id_calendrier: $donnees[1], id_saison: $donnees[2]);
+        $liste_matchs = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1], id_saison: $donnees[2]);
         $t_rencontres = [];
         $r_trouve = false;
 

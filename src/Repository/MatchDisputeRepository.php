@@ -85,19 +85,23 @@ class MatchDisputeRepository extends ServiceEntityRepository
         return $retour ? $retour[0]['id'] : 0;
     }
 
-    public function getListeRencontres(int $id_calendrier) : array
+    public function getListeRencontres(int $id_calendrier, int $id_saison) : array
     {
         $this->setRepository(repository: new RencontreRepository(registry: $this->registry));
-        return $this->getRepository()->findBy(criteria: ['calendrier' => $id_calendrier]);
+        return $this->getRepository()->findBy(criteria: ['calendrier' => $id_calendrier, 'saison' => $id_saison]);
     }
 
-    public function findMatchDisputesByCalendrier(int $id_calendrier) : array
+    //--------------------------------------
+    public function findMatchDisputesByCalendrier(int $id_calendrier, int $id_saison) : array
     {
         return $this->createQueryBuilder(alias: 'x')
             ->select(['r.id',])  
             ->leftJoin('x.rencontre', 'r')          
-            ->andWhere('r.calendrier = :id_calendrier')
-            ->setParameter(key: 'id_calendrier', value: $id_calendrier)
+            ->andWhere('r.calendrier = :id_calendrier AND r.saison = :id_saison')
+            ->setParameters(parameters: new ArrayCollection(elements: [
+                new Parameter('id_calendrier', $id_calendrier),
+                new Parameter('id_saison', $id_saison),
+            ]))
             ->getQuery()
             ->getResult()
         ;
@@ -149,25 +153,30 @@ class MatchDisputeRepository extends ServiceEntityRepository
         return $this->getRepository()->findListeClubs(id_saison: $id_saison, id_championnat: $id_championnat);
     }
 
-    public function findMatchByCalendrier(int $id_calendrier) : array
+    public function findMatchByCalendrier(int $id_calendrier, int $id_saison) : array
     {
         return $this->createQueryBuilder(alias: 'x')
             ->leftJoin('x.rencontre', 'r')          
-            ->andWhere('r.calendrier = :id_calendrier')
-            ->setParameter(key: 'id_calendrier', value: $id_calendrier)
+            ->andWhere('r.calendrier = :id_calendrier AND r.saison = :id_saison')
+            ->setParameters(parameters: new ArrayCollection(elements: [
+                new Parameter('id_calendrier', $id_calendrier),
+                new Parameter('id_saison', $id_saison),
+            ]))
             ->orderBy(sort: 'x.id', order: 'DESC')
             ->getQuery()
             ->getResult()
         ;
     }
 
-    public function findMatchByCalendrierByCubByPreponderance(int $id_calendrier, int $id_club, int $id_preponderance) : array
+    //----------------------------------
+    public function findMatchByCalendrierByCubByPreponderance(int $id_calendrier, int $id_saison, int $id_club, int $id_preponderance) : array
     {
         return $this->createQueryBuilder(alias: 'x')
             ->leftJoin('x.rencontre', 'r')          
-            ->andWhere('r.calendrier = :id_calendrier AND x.equipeSaison = :id_club AND x.preponderance = :id_preponderance')
+            ->andWhere('r.calendrier = :id_calendrier AND r.saison = :id_saison AND x.equipeSaison = :id_club AND x.preponderance = :id_preponderance')
             ->setParameters(parameters: new ArrayCollection(elements: [
                 new Parameter(name: 'id_calendrier', value: $id_calendrier),
+                new Parameter(name: 'id_saison', value: $id_saison),
                 new Parameter(name: 'id_club', value: $id_club),
                 new Parameter(name: 'id_preponderance', value: $id_preponderance),
             ]))

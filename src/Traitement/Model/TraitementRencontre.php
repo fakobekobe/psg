@@ -24,6 +24,7 @@ class TraitementRencontre extends TraitementAbstrait
     protected function getObjet(mixed ...$donnees): array
     {
         $objet['id'] = ($donnees[0])->getId();
+        $objet['saison'] = ($donnees[0])->getSaison()->getId();
         $objet['championnat'] = ($donnees[0])->getCalendrier()->getChampionnat()->getId();
         $liste = $this->repository->getListeJournees(id_championnat: $objet['championnat']);
         $objet['calendrier'] = $liste ? Utilitaire::getOptionsSelect(objet:$liste, label: 'Calendrier', index: ($donnees[0])->getCalendrier()->getId()) : "<option value=\"\">--- Calendrier ---</option>";
@@ -41,16 +42,18 @@ class TraitementRencontre extends TraitementAbstrait
 
         foreach($donnees[0] as $data)
         {
+            $saison = ucfirst(string: htmlspecialchars(string: $data->getSaison()->getLibelle()));
             $championnat = ucfirst(string: htmlspecialchars(string: $data->getCalendrier()->getChampionnat()->getNom()));
             $calendrier = $data->getCalendrier()->getJournee()->getDescription();
             $temperature = $data->getTemperatureAfficher();
             $date = $data->getDate();
             $heure = $data->getHeure();
 
-            $nom = $championnat . ' => ' . $calendrier . ' => ' . $temperature . ' => ' . $date . ' à ' . $heure;
+            $nom = $saison . '=>' . $championnat . ' => ' . $calendrier . ' => ' . $temperature . ' => ' . $date . ' à ' . $heure;
             $i++;
             $v = ($i != $nb) ? '!x!':'';
             $tab .=  $i . $separateur . 
+            $saison . $separateur . 
             $championnat . $separateur . 
             $calendrier . $separateur . 
             $temperature . $separateur . 

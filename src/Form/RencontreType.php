@@ -5,6 +5,9 @@ namespace App\Form;
 use App\Entity\Calendrier;
 use App\Entity\Championnat;
 use App\Entity\Rencontre;
+use App\Entity\Saison;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,6 +23,23 @@ class RencontreType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add(child: 'saison', type: EntityType::class, options: [
+                'class' => Saison::class,
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('e')                        
+                        ->orderBy('e.id', 'DESC')                        
+                        ;
+                },
+                'choice_label' => 'libelle',
+                'label' => false,
+                'placeholder' => '--- Saison ---',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'constraints' => [
+                    new NotBlank,
+                ],
+            ])  
             ->add(child: 'championnat', type: EntityType::class, options: [
                 'class' => Championnat::class,
                 'choice_label' => 'nom',

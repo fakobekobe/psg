@@ -27,6 +27,10 @@ class Rencontre
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Calendrier $calendrier = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    private ?Saison $saison = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -84,6 +88,18 @@ class Rencontre
     public function setCalendrier(?Calendrier $calendrier): static
     {
         $this->calendrier = $calendrier;
+
+        return $this;
+    }
+
+    public function getSaison(): ?Saison
+    {
+        return $this->saison;
+    }
+
+    public function setSaison(?Saison $saison): static
+    {
+        $this->saison = $saison;
 
         return $this;
     }

@@ -51,7 +51,7 @@ class EquipeSaisonRepository extends ServiceEntityRepository
         return $this->getRepository()->findOptionsById(id: $id_championnat);
     }
 
-    public function findSelect(int $id) : Equipe
+    public function findSelect(int $id) : ?Equipe
     {
         $this->setRepository(repository: new EquipeRepository(registry: $this->registry));
         return $this->getRepository()->findOneBy(criteria: ['id' => $id]);

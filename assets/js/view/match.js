@@ -10,9 +10,9 @@ const URL_SELECT = "calendrier",
 
 // Rédéfinition de la méthode Action ajouter
 // Rédéfinition de l'Action liste
-function action_liste(URL, NOM_TABLEAU = 'dataTable', ID_CALENDRIER = 0) {
+function action_liste(URL, NOM_TABLEAU = 'dataTable', ID_CALENDRIER = 0, ID_SAISON = 0) {
     // Les variables globales
-    let URL_FETCH = "/" + URL + "/liste/" + ID_CALENDRIER;
+    let URL_FETCH = "/" + URL + "/liste/" + ID_CALENDRIER + '/' + ID_SAISON;
     let table = $('#' + NOM_TABLEAU);
 
     fetch(URL_FETCH)
@@ -44,6 +44,7 @@ function action_liste(URL, NOM_TABLEAU = 'dataTable', ID_CALENDRIER = 0) {
 function action_ajouter(
     PREFIX_URL,
     id_calendrier = "match_dispute_calendrier",
+    id_saison = "match_dispute_saison",
     id_contenu_rencontre = 'contenu_rencontre',
     NOM_TABLEAU = 'dataTable',
     NOM_BTN_AJOUTER = 'enregistrer'
@@ -169,8 +170,9 @@ function action_ajouter(
         contenu_rencontre.html(data);
 
         // On charge les nouvelles données avec la fonction de l'action liste
-        let btn_calendrier = $('#' + id_calendrier);
-        action_liste(PREFIX_URL, NOM_TABLEAU, btn_calendrier.val());
+        let btn_calendrier = $('#' + id_calendrier),
+            btn_saison = $('#' + id_saison);
+        action_liste(PREFIX_URL, NOM_TABLEAU, btn_calendrier.val(), btn_saison.val());
     };
 
     const traitement_echec = function (erreur) {
@@ -203,12 +205,11 @@ function valider1(
         contenu_rencontre = $('#' + id_contenu_rencontre),
         contenu_domicile = $('#' + id_contenu_domicile),
         contenu_exterieur = $('#' + id_contenu_exterieur),
-        btn_calendrier = $('#' + id_calendrier);
+        btn_calendrier = $('#' + id_calendrier),
+        btn_saison = $('#' + id_saison);
 
     btn.on('click', function (e) {
         e.preventDefault();
-        let btn_saison = $('#' + id_saison);
-
 
         if (!btn_saison.val()) {
             Swal.fire({
@@ -271,7 +272,7 @@ function valider1(
         contenu_exterieur.html(objet.exterieur);
 
         // On raffraichit la table des matchs
-        action_liste(PREFIX_URL, NOM_TABLEAU, btn_calendrier.val());
+        action_liste(PREFIX_URL, NOM_TABLEAU, btn_calendrier.val(), btn_saison.val());
     };
 
     const traitement_echec = function (erreur) {
