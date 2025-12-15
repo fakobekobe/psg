@@ -24,7 +24,7 @@ class Rencontre
     private ?int $temperature = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Calendrier $calendrier = null;
 
     public function getId(): ?int
