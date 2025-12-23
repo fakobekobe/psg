@@ -3,8 +3,8 @@ let P_URL = 'equipe-saison',
 NOM_FORM = "equipe_saison_", 
 texteTitre = 'Ajouter un club';
 const URL_SELECT = "equipe";
-const PLACEHOLDER = "Equipe",
-    LABEL_SELECT = ['saison', 'championnat', 'entraineur'];
+const PLACEHOLDER = "Equipe";
+let LABEL_SELECT = ['saison', 'championnat', 'entraineur'];
 
 
 // Appel des fonctions d'action-------------

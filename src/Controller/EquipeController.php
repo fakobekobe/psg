@@ -93,7 +93,7 @@ final class EquipeController extends AbstractController
         if($request->isMethod(method: 'POST'))
         {            
             $file = $request->files->all(); // Le tableau des fichiers
-            $data['image'] = $file['image'];
+            $data['image'] = $file['image'];            
         }
 
         return $this->controlleur->modifier(

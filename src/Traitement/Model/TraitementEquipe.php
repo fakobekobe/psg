@@ -92,13 +92,13 @@ class TraitementEquipe extends TraitementAbstrait
             $nomDuFichier = Utilitaire::verifier_images(image: $objet['image'], path: Utilitaire::getPathImage(), extensions: Utilitaire::EXTENSIONS_IMAGES, taille: Utilitaire::TAILLE_IMAGE);
             $path = Utilitaire::getPathImage() . DIRECTORY_SEPARATOR . $data->getLogo();
             Utilitaire::supprime_image(path: $path);
-            $data->setLogo($nomDuFichier);
+            $data->setLogo($nomDuFichier);            
         }
 
         $this->em->flush();
 
         return new JsonResponse(data: 
-        ['code' => self::SUCCES]);
+        ['code' => self::SUCCES,]);
     }
 
     protected function actionSupprimerSucces(mixed $objet): JsonResponse

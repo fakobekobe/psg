@@ -4,7 +4,7 @@ NOM_FORM = P_URL + "_",
 texteTitre = 'Ajouter une rencontre';
 const URL_SELECT = "calendrier";
 const PLACEHOLDER = "Calendrier",
-    LABEL_SELECT = ['championnat'];
+    LABEL_SELECT = ['saison', 'championnat'];
 
 
 // Rédéfinition de la méthode Action ajouter
