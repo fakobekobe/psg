@@ -35,31 +35,50 @@
 							<div class="row">
 								<div class="col-lg-12 d-flex grid-margin stretch-card">
 									<div class="card">
-										<div class="card-body">
-											<h3 class="text-center bg-info p-0 p-2 m-0">Sélectionner les champs pour déterminer la rencontre et les équipes</h3>
-											{{form_start(form_analyse)}}
-											<div class="row mb-3 bg-info pt-3">
-												<div class="col-lg-3">
-													{{form_row(form_analyse.saison)}}
-												</div>
-												<div class="col-lg-3">
-													{{form_row(form_analyse.championnat)}}
-												</div>
-												<div class="col-lg-3">
-													{{form_row(form_analyse.calendrier)}}
-												</div>
-												<div class="col-lg-3">
-													<button class="btn btn-primary btn-block p-0" id="valider_1" style="font-size:1.4em;">
-														<i class="typcn typcn-input-checked" style="font-size:1.6em;"></i>
-														Valider</button>
-												</div>
-											</div>
-											{{form_end(form_analyse)}}
+										<div class="card-body">										
 
 											<div
 												class="row mt-3 mb-5">
 												<!-- Classement -->
 												<div class="col-lg-6">
+													<div class="row">
+														<div class="col-lg-12">
+															<h5 class="text-center bg-info p-0 p-2 m-0">Sélectionner les champs pour déterminer le classement</h5>
+															{{form_start(form_analyse)}}
+															<div class="row mb-3 bg-info pt-3">
+																<div class="col-lg-3">
+																	{{form_row(form_analyse.saison, {
+																		'attr':{
+																			'style':"font-size:0.7em;"
+																			}
+																		}
+																	)}}
+																</div>
+																<div class="col-lg-3">
+																	{{form_row(form_analyse.championnat, {
+																		'attr':{
+																			'style':"font-size:0.7em;"
+																			}
+																		}
+																	)}}
+																</div>
+																<div class="col-lg-3">
+																	{{form_row(form_analyse.calendrier, {
+																		'attr':{
+																			'style':"font-size:0.7em;"
+																			}
+																		}
+																	)}}
+																</div>
+																<div class="col-lg-3">
+																	<button class="btn btn-primary btn-block p-0" id="valider_1" style="font-size:1.2em;">
+																		<i class="typcn typcn-input-checked" style="font-size:1.4em;"></i>
+																		Valider</button>
+																</div>
+															</div>
+															{{form_end(form_analyse)}}
+														</div>
+													</div>
 													<h3 class="text-center">Classement</h3>
 													<div id="contenu_classement"></div>
 												</div>

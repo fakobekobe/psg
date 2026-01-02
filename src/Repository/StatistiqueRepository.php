@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Equipe;
+use App\Entity\Journee;
 use App\Entity\Periode;
+use App\Entity\Preponderance;
 use App\Entity\Statistique;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -90,5 +93,56 @@ class StatistiqueRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()            
         ;
+    }
+
+    public function findStatistiqueBySaisonByChampionnatbyCalendrier(int $id_saison, int $id_championnat, int $id_calendrier) : array
+    {
+        $journee = $this->getJournee(id_calendrier: $id_calendrier);
+        $id_journee = $journee ? $journee->getNumero() : 1;
+
+        return $this->createQueryBuilder(alias: 'x')
+            ->select(['x as statistique', 'p.id as periode', 'pre.id as preponderance', 'j.id as journee', 'eq.id as equipe'])
+            ->leftJoin('x.matchDispute', 'm')
+            ->leftJoin('m.preponderance', 'pre')
+            ->leftJoin('x.periode', 'p')
+            ->leftJoin('m.equipeSaison', 'e')
+            ->leftJoin('e.equipe', 'eq')
+            ->leftJoin('m.rencontre', 'r')
+            ->leftJoin('r.calendrier', 'c')
+            ->leftJoin('c.journee', 'j')
+            ->andWhere('r.saison = :id_saison AND c.championnat = :id_championnat AND j.numero >= 1 AND j.numero <= :id_journee')
+            ->setParameters(parameters: new ArrayCollection(elements: [
+                new Parameter(name: 'id_saison', value: $id_saison),
+                new Parameter(name: 'id_championnat', value: $id_championnat),
+                new Parameter(name: 'id_journee', value: $id_journee),
+            ]))
+            ->getQuery()
+            ->getResult()            
+        ;
+    }
+
+    public function getJournee(int $id_calendrier) : ?Journee
+    {
+        $this->setRepository(repository: new CalendrierRepository(registry: $this->registry));
+        $calendrier = $this->getRepository()->findOneBy(criteria: ['id' => $id_calendrier]);
+        return $calendrier ? $calendrier->getJournee() : null;
+    }
+
+    public function journee(int $id_journee) : ?Journee
+    {
+        $this->setRepository(repository: new JourneeRepository(registry: $this->registry));
+        return $this->getRepository()->findOneBy(criteria: ['id' => $id_journee]);
+    }
+
+    public function preponderance(int $id_preponderance) : ?Preponderance
+    {
+        $this->setRepository(repository: new PreponderanceRepository(registry: $this->registry));
+        return $this->getRepository()->findOneBy(criteria: ['id' => $id_preponderance]);
+    }
+
+    public function equipe(int $id_equipe) : ?Equipe
+    {
+        $this->setRepository(repository: new EquipeRepository(registry: $this->registry));
+        return $this->getRepository()->findOneBy(criteria: ['id' => $id_equipe]);
     }
 }
