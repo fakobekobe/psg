@@ -154,3 +154,14 @@ background: #000;
     font-size: 0.8em;
     text-align: center;
 }
+
+.btn_orange{
+    margin: 0px;
+    padding:0px;
+    padding-left:20px; 
+    text-decoration: none;
+}
+
+.btn_orange:hover{
+    color: orange;
+}
