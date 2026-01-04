@@ -79,13 +79,11 @@ function valider1(
 
         switch (data.code) {
             case 'SUCCES':
-                console.log(data.data);
-                return;
                 traitement_succes(data.data);
                 break;
 
             case 'ECHEC':
-                traitement_echec(data.erreur);
+                traitement_echec(data.message);
                 break;
         }
     };
@@ -93,13 +91,13 @@ function valider1(
     const traitement_succes = function (objet) {
 
         // On cahrge les formulaires rencontre et équipes
-        contenu_classement.html(objet.classement);    
+        contenu_classement.html(objet);    
     };
 
-    const traitement_echec = function (erreur) {
+    const traitement_echec = function (message) {
         Swal.fire({
             title: "Erreur",
-            text: erreur,
+            text: message,
             icon: "error",
             timer: 3000
         });

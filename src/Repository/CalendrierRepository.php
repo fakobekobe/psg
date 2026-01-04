@@ -57,6 +57,11 @@ class CalendrierRepository extends ServiceEntityRepository
         return $calendrier ? $calendrier->getId() : 0;
     }
 
+    public function getCalendrier(int $id_championnat, int $id_journee) : ?Calendrier
+    {
+        return $this->findOneBy(criteria: ['championnat' => $id_championnat, 'journee' => $id_journee]);
+    }
+
     public function findOptionsById(int $id) : array
     {
         return $this->createQueryBuilder(alias: 'x')

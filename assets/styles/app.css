@@ -121,3 +121,36 @@ background: #000;
     height:30px;
     margin-bottom: 3px;
 }
+
+
+
+.td_1{
+    padding-top: 5px;
+    padding-left: 10px;
+    border-bottom: 1px solid rgb(211, 208, 208);
+}
+
+.td_b{
+    border-left: 3px solid blue;
+    padding-left: 10px;
+}
+
+.td_o{
+    border-left: 3px solid orange;
+    padding-left: 10px;
+}
+
+.td_r{
+    border-left: 3px solid red;
+    padding-left: 10px;
+}
+
+.td_v{
+    border-left: 3px solid green;
+    padding-left: 10px;
+}
+
+.tsm{
+    font-size: 0.8em;
+    text-align: center;
+}
