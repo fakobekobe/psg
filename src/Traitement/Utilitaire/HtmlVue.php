@@ -59,7 +59,7 @@ HTML;
         {
             case 1: $retour = '<i class="typcn typcn-input-checked text-success"></i>'; break;
             case 2: $retour = '<i class="typcn typcn-minus text-dark"></i>'; break;
-            case 3: $retour = '<i class="typcn typcn-time text-danger"></i>'; break;
+            case 3: $retour = '<i class="typcn typcn-delete text-danger"></i>'; break;
         }
 
         return $retour;

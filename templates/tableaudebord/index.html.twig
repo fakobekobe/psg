@@ -20,8 +20,9 @@
 			<div class="col-lg-12">
 
 				<div class="accordion" id="accordionPremier">
-					<div class="card">
-						<!-- Entête de l'accordeon -->
+					<div
+						class="card">
+						<!-- Entête de l'accordion -->
 						<div class="card-header" id="headingOne">
 							<div class="row mb-0">
 								<div class="col-lg-3">
@@ -30,30 +31,191 @@
 											<h1 style="margin:0px;padding:0px;padding-left:20px;font-seize:3em;">1</h1>
 										</div>
 										<div class="col-lg-12">
-											<button 
-												style="text-decoration:none;"
-												class="btn btn-link btn-block text-left btn_orange" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+											<button style="text-decoration:none;" class="btn btn-link btn-block text-left btn_orange" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 												PREMIER LEAGUE
 											</button>
-										</div>										
+										</div>
 									</div>
 								</div>
 								<div class="col-lg-3">
-									<i class="typcn typcn-device-desktop menu-icon h1"></i>
-								</div>								
+									<i class="typcn typcn-device-desktop h1"></i>
+								</div>
 							</div>
 							<div class="row">
 								<div class="col-lg-4">
-									<hr style="width: 85%; margin:0px; padding:0px; margin-left:20px; border:2px solid orange;" />
+									<hr style="width: 85%; margin:0px; padding:0px; margin-left:20px; border:2px solid orange;"/>
 								</div>
-							</div>							
+							</div>
 						</div>
 
+						<!-- Contenu accordion  -->
 						<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionPremier">
-							<div class="card-body">
-								Some placeholder content for the first accordion panel. This panel is shown by default, thanks to the
-								<code>.show</code>
-								class.
+							<div class="card-body card_o">
+								<div class="row">
+									<div class="col-lg-6">
+										<table>
+											<tr class="t_tr">
+												<th class="t_th">
+													Classement
+												</th>
+												<th class="t_th">
+													1EM
+												</th>
+												<th class="t_th">
+													2EM
+												</th>
+												<th class="t_th">
+													TR
+												</th>
+												<th class="t_th">
+													%1EM
+												</th>
+												<th class="t_th">
+													%2EM
+												</th>
+												<th class="t_th">
+													[90-100%]
+												</th>
+											</tr>
+											<tr class="t_tr_td">
+												<td class="t_td">
+													1-1
+												</td>
+												<td class="t_td">
+													5
+												</td>
+												<td class="t_td">
+													2
+												</td>
+												<td class="t_td">
+													7
+												</td>
+												<td class="t_td">
+													80%
+												</td>
+												<td class="t_td">
+													20%
+												</td>
+												<td class="t_td">
+													<i class="typcn typcn-input-checked text-success h2"></i>
+												</td>
+											</tr>
+											<tr class="t_tr_td">
+												<td class="t_td">
+													1-2
+												</td>
+												<td class="t_td">
+													8
+												</td>
+												<td class="t_td">
+													8
+												</td>
+												<td class="t_td">
+													16
+												</td>
+												<td class="t_td">
+													50%
+												</td>
+												<td class="t_td">
+													50%
+												</td>
+												<td class="t_td">
+													<i class="typcn typcn-delete text-danger h2"></i>
+												</td>
+											</tr>
+										</table>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="row">
+											<div class="col-lg-12">
+												<h3 class="h_3">Les 2 équipes se marquent ou pas</h3>
+											</div>
+										</div>
+										<div class="row justify-content-between mb-3">
+											<div class="col-lg-5 d_b">
+												<div class="row justify-content-between text-center mt-1 mb-1">
+													<div class="col-lg-6">
+														<img src="{{asset('images/logo_defaut.png')}}">
+													</div>
+													<div class="col-lg-6">
+														<img src="{{asset('images/logo_defaut.png')}}">
+													</div>
+												</div>
+
+												<div class="row justify-content-between text-center mb-1">
+													<div class="col-lg-6">
+														<strong>Arsenal</strong>
+													</div>
+													<div class="col-lg-6">
+														<strong>Wolves</strong>
+													</div>
+												</div>
+
+												<div class="row justify-content-between text-center mb-1">
+													<div class="col-lg-6">
+														2e
+													</div>
+													<div class="col-lg-6">
+														17e
+													</div>
+												</div>
+
+												<div class="row justify-content-between text-center mb-1">
+													<div class="col-lg-12">
+														Lundi 10 Janvier 2026
+													</div>									
+												</div>
+
+												<div class="row justify-content-between text-center mb-1">
+													<div class="col-lg-12">
+														16h 30min
+													</div>									
+												</div>
+
+												<div class="row mb-1">
+													<div class="col-lg-6 text-right">
+														<strong>Journée :</strong>
+													</div>	
+													<div class="col-lg-6 text-left">
+														<em>2e journée</em>
+													</div>								
+												</div>
+
+												<div class="row mb-1">
+													<div class="col-lg-6 text-right">
+														<strong>Classe. :</strong>
+													</div>	
+													<div class="col-lg-6 text-left">
+														<em>1-4</em>
+													</div>								
+												</div>
+
+												<div class="row mb-1">
+													<div class="col-lg-6 text-right">
+														<strong>[90-100%] :</strong>
+													</div>	
+													<div class="col-lg-6 text-left">
+														<em>95%</em>
+													</div>								
+												</div>
+
+												<div class="row mb-1">
+													<div class="col-lg-6 text-right">
+														<strong>Paris :</strong>
+													</div>	
+													<div class="col-lg-6 text-left">
+														<em>1EM</em>
+													</div>								
+												</div>
+
+											</div>
+											<div class="col-lg-5 d_v">
+												ok
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

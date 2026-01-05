@@ -165,3 +165,51 @@ background: #000;
 .btn_orange:hover{
     color: orange;
 }
+
+.card_o{
+    border-top: 2px solid orange;
+}
+
+.t_th{
+    font-size: 1.2em;
+    padding: 8px;
+    text-align: center;
+}
+
+.t_tr
+{
+    background-color: rgb(243, 209, 147);
+}
+
+.t_td{
+    font-size: 1.2em;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-align: center;
+}
+
+.t_tr_td{
+    border-bottom: 1px solid gray;
+}
+
+.d_b
+{
+    border-top: 2px solid blue;
+    background-color: lightblue;
+}
+
+.d_v
+{
+    border-top: 2px solid green;
+    background-color: lightgreen;
+}
+
+.h_3{
+    text-align: center;
+     background-color: lightgray;
+     margin-bottom: 10px;
+     padding-top: 8px;
+     padding-bottom: 8px;
+}
