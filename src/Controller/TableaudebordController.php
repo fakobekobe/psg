@@ -37,11 +37,11 @@ final class TableaudebordController extends AbstractController
             $id_periode_deuxieme_mt,
         );
 
-        dd($stat_classement);
-
         return $this->render(
             view: 'tableaudebord/index.html.twig',
-            parameters: []
+            parameters: [
+                'classements' => $stat_classement,
+            ]
         );
     }
 

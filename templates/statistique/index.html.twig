@@ -1,20 +1,199 @@
-{% extends 'base.html.twig' %}
+<div class="accordion" id="accordionPremier">
+	{% for key, classement in classements %}
+		{{key|upper}}
+	{% endfor %}
+	<div class="card">
+		<!-- Entête de l'accordion -->
+		<div class="card-header" id="headingOne">
+			<div class="row mb-0">
+				<div class="col-lg-3">
+					<div class="row">
+						<div class="col-lg-12">
+							<h1 style="margin:0px;padding:0px;padding-left:20px;font-seize:3em;">1</h1>
+						</div>
+						<div class="col-lg-12">
+							<button style="text-decoration:none;" class="btn btn-link btn-block text-left btn_orange" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								PREMIER LEAGUE
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3">
+					<i class="typcn typcn-device-desktop h1"></i>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<hr style="width: 85%; margin:0px; padding:0px; margin-left:20px; border:2px solid orange;"/>
+				</div>
+			</div>
+		</div>
 
-{% block title %}Hello StatistiqueController!{% endblock %}
+		<!-- Contenu accordion  -->
+		<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionPremier">
+			<div class="card-body card_o">
+				<div class="row">
+					<div class="col-lg-6" id="stat_classement">
+						<table>
+							<tr class="t_tr">
+								<th class="t_th">
+									Classement
+								</th>
+								<th class="t_th">
+									1EM
+								</th>
+								<th class="t_th">
+									2EM
+								</th>
+								<th class="t_th">
+									TR
+								</th>
+								<th class="t_th">
+									%1EM
+								</th>
+								<th class="t_th">
+									%2EM
+								</th>
+								<th class="t_th">
+									[80-100%]
+								</th>
+							</tr>
+							<tr class="t_tr_td">
+								<td class="t_td">
+									1-1
+								</td>
+								<td class="t_td">
+									5
+								</td>
+								<td class="t_td">
+									2
+								</td>
+								<td class="t_td">
+									7
+								</td>
+								<td class="t_td">
+									80%
+								</td>
+								<td class="t_td">
+									20%
+								</td>
+								<td class="t_td">
+									<i class="typcn typcn-input-checked text-success h2"></i>
+								</td>
+							</tr>
+							<tr class="t_tr_td">
+								<td class="t_td">
+									1-2
+								</td>
+								<td class="t_td">
+									8
+								</td>
+								<td class="t_td">
+									8
+								</td>
+								<td class="t_td">
+									16
+								</td>
+								<td class="t_td">
+									50%
+								</td>
+								<td class="t_td">
+									50%
+								</td>
+								<td class="t_td">
+									<i class="typcn typcn-delete text-danger h2"></i>
+								</td>
+							</tr>
+						</table>
+					</div>
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+					<div class="col-lg-6">
+						<div class="row">
+							<div class="col-lg-12">
+								<h3 class="h_3">Les 2 équipes se marquent ou pas</h3>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-lg-12 d_b">
+								<div class="row h_1">
+									<div class="col-lg-12 text-center">
+										(1er)
+										<strong class="s_b">Arsenal</strong>
+										<img style="width:40px;" src="{{asset('images/logo_defaut.png')}}">
+										<span class="score">VS</span>
+										<img style="width:40px;" src="{{asset('images/logo_defaut.png')}}">
+										<strong class="s_b">Wolves</strong>
+										(17e)
+									</div>
+								</div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+								<div class="row text-center h_1">
+									<div class="col-lg-12">
+										Lundi, 10 Janvier 2026 à 16:30
+									</div>
+								</div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Projet_PSG/psg/src/Controller/StatistiqueController.php</code></li>
-        <li>Your template at <code>C:/Projet_PSG/psg/templates/statistique/index.html.twig</code></li>
-    </ul>
+								<div class="row h_1">
+									<div class="col-lg-12 ">
+										<table style="width:100%; text-align:center;">
+											<tr>
+												<th>Journée</th>
+												<th>Classement</th>
+												<th>[90-100%]</th>
+												<th>Paris</th>
+											</tr>
+											<tr>
+												<td>2e</td>
+												<td>1-4</td>
+												<td class="text-warning">
+													<strong>95%</strong>
+												</td>
+												<td class="text-danger">
+													<strong>1EM</strong>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div></div>
+<div class="card">
+<div class="card-header" id="headingTwo">
+	<h2 class="mb-0">
+		<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			Collapsible Group Item #2
+		</button>
+	</h2>
 </div>
-{% endblock %}
+<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionPremier">
+	<div class="card-body">
+		Some placeholder content for the second accordion panel. This panel is hidden by default.
+	</div>
+</div>
+
+</div>
+<div class="card">
+<div class="card-header" id="headingThree">
+	<h2 class="mb-0">
+		<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+			Collapsible Group Item #3
+		</button>
+	</h2>
+</div>
+<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionPremier">
+	<div class="card-body">
+		And lastly, the placeholder content for the third and final accordion panel. This panel is hidden by default.
+	</div>
+</div></div></div>
+
+
+{% for key, classement in classements %}
+						{{key|upper}}
+					{% endfor %}

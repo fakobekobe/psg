@@ -236,3 +236,11 @@ background: #000;
     border-bottom: 1px solid white;
     margin-bottom: 5px;
 }
+
+.hr_tb{
+    width: 85%; 
+    margin:0px; 
+    padding:0px; 
+    margin-left:20px; 
+    border:2px solid orange;
+}
