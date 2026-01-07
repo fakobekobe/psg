@@ -18,6 +18,19 @@ abstract class Utilitaire
     public const TAILLE_IMAGE = 10000000; // 10Mo
     public const TAILLE_FICHIER = 100000000; // 100Mo
     public const UPLOAD_ERR_OK = 0; 
+    public const VICTOIRE = 1; 
+    public const NUL = 2; 
+    public const DEFAITE = 3; 
+    public const POINT_VICTOIRE = 3; 
+    public const POINT_NUL = 1; 
+    public const EM1 = "1EM"; 
+    public const EM2 = "2EM"; 
+    public const PEM1 = "%1EM"; 
+    public const PEM2 = "%2EM"; 
+    public const TR = "TR"; 
+    public const P_PARI = "[80-100%]"; 
+    public const PARI = 80; 
+
 
     /**
      * Résumé de getErreur :
@@ -484,6 +497,53 @@ HTML;
     private static function logo_defaut() : string
     {
         return "logo_defaut.png";
+    }
+
+    /**
+     * tableau_portion est une fonction qui reçoit un tableau et renvoie un tableau selon le nombre
+     * d'éléments donnés en paramètre
+     * @param array $donnees est le tableau source
+     * @param int $nombre est le nombre d'élément à retourner
+     * @param bool $sens est un booléan qui définit le sens de parcourt. Par défaut il vaut false
+     * c'est à dire que le parcourt se fait à la fin du tableau
+     * @return array est le tableau de retour
+     */
+    public static function tableau_portion(array $donnees, int $nombre, bool $sens = false): array
+    {
+        $total = count(value: $donnees); 
+
+        if($nombre >= $total) return $donnees;
+
+        $debut = $sens ? 0 : ($total - $nombre);
+        $fin = $sens ? $nombre  : $total;
+        $retour = [];
+        for($i = $debut; $i < $fin; $i++)
+        {
+            $retour[] = $donnees[$i];
+        }
+
+        return $retour;
+    }
+
+    public static function categorie_classement(int $rang_domicile, int $rang_exterieur): string
+    {
+        $groupe_domicile = Utilitaire::classement(rang: $rang_domicile);
+        $groupe_exterieur = Utilitaire::classement(rang: $rang_exterieur);        
+
+        return $groupe_domicile . "-" . $groupe_exterieur;
+    }
+
+    public static function classement(int $rang) : string
+    {
+        $groupe = "";
+        switch(true)
+        {
+            case in_array(needle: $rang, haystack: range(start: 1,end: 5)): $groupe = "1"; break;
+            case in_array(needle: $rang, haystack: range(start: 6,end: 10)): $groupe = "2"; break;
+            case in_array(needle: $rang, haystack: range(start: 11,end: 15)): $groupe = "3"; break;
+            case in_array(needle: $rang, haystack: range(start: 15,end: 20)): $groupe = "4"; break;
+        }
+        return $groupe;
     }
 
 }

@@ -57,9 +57,9 @@ HTML;
         $retour = "";
         switch($code)
         {
-            case 1: $retour = '<i class="typcn typcn-input-checked text-success"></i>'; break;
-            case 2: $retour = '<i class="typcn typcn-minus text-dark"></i>'; break;
-            case 3: $retour = '<i class="typcn typcn-delete text-danger"></i>'; break;
+            case Utilitaire::VICTOIRE: $retour = '<i class="typcn typcn-input-checked text-success"></i>'; break;
+            case Utilitaire::NUL: $retour = '<i class="typcn typcn-minus text-dark"></i>'; break;
+            case Utilitaire::DEFAITE: $retour = '<i class="typcn typcn-delete text-danger"></i>'; break;
         }
 
         return $retour;

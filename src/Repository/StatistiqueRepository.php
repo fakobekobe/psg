@@ -195,4 +195,22 @@ class StatistiqueRepository extends ServiceEntityRepository
         $this->setRepository(repository: new JourneeRepository(registry: $this->registry));
         return $this->getRepository()->findOneBy(criteria: ['numero' => $numero]);
     }
+
+    public function saisons() : array
+    {
+        $this->setRepository(repository: new SaisonRepository(registry: $this->registry));
+        return $this->getRepository()->findBy(criteria: [], orderBy: ['id' => 'ASC']);
+    }
+
+    public function championnats() : array
+    {
+        $this->setRepository(repository: new ChampionnatRepository(registry: $this->registry));
+        return $this->getRepository()->findAll();
+    }
+
+    public function getCalendriersByChampionnat(int $id_championnat) : array
+    {
+        $this->setRepository(repository: new CalendrierRepository(registry: $this->registry));
+        return $this->getRepository()->findOptionsById(id: $id_championnat);
+    }
 }

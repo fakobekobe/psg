@@ -213,3 +213,26 @@ background: #000;
      padding-top: 8px;
      padding-bottom: 8px;
 }
+
+.s_b{
+    color: blue;
+    font-size: 1.2em;
+}
+
+.score{
+    display: inline-block;
+    color: blue;
+    font-size: 1.2em;
+    background-color: rgb(243, 209, 147);
+    padding: 5px;
+    border-radius: 10px 10px;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.h_1{
+    border-bottom: 1px solid white;
+    margin-bottom: 5px;
+}

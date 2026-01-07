@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\MatchDisputeType;
 use App\Repository\StatistiqueRepository;
 use App\Src\Traitement\Utilitaire\HtmlVue;
+use App\Traitement\Utilitaire\Utilitaire;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -118,7 +119,7 @@ final class BunkerController extends AbstractController
                 $stat_classement[$i]['but_encaisse'],
                 $stat_classement[$i]['but_difference'],
                 $stat_classement[$i]['point'],
-                $this->tableau_portion(donnees: $stat_classement[$i]['performance'], nombre: 5),
+                Utilitaire::tableau_portion(donnees: $stat_classement[$i]['performance'], nombre: 5),
                 "img_30",
                 "td_1",
                 $couleur,
@@ -158,11 +159,6 @@ final class BunkerController extends AbstractController
         $id_equipe_domicile = 0;
         $id_equipe_exterieur = 0;
 
-        // Constante
-        $C_VICTOIRE = 1;
-        $C_NUL = 2;
-        $C_DEFAITE = 3;
-
         // On récupère les clubs
         $clubs = $repository->club($saison, $championnat);
 
@@ -178,7 +174,7 @@ final class BunkerController extends AbstractController
             $club[$cpt]['but_marque'] = 0;
             $club[$cpt]['but_encaisse'] = 0;
             $club[$cpt]['but_difference'] = 0;
-           $cpt++;
+            $cpt++;
         }
 
         // On parcours les journées
@@ -242,15 +238,15 @@ final class BunkerController extends AbstractController
                         {
                             $club[$j]['victoire'] += 1; // VICTOIRE
                             $club[$j]['point'] += 3; // POINT                            
-                            $club[$j]['performance'][] = $C_VICTOIRE; // PERFORMANCE                            
+                            $club[$j]['performance'][] = Utilitaire::VICTOIRE; // PERFORMANCE                            
                         }else if($score_domicile < $score_exterieur)
                         {
                             $club[$j]['defaite'] += 1; // DEFAITE
-                            $club[$j]['performance'][] = $C_DEFAITE; // PERFORMANCE
+                            $club[$j]['performance'][] = Utilitaire::DEFAITE; // PERFORMANCE
                         }else{
                             $club[$j]['nul'] += 1; // NUL
                             $club[$j]['point'] += 1; // POINT
-                            $club[$j]['performance'][] = $C_NUL; // PERFORMANCE
+                            $club[$j]['performance'][] = Utilitaire::NUL; // PERFORMANCE
                         }
                         //-------------------------------
 
@@ -266,15 +262,15 @@ final class BunkerController extends AbstractController
                         {
                             $club[$j]['victoire'] += 1; // VICTOIRE
                             $club[$j]['point'] += 3; // POINT                            
-                            $club[$j]['performance'][] = $C_VICTOIRE; // PERFORMANCE                            
+                            $club[$j]['performance'][] = Utilitaire::VICTOIRE; // PERFORMANCE                            
                         }else if($score_exterieur < $score_domicile)
                         {
                             $club[$j]['defaite'] += 1; // DEFAITE
-                            $club[$j]['performance'][] = $C_DEFAITE; // PERFORMANCE
+                            $club[$j]['performance'][] = Utilitaire::DEFAITE; // PERFORMANCE
                         }else{
                             $club[$j]['nul'] += 1; // NUL
                             $club[$j]['point'] += 1; // POINT
-                            $club[$j]['performance'][] = $C_NUL; // PERFORMANCE
+                            $club[$j]['performance'][] = Utilitaire::NUL; // PERFORMANCE
                         }
                         //-------------------------------
 
@@ -414,32 +410,6 @@ final class BunkerController extends AbstractController
         }
 
         return $club;
-    }
-
-    /**
-     * tableau_portion est une fonction qui reçoit un tableau et renvoie un tableau selon le nombre
-     * d'éléments donnés en paramètre
-     * @param array $donnees est le tableau source
-     * @param int $nombre est le nombre d'élément à retourner
-     * @param bool $sens est un booléan qui définit le sens de parcourt. Par défaut il vaut false
-     * c'est à dire que le parcourt se fait à la fin du tableau
-     * @return array est le tableau de retour
-     */
-    private function tableau_portion(array $donnees, int $nombre, bool $sens = false): array
-    {
-        $total = count(value: $donnees); 
-
-        if($nombre >= $total) return $donnees;
-
-        $debut = $sens ? 0 : ($total - $nombre);
-        $fin = $sens ? $nombre  : $total;
-        $retour = [];
-        for($i = $debut; $i < $fin; $i++)
-        {
-            $retour[] = $donnees[$i];
-        }
-
-        return $retour;
     }
     
 }
