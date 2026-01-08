@@ -28,8 +28,10 @@ final class TableaudebordController extends AbstractController
         $id_preponderance_exterieur = 2;
         $id_periode_premiere_mt = 1;
         $id_periode_deuxieme_mt = 2;
-        
-        $stat_classement = $this->stat_classement(
+
+        $stat_2EM_copie = [];
+
+        $stat = $this->stat_classement(
             $this->statistique_repository,
             $id_preponderance_domicile,
             $id_preponderance_exterieur,
@@ -37,10 +39,15 @@ final class TableaudebordController extends AbstractController
             $id_periode_deuxieme_mt,
         );
 
+        $stat_classement = $stat[0];
+        $stat_2EM = $stat[1];
+        $stat_2EM_copie = $this->EM2_Oui_Non(repository: $this->statistique_repository, donnees: $stat_2EM);
+
         return $this->render(
             view: 'tableaudebord/index.html.twig',
             parameters: [
                 'classements' => $stat_classement,
+                'em2_oui_non' => $stat_2EM_copie,
             ]
         );
     }
@@ -58,6 +65,8 @@ final class TableaudebordController extends AbstractController
         $id_equipe_exterieur = 0;
         $club = [];
         $classement = [];
+        $data_2EM_O_N = [];
+        $donnees_2EM_O_N = [];
         //------------------------------
 
         // On récupère les saisons
@@ -75,6 +84,7 @@ final class TableaudebordController extends AbstractController
                 $clubs = $repository->club($saison->getId(), $championnat->getId());
                 $club = [];
                 $cpt = 0;
+                $cpte = 0;
 
                 // On parcours les clubs
                 foreach ($clubs as $c) {
@@ -89,6 +99,40 @@ final class TableaudebordController extends AbstractController
                     $club[$cpt]['but_difference'] = 0;
                     $cpt++;
                 }
+
+                // Gestion de l'analyse les 2 équipes se marquent ou pas ------------
+                $liste_calendrier_jouer = $repository->findCalendriersBySaisonByChampionnat($saison->getId(), $championnat->getId());
+                if ($liste_calendrier_jouer) {
+                    $calendrier_championnat = $repository->getCalendriersByChampionnat(id_championnat: $championnat->getId());
+                    $liste_calend_jouer = [];
+
+                    foreach ($liste_calendrier_jouer as $calend) {
+                        $liste_calend_jouer[] = $calend['id'];
+                    }
+
+                    $tableau_calendrier = [];
+
+                    foreach ($calendrier_championnat as $calend) {
+                        $tableau_calendrier[] = $calend['id'];
+                    }
+
+                    // On vérifie s'il y a un calendrier non disputé
+                    foreach ($tableau_calendrier as $calend) {
+                        if (!in_array(needle: $calend, haystack: $liste_calend_jouer)) {
+                            $data_2EM_O_N['id_calendrier'] = $calend;
+                            $data_2EM_O_N['id_saison'] = $saison->getId();
+                            $data_2EM_O_N['id_championnat'] = $championnat->getId();
+                            break;
+                        } else {
+                            $data_2EM_O_N['id_calendrier_precedent'] = $calend;
+                            $data_2EM_O_N['id_calendrier'] = 0;
+                            $data_2EM_O_N['id_saison'] = 0;
+                            $data_2EM_O_N['id_championnat'] = 0;
+                        }
+                    }
+                }
+
+                // ------------------------------------------------------------------
 
                 // On récupère les calendriers selon le championnat
                 // $calendriers est une liste qui contient des dictionnaires ['id','libelle']
@@ -142,6 +186,7 @@ final class TableaudebordController extends AbstractController
 
                         // On effectue le classement [1-2] à partir de la 2e journée --------------------------
                         if ($rencontre->getCalendrier()->getJournee()->getNumero() > 1 and $id_equipe_domicile) {
+
                             for ($i = 0; $i < count(value: $club); $i++) {
                                 if ($club[$i]['id'] == $id_equipe_domicile) {
                                     $rang_domicile = $i + 1;
@@ -177,6 +222,35 @@ final class TableaudebordController extends AbstractController
                                     } else {
                                         $classement[$championnat->getNom()][$code][Utilitaire::EM1] += 1;
                                     }
+                                }
+                            }
+
+                            // On effectue la sauvegarde des données pour l'analyse les 2 équipes marquent ou pas
+                            if (
+                                24 == $calendrier['id'] and
+                                1 == $saison->getId() and
+                                1 == $championnat->getId()
+                            ) {
+                                // On effectue les calculs sur le classement
+                                foreach ($classement[$championnat->getNom()] as $key => $classe) {
+                                    $classement[$championnat->getNom()][$key][Utilitaire::TR] = $classement[$championnat->getNom()][$key][Utilitaire::EM1] + $classement[$championnat->getNom()][$key][Utilitaire::EM2];
+                                    $classement[$championnat->getNom()][$key][Utilitaire::PEM1] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::EM1] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                                    $classement[$championnat->getNom()][$key][Utilitaire::PEM2] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::EM2] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                                    $classement[$championnat->getNom()][$key][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$key][Utilitaire::PEM1] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::PEM2] >= Utilitaire::PARI) ? true : false;
+                                }
+
+                                if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI]) {
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['club']['domicile'] = $id_equipe_domicile;
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['club']['exterieur'] = $id_equipe_exterieur;
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['classement'] = $code;
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['domicile'] = $rang_domicile;
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['exterieur'] = $rang_exterieur;
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['calendrier'] = 25;//$data_2EM_O_N['id_calendrier'];
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1,25 , $id_equipe_domicile, $domicile);
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$code][Utilitaire::PEM1] > $classement[$championnat->getNom()][$code][Utilitaire::PEM2]) ? Utilitaire::EM1 : Utilitaire::EM2;
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage'] = ($classement[$championnat->getNom()][$code][Utilitaire::PEM1] > $classement[$championnat->getNom()][$code][Utilitaire::PEM2]) ? $classement[$championnat->getNom()][$code][Utilitaire::PEM1] : $classement[$championnat->getNom()][$code][Utilitaire::PEM2];
+                                    $cpte++;
+                                    dd($repository->findRencontreBySaisonByClubByCalendrier(1,25 , $id_equipe_domicile, $domicile));
                                 }
                             }
                         }
@@ -353,18 +427,50 @@ final class TableaudebordController extends AbstractController
 
 
                 // On effectue les calculs sur le classement
-                if(!empty($classement[$championnat->getNom()]))
-                {
+                if (!empty($classement[$championnat->getNom()])) {
                     foreach ($classement[$championnat->getNom()] as $key => $classe) {
                         $classement[$championnat->getNom()][$key][Utilitaire::TR] = $classement[$championnat->getNom()][$key][Utilitaire::EM1] + $classement[$championnat->getNom()][$key][Utilitaire::EM2];
                         $classement[$championnat->getNom()][$key][Utilitaire::PEM1] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::EM1] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
                         $classement[$championnat->getNom()][$key][Utilitaire::PEM2] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::EM2] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
-                        $classement[$championnat->getNom()][$key][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$key][Utilitaire::PEM1] > Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::PEM2] > Utilitaire::PARI) ? true : false;
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$key][Utilitaire::PEM1] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::PEM2] >= Utilitaire::PARI) ? true : false;
                     }
                 }
             }
         }
 
-        return $classement;
+        return [$classement, $donnees_2EM_O_N];
+    }
+
+    private function EM2_Oui_Non(mixed $repository, array $donnees): array
+    {
+        $retour = [];
+        $cpt = 0;
+        foreach($donnees as $key => $data)
+        {
+            foreach($data as $stat)
+            {
+                $equipe_domicile = $repository->equipe($stat['club']['domicile']);
+                $equipe_exterieur = $repository->equipe($stat['club']['exterieur']);
+                $rencontre = $repository->rencontre($stat['rencontre']);
+                $calendrier = $repository->getCalendrier($stat['calendrier']);
+                $retour[$key][$cpt]['club']['domicile'] = ucfirst(string: $equipe_domicile->getNom());
+                $retour[$key][$cpt]['club']['exterieur'] = ucfirst(string: $equipe_exterieur->getNom());
+                $retour[$key][$cpt]['logo']['domicile'] = $equipe_domicile->getLogo();
+                $retour[$key][$cpt]['logo']['exterieur'] = $equipe_exterieur->getLogo();
+                $rang_domicile = (((int) $stat['rang']['domicile']) > 1) ? 'e' : 'er';
+                $rang_exterieur = (((int) $stat['rang']['exterieur']) > 1) ? 'e' : 'er';
+                $retour[$key][$cpt]['rang']['domicile'] = $stat['rang']['domicile'] . $rang_domicile;
+                $retour[$key][$cpt]['rang']['exterieur'] = $stat['rang']['exterieur'] . $rang_exterieur;
+                $retour[$key][$cpt]['rencontre'] = $rencontre->getDescription();
+                $retour[$key][$cpt]['journee'] = $calendrier->getJournee()->getDescriptionSimple();
+                $retour[$key][$cpt]['pourcentage'] = $stat['pourcentage'];
+                $retour[$key][$cpt][Utilitaire::P_PARI] = $stat[Utilitaire::P_PARI];
+                $retour[$key][$cpt]['classement'] = $stat['classement'];
+
+                $cpt++;
+            }
+        }
+
+        return $retour;
     }
 }

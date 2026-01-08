@@ -103,4 +103,9 @@ class Rencontre
 
         return $this;
     }
+
+    public function getDescription() : string
+    {
+        return $this->dateHeureRencontre->format(format: "l, d F Y à H:i");
+    }
 }

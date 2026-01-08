@@ -129,11 +129,35 @@ class StatistiqueRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findCalendriersBySaisonByChampionnat(int $id_saison, int $id_championnat) : array
+    {
+        return $this->createQueryBuilder(alias: 'x')
+            ->select(['DISTINCT(c.id) as id'])
+            ->leftJoin('x.matchDispute', 'm')
+            ->leftJoin('m.rencontre', 'r')
+            ->leftJoin('r.calendrier', 'c')
+            ->andWhere('r.saison = :id_saison AND c.championnat = :id_championnat')
+            ->setParameters(parameters: new ArrayCollection(elements: [
+                new Parameter(name: 'id_saison', value: $id_saison),
+                new Parameter(name: 'id_championnat', value: $id_championnat),
+            ]))
+            ->orderBy(sort: 'c.id', order: 'ASC')
+            ->getQuery()
+            ->getResult()            
+        ;
+    }
+
     public function getJournee(int $id_calendrier) : ?Journee
     {
         $this->setRepository(repository: new CalendrierRepository(registry: $this->registry));
         $calendrier = $this->getRepository()->findOneBy(criteria: ['id' => $id_calendrier]);
         return $calendrier ? $calendrier->getJournee() : null;
+    }
+
+    public function getCalendrier(int $id_calendrier) : ?Calendrier
+    {
+        $this->setRepository(repository: new CalendrierRepository(registry: $this->registry));
+        return $this->getRepository()->findOneBy(criteria: ['id' => $id_calendrier]);
     }
 
     public function journee(int $id_journee) : ?Journee
@@ -213,4 +237,12 @@ class StatistiqueRepository extends ServiceEntityRepository
         $this->setRepository(repository: new CalendrierRepository(registry: $this->registry));
         return $this->getRepository()->findOptionsById(id: $id_championnat);
     }
+
+    public function findRencontreBySaisonByClubByCalendrier(int $id_saison, int $id_calendrier, int $id_equipe, int $id_preponderance) : ?int
+    {
+        $this->setRepository(repository: new MatchDisputeRepository(registry: $this->registry));
+        return $this->getRepository()->findRencontreBySaisonByClubByCalendrier($id_saison, $id_calendrier, $id_equipe, $id_preponderance);
+    }
+
+
 }

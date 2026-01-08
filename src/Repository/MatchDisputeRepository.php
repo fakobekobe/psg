@@ -208,4 +208,24 @@ class MatchDisputeRepository extends ServiceEntityRepository
         $this->setRepository(repository: new PeriodeRepository(registry: $this->registry));
         return $this->getRepository()->findAll();
     }
+
+    public function findRencontreBySaisonByClubByCalendrier(int $id_saison, int $id_calendrier, int $id_equipe, int $id_preponderance) : ?int
+    {
+        $retour =  $this->createQueryBuilder(alias: 'x')
+            ->select(['r.id as id'])
+            ->leftJoin('x.rencontre', 'r')          
+            ->leftJoin('x.equipeSaison', 'e')          
+            ->andWhere('r.saison = :id_saison AND r.calendrier = :id_calendrier AND e.equipe = :id_equipe AND x.preponderance = :id_preponderance')
+            ->setParameters(parameters: new ArrayCollection(elements: [
+                new Parameter('id_saison', $id_saison),
+                new Parameter('id_calendrier', $id_calendrier),
+                new Parameter('id_equipe', $id_equipe),
+                new Parameter('id_preponderance', $id_preponderance),
+            ]))
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $retour ? $retour[0] : null;
+    }
 }
