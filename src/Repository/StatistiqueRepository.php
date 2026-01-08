@@ -238,10 +238,10 @@ class StatistiqueRepository extends ServiceEntityRepository
         return $this->getRepository()->findOptionsById(id: $id_championnat);
     }
 
-    public function findRencontreBySaisonByClubByCalendrier(int $id_saison, int $id_calendrier, int $id_equipe, int $id_preponderance) : ?int
+    public function findRencontreBySaisonByClubByCalendrier(int $id_saison, int $id_calendrier, int $id_equipe) : ?int
     {
         $this->setRepository(repository: new MatchDisputeRepository(registry: $this->registry));
-        return $this->getRepository()->findRencontreBySaisonByClubByCalendrier($id_saison, $id_calendrier, $id_equipe, $id_preponderance);
+        return $this->getRepository()->findRencontreBySaisonByClubByCalendrier($id_saison, $id_calendrier, $id_equipe);
     }
 
 

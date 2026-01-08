@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\RencontreRepository;
+use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use \DateTime;
+use IntlDateFormatter;
 
 #[ORM\Entity(repositoryClass: RencontreRepository::class)]
 class Rencontre
@@ -106,6 +108,15 @@ class Rencontre
 
     public function getDescription() : string
     {
-        return $this->dateHeureRencontre->format(format: "l, d F Y à H:i");
+        $fmt = datefmt_create(
+            locale: 'fr_FR',
+            dateType: IntlDateFormatter::FULL,
+            timeType: IntlDateFormatter::FULL,
+            timezone: 'Africa/Abidjan',
+            calendar: IntlDateFormatter::GREGORIAN,
+            pattern: "EEEE, dd MMMM Y à HH:mm"
+        );
+
+        return ucfirst(string: datefmt_format(formatter: $fmt, datetime: $this->dateHeureRencontre));
     }
 }

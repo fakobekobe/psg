@@ -227,9 +227,9 @@ final class TableaudebordController extends AbstractController
 
                             // On effectue la sauvegarde des données pour l'analyse les 2 équipes marquent ou pas
                             if (
-                                24 == $calendrier['id'] and
-                                1 == $saison->getId() and
-                                1 == $championnat->getId()
+                                24 == $calendrier['id'] and //$data_2EM_O_N['id_calendrier_precedent']
+                                1 == $saison->getId() and //$data_2EM_O_N['id_saison']
+                                1 == $championnat->getId() //$data_2EM_O_N['id_championnat']
                             ) {
                                 // On effectue les calculs sur le classement
                                 foreach ($classement[$championnat->getNom()] as $key => $classe) {
@@ -246,11 +246,10 @@ final class TableaudebordController extends AbstractController
                                     $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['domicile'] = $rang_domicile;
                                     $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['exterieur'] = $rang_exterieur;
                                     $donnees_2EM_O_N[$championnat->getNom()][$cpte]['calendrier'] = 25;//$data_2EM_O_N['id_calendrier'];
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1,25 , $id_equipe_domicile, $domicile);
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1,25 , $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
                                     $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$code][Utilitaire::PEM1] > $classement[$championnat->getNom()][$code][Utilitaire::PEM2]) ? Utilitaire::EM1 : Utilitaire::EM2;
                                     $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage'] = ($classement[$championnat->getNom()][$code][Utilitaire::PEM1] > $classement[$championnat->getNom()][$code][Utilitaire::PEM2]) ? $classement[$championnat->getNom()][$code][Utilitaire::PEM1] : $classement[$championnat->getNom()][$code][Utilitaire::PEM2];
                                     $cpte++;
-                                    dd($repository->findRencontreBySaisonByClubByCalendrier(1,25 , $id_equipe_domicile, $domicile));
                                 }
                             }
                         }
