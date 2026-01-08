@@ -244,3 +244,8 @@ background: #000;
     margin-left:20px; 
     border:2px solid orange;
 }
+
+.h_bas{
+    border:1px solid green;
+    box-shadow: 1px 1px 5px black;
+}

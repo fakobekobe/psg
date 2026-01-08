@@ -23,13 +23,23 @@ abstract class Utilitaire
     public const DEFAITE = 3; 
     public const POINT_VICTOIRE = 3; 
     public const POINT_NUL = 1; 
-    public const EM1 = "1EM"; 
-    public const EM2 = "2EM"; 
+    public const EM1 = "1EM"; // une équipe marque
+    public const EM2 = "2EM"; // deux équipes marquent
     public const PEM1 = "%1EM"; 
     public const PEM2 = "%2EM"; 
     public const TR = "TR"; 
     public const P_PARI = "[80-100%]"; 
     public const PARI = 80; 
+    public const NPM = "NPM"; // Nul première mi-temps
+    public const BPM = "BPM"; // But première mi-temps
+    public const N2M = "N2M"; // Nul deuxème mi-temps
+    public const B2M = "B2M"; // But deuxème mi-temps
+    public const PNPM = "%NPM";
+    public const PBPM = "%BPM"; 
+    public const PN2M = "%N2M"; 
+    public const PB2M = "%B2M"; 
+    public const P_PARI_PM = "[80-100%:PM]"; // Pourcentage de pari première mi-temps
+    public const P_PARI_2M = "[80-100%:2M]"; // Pourcentage de pari deuxième mi-temps
 
 
     /**

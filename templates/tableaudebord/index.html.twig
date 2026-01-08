@@ -20,173 +20,354 @@
 			<div class="col-lg-12">
 				<div class="accordion" id="accordionPremier">
 
-				{% for key, classement in classements %}				
-					<div class="card">
-						<!-- Entête de l'accordion -->
-						<div class="card-header" id="heading{{loop.index}}">
-							<div class="row mb-0">
-								<div class="col-lg-3">
-									<div class="row">
-										<div class="col-lg-12">
-											<h1 style="margin:0px;padding:0px;padding-left:20px;font-seize:3em;">{{loop.index}}</h1>
-										</div>
-										<div class="col-lg-12">
-											<button style="text-decoration:none;" class="btn btn-link btn-block text-left btn_orange" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-												{{key|upper}}
-											</button>
-										</div>
-									</div>
-								</div>
-								<div class="col-lg-3">
-									<i class="typcn typcn-device-desktop h1"></i>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-lg-4">
-									<hr class="hr_tb" />
-								</div>
-							</div>
-						</div>
-						<!-- Contenu accordion  -->
-						<div id="collapseOne" class="collapse show" aria-labelledby="heading{{loop.index}}" data-parent="#accordionPremier">
-							<div class="card-body card_o">
-								<div class="row">
-
-									<div class="col-lg-6" id="stat_classement">
-										<table>
-											<tr class="t_tr">
-												<th class="t_th">
-													Classement
-												</th>
-												<th class="t_th">
-													1EM
-												</th>
-												<th class="t_th">
-													2EM
-												</th>
-												<th class="t_th">
-													TR
-												</th>
-												<th class="t_th">
-													%1EM
-												</th>
-												<th class="t_th">
-													%2EM
-												</th>
-												<th class="t_th">
-													[80-100%]
-												</th>
-											</tr>
-
-											{% for classe, donnees in classement %}
-											<tr class="t_tr_td">
-												<td class="t_td">
-													{{classe}}
-												</td>
-												<td class="t_td">
-													{{donnees['1EM']}}
-												</td>
-												<td class="t_td">
-													{{donnees['2EM']}}
-												</td>
-												<td class="t_td">
-													{{donnees['TR']}}
-												</td>
-												<td class="t_td">
-													{{donnees['%1EM']}}%
-												</td>
-												<td class="t_td">
-													{{donnees['%2EM']}}%
-												</td>
-												<td class="t_td">
-													{% if donnees['[80-100%]'] %}
-														<i class="typcn typcn-input-checked text-success h2"></i>
-													{% else %}
-														<i class="typcn typcn-delete text-danger h2"></i>
-													{% endif %}
-												</td>
-											</tr>
-											{% endfor %}											
-										</table>
-									</div>
-
-									<div class="col-lg-6">
-
+					{% for key, classement in classements %}
+						<div
+							class="card">
+							<!-- Entête de l'accordion -->
+							<div class="card-header" id="heading{{loop.index}}">
+								<div class="row mb-0">
+									<div class="col-lg-3">
 										<div class="row">
 											<div class="col-lg-12">
-												<h3 class="h_3">Les 2 équipes se marquent ou pas</h3>
+												<h1 style="margin:0px;padding:0px;padding-left:20px;font-seize:3em;">{{loop.index}}</h1>
+											</div>
+											<div class="col-lg-12">
+												<button style="text-decoration:none;" class="btn btn-link btn-block text-left btn_orange" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+													{{key|upper}}
+												</button>
 											</div>
 										</div>
+									</div>
+									<div class="col-lg-3">
+										<i class="typcn typcn-device-desktop h1"></i>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4">
+										<hr class="hr_tb"/>
+									</div>
+								</div>
+							</div>
+							<!-- Contenu accordion  -->
+							<div id="collapseOne" class="collapse show" aria-labelledby="heading{{loop.index}}" data-parent="#accordionPremier">
+								<div class="card-body card_o">
 
-										{% for cle, data in em2_oui_non %}
-											{% if (key == cle) %}
-												{% for valeur in data %}
-													<div class="row mb-3">
-														<div class="col-lg-12 d_b">
+									<div class="row mb-5">
 
-															<div class="row h_1">
-																<div class="col-lg-12 text-center">
-																	({{valeur['rang']['domicile']}})
-																	<strong class="s_b">{{valeur['club']['domicile']}}</strong>
-																	{% set domicile = valeur['logo']['domicile'] %}
-																	<img style="width:25px;" src="{{asset('images/'~ valeur['logo']['domicile'])}}">
-																	<span class="score">VS</span>
-																	<img style="width:25px;" src="{{asset('images/'~ valeur['logo']['exterieur'])}}">
-																	<strong class="s_b">{{valeur['club']['exterieur']}}</strong>
-																	({{valeur['rang']['exterieur']}})
-																</div>
-															</div>
+										<div class="col-lg-12">
+											<h3 class="h_3">Les 2 équipes se marquent ou pas</h3>
+										</div>
 
-															<div class="row text-center h_1">
-																<div class="col-lg-12">
-																	{{valeur['rencontre']}}
-																</div>
-															</div>
+										<div class="col-lg-6">
+											<table>
+												<tr class="t_tr">
+													<th class="t_th">
+														Classement
+													</th>
+													<th class="t_th">
+														1EM
+													</th>
+													<th class="t_th">
+														2EM
+													</th>
+													<th class="t_th">
+														TR
+													</th>
+													<th class="t_th">
+														%1EM
+													</th>
+													<th class="t_th">
+														%2EM
+													</th>
+													<th class="t_th">
+														[80-100%]
+													</th>
+												</tr>
 
-															<div class="row h_1">
-																<div class="col-lg-12 ">
-																	<table style="width:100%; text-align:center;">
-																		<tr>
-																			<th>Journée</th>
-																			<th>Classement</th>
-																			<th>[80-100%]</th>
-																			<th>Pari</th>
-																		</tr>
-																		<tr>
-																			<td>{{valeur['journee']}}</td>
-																			<td>{{valeur['classement']}}</td>
-																			<td class="text-warning">
-																				<strong>{{valeur['pourcentage']}}%</strong>
-																			</td>
-																			<td class="text-danger">
-																				<strong>{{valeur['[80-100%]']}}</strong>
-																			</td>
-																		</tr>
-																	</table>
-																</div>
-															</div>
-
-														</div>
-													</div>
+												{% for classe, donnees in classement %}
+													<tr class="t_tr_td">
+														<td class="t_td">
+															{{classe}}
+														</td>
+														<td class="t_td">
+															{{donnees['1EM']}}
+														</td>
+														<td class="t_td">
+															{{donnees['2EM']}}
+														</td>
+														<td class="t_td">
+															{{donnees['TR']}}
+														</td>
+														<td class="t_td">
+															{{donnees['%1EM']}}%
+														</td>
+														<td class="t_td">
+															{{donnees['%2EM']}}%
+														</td>
+														<td class="t_td">
+															{% if donnees['[80-100%]'] %}
+																<i class="typcn typcn-input-checked text-success h2"></i>
+															{% else %}
+																<i class="typcn typcn-delete text-danger h2"></i>
+															{% endif %}
+														</td>
+													</tr>
 												{% endfor %}
-											{% endif %}
-										{% endfor %}
+											</table>
+										</div>
 
+										<div class="col-lg-6">
+
+											{% for cle, data in em2_oui_non %}
+												{% if (key == cle) %}
+													{% for valeur in data %}
+														<div class="row mb-3">
+															<div class="col-lg-12 d_b">
+
+																<div class="row h_1">
+																	<div class="col-lg-12 text-center">
+																		({{valeur['rang']['domicile']}})
+																		<strong class="s_b">{{valeur['club']['domicile']}}</strong>
+																		{% set domicile = valeur['logo']['domicile'] %}
+																		<img style="width:25px;" src="{{asset('images/'~ valeur['logo']['domicile'])}}">
+																		<span class="score">VS</span>
+																		<img style="width:25px;" src="{{asset('images/'~ valeur['logo']['exterieur'])}}">
+																		<strong class="s_b">{{valeur['club']['exterieur']}}</strong>
+																		({{valeur['rang']['exterieur']}})
+																	</div>
+																</div>
+
+																<div class="row text-center h_1">
+																	<div class="col-lg-12">
+																		{{valeur['rencontre']}}
+																	</div>
+																</div>
+
+																<div class="row h_1">
+																	<div class="col-lg-12 ">
+																		<table style="width:100%; text-align:center;">
+																			<tr>
+																				<th>Journée</th>
+																				<th>Classement</th>
+																				<th>[80-100%]</th>
+																				<th>Pari</th>
+																			</tr>
+																			<tr>
+																				<td>{{valeur['journee']}}</td>
+																				<td>{{valeur['classement']}}</td>
+																				<td class="text-warning">
+																					<strong>{{valeur['pourcentage']}}%</strong>
+																				</td>
+																				<td class="text-danger">
+																					<strong>{{valeur['[80-100%]']}}</strong>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+
+															</div>
+														</div>
+													{% endfor %}
+												{% endif %}
+											{% endfor %}
+
+
+										</div>
 
 									</div>
+
+									<hr class="h_bas"/>
+
+									<div class="row mb-5 text-center">
+										<div class="col-lg-12">
+											<h3 class="h_3">Nul dans chaque mi-temps ou pas</h3>
+										</div>
+
+										<div class="col-lg-12 mb-3">
+											<table class="w-100 text-center">
+												<tr class="t_tr">
+													<th class="t_th">
+														Classement
+													</th>
+													<th class="t_th">
+														NPM
+													</th>
+													<th class="t_th">
+														BPM
+													</th>
+													<th class="t_th">
+														N2M
+													</th>
+													<th class="t_th">
+														B2M
+													</th>
+													<th class="t_th">
+														TR
+													</th>
+													<th class="t_th">
+														%NPM
+													</th>
+													<th class="t_th">
+														%BPM
+													</th>
+													<th class="t_th">
+														%N2M
+													</th>
+													<th class="t_th">
+														%B2M
+													</th>
+													<th class="t_th">
+														[80-100%:PM]
+													</th>
+													<th class="t_th">
+														[80-100%:2M]
+													</th>
+												</tr>
+
+												{% for championnat, donnees in but_mi_temps %}
+													{% if championnat == key %}
+														{% for code, data in donnees %}
+															<tr class="t_tr_td">
+																<td class="t_td">
+																	{{code}}
+																</td>
+																<td class="t_td">
+																	{{data['NPM']}}
+																</td>
+																<td class="t_td">
+																	{{data['BPM']}}
+																</td>
+																<td class="t_td">
+																	{{data['N2M']}}
+																</td>
+																<td class="t_td">
+																	{{data['B2M']}}
+																</td>
+																<td class="t_td">
+																	{{data['TR']}}
+																</td>
+																<td class="t_td">
+																	{{data['%NPM']}}%
+																</td>
+																<td class="t_td">
+																	{{data['%BPM']}}%
+																</td>
+																<td class="t_td">
+																	{{data['%N2M']}}%
+																</td>
+																<td class="t_td">
+																	{{data['%B2M']}}%
+																</td>
+																<td class="t_td">
+																	{% if data['[80-100%:PM]'] %}
+																		<i class="typcn typcn-input-checked text-success h2"></i>
+																	{% else %}
+																		<i class="typcn typcn-delete text-danger h2"></i>
+																	{% endif %}
+																</td>
+																<td class="t_td">
+																	{% if data['[80-100%:2M]'] %}
+																		<i class="typcn typcn-input-checked text-success h2"></i>
+																	{% else %}
+																		<i class="typcn typcn-delete text-danger h2"></i>
+																	{% endif %}
+																</td>
+															</tr>
+														{% endfor %}
+													{% endif %}
+												{% endfor %}
+											</table>
+										</div>
+
+										<div class="col-lg-12">
+											{% for cle, data in nul_chaque_mi_temps %}
+												{% if (key == cle) %}
+													{% for valeur in data %}
+														<div class="row mb-3">
+															<div class="col-lg-12 d_b">
+
+																<div class="row h_1">
+																	<div class="col-lg-12 text-center">
+																		({{valeur['rang']['domicile']}})
+																		<strong class="s_b">{{valeur['club']['domicile']}}</strong>
+																		{% set domicile = valeur['logo']['domicile'] %}
+																		<img style="width:25px;" src="{{asset('images/'~ valeur['logo']['domicile'])}}">
+																		<span class="score">VS</span>
+																		<img style="width:25px;" src="{{asset('images/'~ valeur['logo']['exterieur'])}}">
+																		<strong class="s_b">{{valeur['club']['exterieur']}}</strong>
+																		({{valeur['rang']['exterieur']}})
+																	</div>
+																</div>
+
+																<div class="row text-center h_1">
+																	<div class="col-lg-12">
+																		{{valeur['rencontre']}}
+																	</div>
+																</div>
+
+																<div class="row h_1">
+																	<div class="col-lg-12 ">
+																		<table style="width:100%; text-align:center;">
+																			<tr>
+																				<th>Journée</th>
+																				<th>Classement</th>
+																				{% if valeur['pourcentage_PM'] is defined %}
+																					<th>[80-100%:PM]</th>
+																					<th>Pari PM</th>
+																				{% endif %}
+																				{% if valeur['pourcentage_2M'] is defined %}
+																					<th>[80-100%:2M]</th>
+																					<th>Pari 2M</th>
+																				{% endif %}
+
+																			</tr>
+																			<tr>
+																				<td>{{valeur['journee']}}</td>
+																				<td>{{valeur['classement']}}</td>
+																				{% if valeur['pourcentage_PM'] is defined %}
+																					<td class="text-warning">
+																						<strong>{{valeur['pourcentage_PM']}}%</strong>
+																					</td>
+																					<td class="text-danger">
+																						<strong>{{valeur['[80-100%:PM]']}}</strong>
+																					</td>
+																				{% endif %}
+																				{% if valeur['pourcentage_2M']is defined %}
+																					<td class="text-warning">
+																						<strong>{{valeur['pourcentage_2M']}}%</strong>
+																					</td>
+																					<td class="text-danger">
+																						<strong>{{valeur['[80-100%:2M]']}}</strong>
+																					</td>
+																				{% endif %}
+																			</tr>
+																		</table>
+																	</div>
+																</div>
+
+															</div>
+														</div>
+													{% endfor %}
+												{% endif %}
+											{% endfor %}
+
+
+										</div>
+
+									</div>
+
+									<hr class="h_bas"/>
 
 								</div>
 							</div>
 						</div>
-					</div>
-				{% endfor %}
+					{% endfor %}
 
 				</div>
 			</div>
-		<div>
+			<div></div>
 
-	</div>
+		{% endblock %}
 
-{% endblock %}
-
-{% block scripts %}{% endblock %}
+		{% block scripts %}{% endblock %}
