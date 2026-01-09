@@ -41,6 +41,29 @@ abstract class Utilitaire
     public const P_PARI_PM = "[80-100%:PM]"; // Pourcentage de pari première mi-temps
     public const P_PARI_2M = "[80-100%:2M]"; // Pourcentage de pari deuxième mi-temps
 
+    public const D1 = "D1"; // Equipe à domicile première mi-temps
+    public const E1 = "E1"; // Equipe à l'extérieur première mi-temps
+    public const N1 = "N1"; // Nul première mi-temps
+    public const PD1 = "%D1"; // Pourcentage Equipe à domicile première mi-temps
+    public const PE1 = "%E1"; // Pourcentage Equipe à l'extérieur première mi-temps
+    public const PN1 = "%N1"; // Pourcentage Nul première mi-temps
+    public const P_PARI1 = "[80-100%:1]"; // Pourcentage de pari première mi-temps
+
+    public const D2 = "D2"; // Equipe à domicile deuxième mi-temps
+    public const E2 = "E2"; // Equipe à l'extérieur deuxième mi-temps
+    public const N2 = "N2"; // Nul deuxième mi-temps
+    public const PD2 = "%D2"; // Pourcentage Equipe à domicile deuxième mi-temps
+    public const PE2 = "%E2"; // Pourcentage Equipe à l'extérieur deuxième mi-temps
+    public const PN2 = "%N2"; // Pourcentage Nul deuxième mi-temps
+    public const P_PARI2 = "[80-100%:2]"; // Pourcentage de pari deuxième mi-temps
+
+    public const D3 = "D3"; // Equipe à domicile du match
+    public const E3 = "E3"; // Equipe à l'extérieur du match
+    public const N3 = "N3"; // Nul du match
+    public const PD3 = "%D3"; // Pourcentage Equipe à domicile du match
+    public const PE3 = "%E3"; // Pourcentage Equipe à l'extérieur du match
+    public const PN3 = "%N3"; // Pourcentage Nul du match
+    public const P_PARI3 = "[80-100%:3]"; // Pourcentage de pari du match
 
     /**
      * Résumé de getErreur :

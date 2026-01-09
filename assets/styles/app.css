@@ -176,6 +176,12 @@ background: #000;
     text-align: center;
 }
 
+.t_th2{
+    font-size: 1em;
+    padding: 8px;
+    text-align: center;
+}
+
 .t_tr
 {
     background-color: rgb(243, 209, 147);
@@ -183,6 +189,15 @@ background: #000;
 
 .t_td{
     font-size: 1.2em;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-align: center;
+}
+
+.t_td2{
+    font-size: 1em;
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 8px;

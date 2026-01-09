@@ -271,7 +271,7 @@ function valider1(
         contenu_domicile.html(objet.domicile);
         contenu_exterieur.html(objet.exterieur);
 
-        // On raffraichit la table des matchs
+        // On raffraichit la table des matchs        
         action_liste(PREFIX_URL, NOM_TABLEAU, btn_calendrier.val(), btn_saison.val());
     };
 

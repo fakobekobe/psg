@@ -38,11 +38,17 @@ final class TableaudebordController extends AbstractController
         );
 
         $stat_classement = $stat["classement"];
+
         $stat_2EM = $stat["deux_equipe_marquent"];
         $stat_2EM = $this->EM2_Oui_Non(repository: $this->statistique_repository, donnees: $stat_2EM);
+
         $but_mi_temps = $stat["but_mi_temps"];
         $nul_chaque_mi_temps = $stat["nul_chaque_mi_temps"];
         $nul_chaque_mi_temps = $this->nul_chaque_mi_temps(repository: $this->statistique_repository, donnees: $nul_chaque_mi_temps);
+
+        $hors_jeu = $stat["hors_jeu"];
+        $donnees_hors_jeu = $stat["donnees_hors_jeu"];
+        $donnees_hors_jeu = $this->hors_jeu(repository: $this->statistique_repository, donnees: $donnees_hors_jeu);
 
         return $this->render(
             view: 'tableaudebord/index.html.twig',
@@ -51,6 +57,8 @@ final class TableaudebordController extends AbstractController
                 'em2_oui_non' => $stat_2EM,
                 "but_mi_temps" => $but_mi_temps,
                 "nul_chaque_mi_temps" => $nul_chaque_mi_temps,
+                "hors_jeu" => $hors_jeu,
+                "donnees_hors_jeu" => $donnees_hors_jeu,
             ]
         );
     }
@@ -76,10 +84,14 @@ final class TableaudebordController extends AbstractController
         $score_2M_domicile = 0;
         $score_PM_exterieur = 0;
         $score_2M_exterieur = 0;
-        $NPM = 0; // Nul première mi-temps
-        $BPM = 0; // But première mi-temps
-        $N2PM = 0; // Nul deuxième mi-temps
-        $B2PM = 0; // But deuxième mi-temps
+
+        $hors_jeu_PM_domicile = 0;
+        $hors_jeu_2M_domicile = 0;
+        $hors_jeu_PM_exterieur = 0;
+        $hors_jeu_2M_exterieur = 0;
+        $hors_jeu = [];
+        $donnees_hors_jeu = [];
+
         //------------------------------
 
         // On récupère les saisons
@@ -99,6 +111,7 @@ final class TableaudebordController extends AbstractController
                 $cpt = 0;
                 $cpte = 0;
                 $cptn = 0;
+                $cpth = 0;
 
                 // On parcours les clubs
                 foreach ($clubs as $c) {
@@ -184,18 +197,22 @@ final class TableaudebordController extends AbstractController
                                     if ($donnees['periode'] == $premiere_mt) {
                                         $score_domicile += ($donnees['statistique'])->getScore();
                                         $score_PM_domicile = ($donnees['statistique'])->getScore();
+                                        $hors_jeu_PM_domicile = ($donnees['statistique'])->getHorsJeu();
                                     } else if ($donnees['periode'] == $seconde_mt) {
                                         $score_domicile += ($donnees['statistique'])->getScore();
                                         $score_2M_domicile = ($donnees['statistique'])->getScore();
+                                        $hors_jeu_2M_domicile = ($donnees['statistique'])->getHorsJeu();
                                         $id_equipe_domicile = $donnees['equipe']; // On récupère l'id de l'équipe à domicile
                                     }
                                 } else if ($donnees['preponderance'] == $exterieur) {
                                     if ($donnees['periode'] == $premiere_mt) {
                                         $score_exterieur += ($donnees['statistique'])->getScore();
-                                        $score_2M_exterieur = ($donnees['statistique'])->getScore();
+                                        $score_PM_exterieur = ($donnees['statistique'])->getScore();
+                                        $hors_jeu_PM_exterieur = ($donnees['statistique'])->getHorsJeu();
                                     } else if ($donnees['periode'] == $seconde_mt) {
                                         $score_exterieur += ($donnees['statistique'])->getScore();
                                         $score_2M_exterieur = ($donnees['statistique'])->getScore();
+                                        $hors_jeu_2M_exterieur = ($donnees['statistique'])->getHorsJeu();
                                         $id_equipe_exterieur = $donnees['equipe']; // On récupère l'id de l'équipe à l'extérieur
                                     }
                                 }
@@ -241,9 +258,53 @@ final class TableaudebordController extends AbstractController
                                     $but_mi_temps[$championnat->getNom()][$code][Utilitaire::B2M] = 1;
                                     $but_mi_temps[$championnat->getNom()][$code][Utilitaire::N2M] = 0;
                                 }
+
+                                // Gestion du hors jeu dans chaque mi-temps 
+                                if ($hors_jeu_PM_domicile > $hors_jeu_PM_exterieur) {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1] = 0;
+                                } else if ($hors_jeu_PM_domicile < $hors_jeu_PM_exterieur) {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1] = 0;
+                                } else {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] = 0;
+                                }
+
+                                if ($hors_jeu_2M_domicile > $hors_jeu_2M_exterieur) {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E2] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2] = 0;
+                                } else if ($hors_jeu_2M_domicile < $hors_jeu_2M_exterieur) {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E2] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2] = 0;
+                                } else {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E2] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] = 0;
+                                }
+
+                                if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) > ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E3] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3] = 0;
+                                } else if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) < ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E3] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3] = 0;
+                                } else if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) == ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3] = 1;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::E3] = 0;
+                                    $hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] = 0;
+                                }
                             } else {
                                 if (!array_key_exists(key: $code, array: $classement[$championnat->getNom()])) {
-                                    // Le code n'existe pas on l'ajoute pour la premier fois                   
+                                    // Le code n'existe pas on l'ajoute pour la premier fois  -------
+                                    // Gestion des deux équipes de marquent ou pas                  
                                     if ($score_domicile > 0 and $score_exterieur > 0) {
                                         $classement[$championnat->getNom()][$code][Utilitaire::EM2] = 1;
                                         $classement[$championnat->getNom()][$code][Utilitaire::EM1] = 0;
@@ -268,8 +329,52 @@ final class TableaudebordController extends AbstractController
                                         $but_mi_temps[$championnat->getNom()][$code][Utilitaire::B2M] = 1;
                                         $but_mi_temps[$championnat->getNom()][$code][Utilitaire::N2M] = 0;
                                     }
+
+                                    // Gestion du hors jeu dans chaque mi-temps 
+                                    if ($hors_jeu_PM_domicile > $hors_jeu_PM_exterieur) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1] = 0;
+                                    } else if ($hors_jeu_PM_domicile < $hors_jeu_PM_exterieur) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1] = 0;
+                                    } else {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] = 0;
+                                    }
+
+                                    if ($hors_jeu_2M_domicile > $hors_jeu_2M_exterieur) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E2] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2] = 0;
+                                    } else if ($hors_jeu_2M_domicile < $hors_jeu_2M_exterieur) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E2] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2] = 0;
+                                    } else {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E2] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] = 0;
+                                    }
+
+                                    if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) > ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E3] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3] = 0;
+                                    } else if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) < ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E3] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3] = 0;
+                                    } else if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) == ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3] = 1;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E3] = 0;
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] = 0;
+                                    }
                                 } else {
-                                    // Le code existe on l'incrémente
+                                    // Le code existe on l'incrémente --------------------
+                                    // Gestion des deux équipes se marquent ou pas
                                     if ($score_domicile > 0 and $score_exterieur > 0) {
                                         $classement[$championnat->getNom()][$code][Utilitaire::EM2] += 1;
                                     } else {
@@ -288,73 +393,31 @@ final class TableaudebordController extends AbstractController
                                     } else {
                                         $but_mi_temps[$championnat->getNom()][$code][Utilitaire::B2M] += 1;
                                     }
-                                }
-                            }
 
-                            // On effectue la sauvegarde des données pour l'analyse des rencontres à venir
-                            if (
-                                24 == $calendrier['id'] and //$data_2EM_O_N['id_calendrier_precedent']
-                                1 == $saison->getId() and //$data_2EM_O_N['id_saison']
-                                1 == $championnat->getId() //$data_2EM_O_N['id_championnat']
-                            ) {
-                                // Gestion des 2 équipes marquent ou pas----------------------
-                                // On effectue les calculs sur le classement
-                                foreach ($classement[$championnat->getNom()] as $key => $classe) {
-                                    $classement[$championnat->getNom()][$key][Utilitaire::TR] = $classement[$championnat->getNom()][$key][Utilitaire::EM1] + $classement[$championnat->getNom()][$key][Utilitaire::EM2];
-                                    $classement[$championnat->getNom()][$key][Utilitaire::PEM1] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::EM1] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
-                                    $classement[$championnat->getNom()][$key][Utilitaire::PEM2] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::EM2] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
-                                    $classement[$championnat->getNom()][$key][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$key][Utilitaire::PEM1] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::PEM2] >= Utilitaire::PARI) ? true : false;
-                                }
-
-                                // On sauvegarde les données des rencontres
-                                if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI]) {
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['club']['domicile'] = $id_equipe_domicile;
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['club']['exterieur'] = $id_equipe_exterieur;
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['classement'] = $code;
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['domicile'] = $rang_domicile;
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['exterieur'] = $rang_exterieur;
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['calendrier'] = 25; //$data_2EM_O_N['id_calendrier'];
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1, 25, $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage'] = ($classement[$championnat->getNom()][$code][Utilitaire::PEM1] > $classement[$championnat->getNom()][$code][Utilitaire::PEM2]) ? $classement[$championnat->getNom()][$code][Utilitaire::PEM1] : $classement[$championnat->getNom()][$code][Utilitaire::PEM2];
-                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$code][Utilitaire::PEM1] > $classement[$championnat->getNom()][$code][Utilitaire::PEM2]) ? Utilitaire::EM1 : Utilitaire::EM2;
-                                    $cpte++;
-                                }
-
-
-                                // Gestion du nul dans chaque mi-temps ou pas----------------------
-                                // On effectue les calculs sur le but_mi_temps
-                                foreach ($but_mi_temps[$championnat->getNom()] as $key => $classe) {                                 
-                                    $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR] = $but_mi_temps[$championnat->getNom()][$key][Utilitaire::NPM] + $but_mi_temps[$championnat->getNom()][$key][Utilitaire::BPM];
-                                    $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PNPM] = round(num: ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::NPM] / $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
-                                    $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PBPM] = round(num: ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::BPM] / $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
-                                    $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PN2M] = round(num: ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::N2M] / $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
-                                    $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PB2M] = round(num: ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::B2M] / $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
-                                    $but_mi_temps[$championnat->getNom()][$key][Utilitaire::P_PARI_PM] = ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::PNPM] >= Utilitaire::PARI or $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PBPM] >= Utilitaire::PARI) ? true : false;
-                                    $but_mi_temps[$championnat->getNom()][$key][Utilitaire::P_PARI_2M] = ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::PN2M] >= Utilitaire::PARI or $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PB2M] >= Utilitaire::PARI) ? true : false;
-                                }
-
-                                // On sauvegarde les données des rencontres
-                                if ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_PM] or $but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_2M]) {
-                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['club']['domicile'] = $id_equipe_domicile;
-                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['club']['exterieur'] = $id_equipe_exterieur;
-                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['classement'] = $code;
-                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rang']['domicile'] = $rang_domicile;
-                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rang']['exterieur'] = $rang_exterieur;
-                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['calendrier'] = 25; //$data_2EM_O_N['id_calendrier'];
-                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1, 25, $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
-                                    
-                                    if($but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_PM])
-                                    {
-                                        $donnees_but_mi_temps[$championnat->getNom()][$cptn]['pourcentage_PM'] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::NPM] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::BPM]) ? $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PNPM] : $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PBPM];
-                                        $donnees_but_mi_temps[$championnat->getNom()][$cptn][Utilitaire::P_PARI_PM] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::PNPM] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PBPM]) ? Utilitaire::NPM : Utilitaire::BPM;
+                                    // Gestion du hors jeu dans chaque mi-temps 
+                                    if ($hors_jeu_PM_domicile > $hors_jeu_PM_exterieur) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] += 1;
+                                    } else if ($hors_jeu_PM_domicile < $hors_jeu_PM_exterieur) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1] += 1;
+                                    } else {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1] += 1;
                                     }
-                                    
-                                    if($but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_2M])
-                                    {
-                                        $donnees_but_mi_temps[$championnat->getNom()][$cptn]['pourcentage_2M'] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::N2M] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::B2M]) ? $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PN2M] : $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PB2M];
-                                        $donnees_but_mi_temps[$championnat->getNom()][$cptn][Utilitaire::P_PARI_2M] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::PN2M] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PB2M]) ? Utilitaire::N2M : Utilitaire::B2M;
+
+                                    if ($hors_jeu_2M_domicile > $hors_jeu_2M_exterieur) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] += 1;
+                                    } else if ($hors_jeu_2M_domicile < $hors_jeu_2M_exterieur) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E2] += 1;
+                                    } else {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2] += 1;
                                     }
-                                    $cptn++;
+
+                                    if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) > ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] += 1;
+                                    } else if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) < ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::E3] += 1;
+                                    } else if (($hors_jeu_PM_domicile + $hors_jeu_2M_domicile) == ($hors_jeu_PM_exterieur + $hors_jeu_2M_exterieur)) {
+                                        $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3] += 1;
+                                    }
                                 }
                             }
                         }
@@ -403,6 +466,191 @@ final class TableaudebordController extends AbstractController
                                 $club[$j]['but_encaisse'] += $score_domicile;
                                 $club[$j]['but_difference'] = $club[$j]['but_marque'] - $club[$j]['but_encaisse'];
                                 //--------------------------                        
+                            }
+                        }
+                    }
+
+                    // On effectue le traitement des match à venir
+                    if (
+                        35 == $calendrier['id'] and //$data_2EM_O_N['id_calendrier_precedent']
+                        1 == $saison->getId() and //$data_2EM_O_N['id_saison']
+                        1 == $championnat->getId() //$data_2EM_O_N['id_championnat']
+                    ) {
+                        // Gestion des 2 équipes marquent ou pas : On effectue les calculs sur le classement
+                        foreach ($classement[$championnat->getNom()] as $key => $classe) {
+                            $classement[$championnat->getNom()][$key][Utilitaire::TR] = $classement[$championnat->getNom()][$key][Utilitaire::EM1] + $classement[$championnat->getNom()][$key][Utilitaire::EM2];
+                            $classement[$championnat->getNom()][$key][Utilitaire::PEM1] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::EM1] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $classement[$championnat->getNom()][$key][Utilitaire::PEM2] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::EM2] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$key][Utilitaire::PEM1] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::PEM2] >= Utilitaire::PARI) ? true : false;
+                        }
+
+                        // Gestion du nul dans chaque mi-temps ou pas : On effectue les calculs sur le but_mi_temps
+                        foreach ($but_mi_temps[$championnat->getNom()] as $key => $classe) {
+                            $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR] = $but_mi_temps[$championnat->getNom()][$key][Utilitaire::NPM] + $but_mi_temps[$championnat->getNom()][$key][Utilitaire::BPM];
+                            $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PNPM] = round(num: ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::NPM] / $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PBPM] = round(num: ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::BPM] / $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PN2M] = round(num: ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::N2M] / $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PB2M] = round(num: ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::B2M] / $but_mi_temps[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $but_mi_temps[$championnat->getNom()][$key][Utilitaire::P_PARI_PM] = ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::PNPM] >= Utilitaire::PARI or $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PBPM] >= Utilitaire::PARI) ? true : false;
+                            $but_mi_temps[$championnat->getNom()][$key][Utilitaire::P_PARI_2M] = ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::PN2M] >= Utilitaire::PARI or $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PB2M] >= Utilitaire::PARI) ? true : false;
+                        }
+
+                        // Gestion du hors-jeu : On effectue les calculs sur le hors-jeu
+                        foreach ($hors_jeu[$championnat->getNom()] as $key => $classe) {
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR] = $hors_jeu[$championnat->getNom()][$key][Utilitaire::D1] + $hors_jeu[$championnat->getNom()][$key][Utilitaire::E1] + $hors_jeu[$championnat->getNom()][$key][Utilitaire::N1];
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PD1] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::D1] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE1] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::E1] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN1] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::N1] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PD2] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::D2] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE2] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::E2] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN2] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::N2] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PD3] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::D3] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE3] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::E3] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN3] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::N3] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::P_PARI1] = ($hors_jeu[$championnat->getNom()][$key][Utilitaire::PD1] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE1] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN1] >= Utilitaire::PARI) ? true : false;
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::P_PARI2] = ($hors_jeu[$championnat->getNom()][$key][Utilitaire::PD2] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE2] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN2] >= Utilitaire::PARI) ? true : false;
+                            $hors_jeu[$championnat->getNom()][$key][Utilitaire::P_PARI3] = ($hors_jeu[$championnat->getNom()][$key][Utilitaire::PD3] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE3] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN3] >= Utilitaire::PARI) ? true : false;
+                        }
+
+                        // On récupère les infos des équipes du match à venir -----
+                        // On récupère les rencontres
+                        //$s_rencontres = $repository->rencontres(id_saison: $data_2EM_O_N['id_saison'], id_calendrier: $data_2EM_O_N['id_calendrier']);
+                        $s_rencontres = $repository->rencontres(id_saison: 1, id_calendrier: 36);
+
+                        // On parcours les rencontres
+                        foreach ($s_rencontres as $s_rencontre) {
+                            // On récupère les matchs en cours
+                            $s_matchs = $repository->getListeMatchByRencontre(id_rencontre: $s_rencontre->getId());
+
+                            // On parcours les matchs 
+                            foreach ($s_matchs as $s_match) {
+                                // On récupère les équipes
+                                if ($s_match->getPreponderance()->getId() == $domicile) {
+                                    $id_equipe_domicile = $s_match->getEquipeSaison()->getEquipe()->getId();
+                                } else if ($s_match->getPreponderance()->getId() == $exterieur) {
+                                    $id_equipe_exterieur = $s_match->getEquipeSaison()->getEquipe()->getId();
+                                }
+                            }
+
+                            // On récupère le code du classement
+                            for ($i = 0; $i < count(value: $club); $i++) {
+                                if ($club[$i]['id'] == $id_equipe_domicile) {
+                                    $rang_domicile = $i + 1;
+                                } else if ($club[$i]['id'] == $id_equipe_exterieur) {
+                                    $rang_exterieur = $i + 1;
+                                }
+                            }
+
+                            $code = Utilitaire::categorie_classement(rang_domicile: $rang_domicile, rang_exterieur: $rang_exterieur);
+
+                            // Gestion des 2 équipes marquent ou pas : On sauvegarde les données des rencontres
+                            if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI]) {
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['club']['domicile'] = $id_equipe_domicile;
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['club']['exterieur'] = $id_equipe_exterieur;
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['classement'] = $code;
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['domicile'] = $rang_domicile;
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['exterieur'] = $rang_exterieur;
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['calendrier'] = 36; //$data_2EM_O_N['id_calendrier'];
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1, 36, $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage'] = ($classement[$championnat->getNom()][$code][Utilitaire::PEM1] > $classement[$championnat->getNom()][$code][Utilitaire::PEM2]) ? $classement[$championnat->getNom()][$code][Utilitaire::PEM1] : $classement[$championnat->getNom()][$code][Utilitaire::PEM2];
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI] = ($classement[$championnat->getNom()][$code][Utilitaire::PEM1] > $classement[$championnat->getNom()][$code][Utilitaire::PEM2]) ? Utilitaire::EM1 : Utilitaire::EM2;
+                                $cpte++;
+                            }
+
+
+                            // Gestion du nul dans chaque mi-temps ou pas : On sauvegarde les données des rencontres
+                            if ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_PM] or $but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_2M]) {
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['club']['domicile'] = $id_equipe_domicile;
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['club']['exterieur'] = $id_equipe_exterieur;
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['classement'] = $code;
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rang']['domicile'] = $rang_domicile;
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rang']['exterieur'] = $rang_exterieur;
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['calendrier'] = 36; //$data_2EM_O_N['id_calendrier'];
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1, 36, $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
+
+                                if ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_PM]) {
+                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['pourcentage_PM'] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::NPM] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::BPM]) ? $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PNPM] : $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PBPM];
+                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn][Utilitaire::P_PARI_PM] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::PNPM] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PBPM]) ? Utilitaire::NPM : Utilitaire::BPM;
+                                }
+
+                                if ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_2M]) {
+                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn]['pourcentage_2M'] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::N2M] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::B2M]) ? $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PN2M] : $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PB2M];
+                                    $donnees_but_mi_temps[$championnat->getNom()][$cptn][Utilitaire::P_PARI_2M] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::PN2M] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PB2M]) ? Utilitaire::N2M : Utilitaire::B2M;
+                                }
+                                $cptn++;
+                            }
+
+                            // Gestion du hors-jeu : On sauvegarde les données des rencontres
+                            if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::P_PARI1] or $hors_jeu[$championnat->getNom()][$code][Utilitaire::P_PARI2] or $hors_jeu[$championnat->getNom()][$code][Utilitaire::P_PARI3]) {
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['club']['domicile'] = $id_equipe_domicile;
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['club']['exterieur'] = $id_equipe_exterieur;
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['classement'] = $code;
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['rang']['domicile'] = $rang_domicile;
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['rang']['exterieur'] = $rang_exterieur;
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['calendrier'] = 36; //$data_2EM_O_N['id_calendrier'];
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1, 36, $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
+
+                                if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::P_PARI1]) {
+                                    if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1]) {
+                                        if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1]) {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_1'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PD1];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI1] = Utilitaire::D1;
+                                        } else {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_1'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PN1];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI1] = Utilitaire::N1;
+                                        }
+                                    } else {
+                                        if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::E1] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::N1]) {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_1'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PE1];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI1] = Utilitaire::E1;
+                                        } else {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_1'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PN1];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI1] = Utilitaire::N1;
+                                        }
+                                    }
+                                }
+
+                                if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::P_PARI2]) {
+                                    if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::E2]) {
+                                        if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::D2] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2]) {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_2'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PD2];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI2] = Utilitaire::D2;
+                                        } else {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_2'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PN2];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI2] = Utilitaire::N2;
+                                        }
+                                    } else {
+                                        if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::E2] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::N2]) {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_2'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PE2];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI2] = Utilitaire::E2;
+                                        } else {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_2'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PN2];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI2] = Utilitaire::N2;
+                                        }
+                                    }
+                                }
+
+                                if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::P_PARI3]) {
+                                    if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::E3]) {
+                                        if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::D3] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3]) {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_3'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PD3];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI3] = Utilitaire::D3;
+                                        } else {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_3'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PN3];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI3] = Utilitaire::N3;
+                                        }
+                                    } else {
+                                        if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::E3] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::N3]) {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_3'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PE3];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI3] = Utilitaire::E3;
+                                        } else {
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth]['pourcentage_3'] = $hors_jeu[$championnat->getNom()][$code][Utilitaire::PN3];
+                                            $donnees_hors_jeu[$championnat->getNom()][$cpth][Utilitaire::P_PARI3] = Utilitaire::N3;
+                                        }
+                                    }
+                                }
+
+                                $cpth++;
                             }
                         }
                     }
@@ -550,6 +798,23 @@ final class TableaudebordController extends AbstractController
                         $but_mi_temps[$championnat->getNom()][$key][Utilitaire::P_PARI_PM] = ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::PNPM] >= Utilitaire::PARI or $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PBPM] >= Utilitaire::PARI) ? true : false;
                         $but_mi_temps[$championnat->getNom()][$key][Utilitaire::P_PARI_2M] = ($but_mi_temps[$championnat->getNom()][$key][Utilitaire::PN2M] >= Utilitaire::PARI or $but_mi_temps[$championnat->getNom()][$key][Utilitaire::PB2M] >= Utilitaire::PARI) ? true : false;
                     }
+
+                    // Gestion du hors-jeu
+                    foreach ($hors_jeu[$championnat->getNom()] as $key => $classe) {
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR] = $hors_jeu[$championnat->getNom()][$key][Utilitaire::D1] + $hors_jeu[$championnat->getNom()][$key][Utilitaire::E1] + $hors_jeu[$championnat->getNom()][$key][Utilitaire::N1];
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PD1] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::D1] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE1] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::E1] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN1] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::N1] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PD2] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::D2] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE2] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::E2] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN2] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::N2] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PD3] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::D3] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE3] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::E3] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN3] = round(num: ($hors_jeu[$championnat->getNom()][$key][Utilitaire::N3] / $hors_jeu[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::P_PARI1] = ($hors_jeu[$championnat->getNom()][$key][Utilitaire::PD1] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE1] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN1] >= Utilitaire::PARI) ? true : false;
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::P_PARI2] = ($hors_jeu[$championnat->getNom()][$key][Utilitaire::PD2] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE2] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN2] >= Utilitaire::PARI) ? true : false;
+                        $hors_jeu[$championnat->getNom()][$key][Utilitaire::P_PARI3] = ($hors_jeu[$championnat->getNom()][$key][Utilitaire::PD3] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PE3] >= Utilitaire::PARI or $hors_jeu[$championnat->getNom()][$key][Utilitaire::PN3] >= Utilitaire::PARI) ? true : false;
+                    }
                 }
             }
         }
@@ -559,6 +824,8 @@ final class TableaudebordController extends AbstractController
             "deux_equipe_marquent" => $donnees_2EM_O_N,
             "but_mi_temps" => $but_mi_temps,
             "nul_chaque_mi_temps" => $donnees_but_mi_temps,
+            "hors_jeu" => $hors_jeu,
+            "donnees_hors_jeu" => $donnees_hors_jeu,
         ];
     }
 
@@ -615,16 +882,58 @@ final class TableaudebordController extends AbstractController
                 $retour[$key][$cpt]['journee'] = $calendrier->getJournee()->getDescriptionSimple();
                 $retour[$key][$cpt]['classement'] = $stat['classement'];
 
-                if(!empty($stat['pourcentage_PM']))
-                {
+                if (!empty($stat['pourcentage_PM'])) {
                     $retour[$key][$cpt]['pourcentage_PM'] = $stat['pourcentage_PM'];
                     $retour[$key][$cpt][Utilitaire::P_PARI_PM] = $stat[Utilitaire::P_PARI_PM];
                 }
 
-                if(!empty($stat['pourcentage_2M']))
-                {
+                if (!empty($stat['pourcentage_2M'])) {
                     $retour[$key][$cpt]['pourcentage_2M'] = $stat['pourcentage_2M'];
                     $retour[$key][$cpt][Utilitaire::P_PARI_2M] = $stat[Utilitaire::P_PARI_2M];
+                }
+
+                $cpt++;
+            }
+        }
+
+        return $retour;
+    }
+
+    private function hors_jeu(mixed $repository, array $donnees): array
+    {
+        $retour = [];
+        $cpt = 0;
+        foreach ($donnees as $key => $data) {
+            foreach ($data as $stat) {
+                $equipe_domicile = $repository->equipe($stat['club']['domicile']);
+                $equipe_exterieur = $repository->equipe($stat['club']['exterieur']);
+                $rencontre = $repository->rencontre($stat['rencontre']);
+                $calendrier = $repository->getCalendrier($stat['calendrier']);
+                $retour[$key][$cpt]['club']['domicile'] = ucfirst(string: $equipe_domicile->getNom());
+                $retour[$key][$cpt]['club']['exterieur'] = ucfirst(string: $equipe_exterieur->getNom());
+                $retour[$key][$cpt]['logo']['domicile'] = $equipe_domicile->getLogo();
+                $retour[$key][$cpt]['logo']['exterieur'] = $equipe_exterieur->getLogo();
+                $rang_domicile = (((int) $stat['rang']['domicile']) > 1) ? 'e' : 'er';
+                $rang_exterieur = (((int) $stat['rang']['exterieur']) > 1) ? 'e' : 'er';
+                $retour[$key][$cpt]['rang']['domicile'] = $stat['rang']['domicile'] . $rang_domicile;
+                $retour[$key][$cpt]['rang']['exterieur'] = $stat['rang']['exterieur'] . $rang_exterieur;
+                $retour[$key][$cpt]['rencontre'] = $rencontre->getDescription();
+                $retour[$key][$cpt]['journee'] = $calendrier->getJournee()->getDescriptionSimple();
+                $retour[$key][$cpt]['classement'] = $stat['classement'];
+
+                if (!empty($stat['pourcentage_1'])) {
+                    $retour[$key][$cpt]['pourcentage_1'] = $stat['pourcentage_1'];
+                    $retour[$key][$cpt][Utilitaire::P_PARI1] = $stat[Utilitaire::P_PARI1];
+                }
+
+                if (!empty($stat['pourcentage_2'])) {
+                    $retour[$key][$cpt]['pourcentage_2'] = $stat['pourcentage_2'];
+                    $retour[$key][$cpt][Utilitaire::P_PARI2] = $stat[Utilitaire::P_PARI2];
+                }
+
+                if (!empty($stat['pourcentage_3'])) {
+                    $retour[$key][$cpt]['pourcentage_3'] = $stat['pourcentage_3'];
+                    $retour[$key][$cpt][Utilitaire::P_PARI3] = $stat[Utilitaire::P_PARI3];
                 }
 
                 $cpt++;
