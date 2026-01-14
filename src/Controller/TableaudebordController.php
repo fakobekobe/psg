@@ -243,6 +243,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 0;
                                     } else if ($score_PM_domicile < $score_PM_exterieur) {
                                         $classement[$championnat->getNom()][$code][Utilitaire::E1_2M] = 1;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D1_2M] = 0;
@@ -250,6 +252,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 0;
                                     } else {
                                         $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] = 1;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D1_2M] = 0;
@@ -257,6 +261,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 0;
                                     }
                                 } else if ($score_PM_domicile > 0 or $score_PM_exterieur > 0) {
                                     if ($score_PM_domicile > 0) {
@@ -266,6 +272,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 0;
                                     } else {
                                         $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 1;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D1_2M] = 0;
@@ -273,6 +281,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 0;
                                     }
                                 } else if ($score_PM_domicile == 0 and $score_PM_exterieur == 0) {
                                     $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 1;
@@ -281,6 +291,8 @@ final class TableaudebordController extends AbstractController
                                     $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] = 0;
                                     $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                     $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
+                                    $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 1;
+                                    $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 0;
                                 }
 
                                 if ($score_2M_domicile > 0 and $score_2M_exterieur > 0) {
@@ -292,6 +304,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 0;
                                     } else if ($score_2M_domicile < $score_2M_exterieur) {
                                         $classement[$championnat->getNom()][$code][Utilitaire::E2_2M] = 1;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D2_2M] = 0;
@@ -299,6 +313,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 0;
                                     } else {
                                         $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] = 1;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D2_2M] = 0;
@@ -306,6 +322,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 0;
                                     }
                                 } else if ($score_2M_domicile > 0 or $score_2M_exterieur > 0) {
                                     if ($score_2M_domicile > 0) {
@@ -315,6 +333,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 0;
                                     } else {
                                         $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 1;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D2_2M] = 0;
@@ -322,6 +342,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 0;
                                     }
                                 } else if ($score_2M_domicile == 0 and $score_2M_exterieur == 0) {
                                     $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 1;
@@ -330,6 +352,8 @@ final class TableaudebordController extends AbstractController
                                     $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] = 0;
                                     $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                     $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
+                                    $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 1;
+                                    $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 0;
                                 }
 
                                 // Gestion du nul dans chaque mi-temps ou pas ----------------------
@@ -404,6 +428,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 0;
                                         } else if ($score_PM_domicile < $score_PM_exterieur) {
                                             $classement[$championnat->getNom()][$code][Utilitaire::E1_2M] = 1;
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_2M] = 0;
@@ -411,6 +437,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 0;
                                         } else {
                                             $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] = 1;
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_2M] = 0;
@@ -418,6 +446,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 0;
                                         }
                                     } else if ($score_PM_domicile > 0 or $score_PM_exterieur > 0) {
                                         if ($score_PM_domicile > 0) {
@@ -427,6 +457,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 0;
                                         } else {
                                             $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 1;
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_2M] = 0;
@@ -434,6 +466,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 0;
                                         }
                                     } else if ($score_PM_domicile == 0 and $score_PM_exterieur == 0) {
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB1] = 1;
@@ -442,6 +476,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P1M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P2M] = 0;
                                     }
 
                                     if ($score_2M_domicile > 0 and $score_2M_exterieur > 0) {
@@ -453,6 +489,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 0;
                                         } else if ($score_2M_domicile < $score_2M_exterieur) {
                                             $classement[$championnat->getNom()][$code][Utilitaire::E2_2M] = 1;
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_2M] = 0;
@@ -460,6 +498,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 0;
                                         } else {
                                             $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] = 1;
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_2M] = 0;
@@ -467,6 +507,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 0;
                                         }
                                     } else if ($score_2M_domicile > 0 or $score_2M_exterieur > 0) {
                                         if ($score_2M_domicile > 0) {
@@ -476,6 +518,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 0;
                                         } else {
                                             $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 1;
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_2M] = 0;
@@ -483,6 +527,8 @@ final class TableaudebordController extends AbstractController
                                             $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                             $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 0;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 0;
                                         }
                                     } else if ($score_2M_domicile == 0 and $score_2M_exterieur == 0) {
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB2] = 1;
@@ -491,6 +537,8 @@ final class TableaudebordController extends AbstractController
                                         $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] = 0;
                                         $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] = 0;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D1M] = 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D2M] = 0;
                                     }
 
                                     // Gestion du nul dans chaque mi-temps ou pas 
@@ -559,38 +607,50 @@ final class TableaudebordController extends AbstractController
 
                                         if ($score_PM_domicile > $score_PM_exterieur) {
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_2M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P2M] += 1;
                                         } else if ($score_PM_domicile < $score_PM_exterieur) {
                                             $classement[$championnat->getNom()][$code][Utilitaire::E1_2M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P2M] += 1;
                                         } else {
                                             $classement[$championnat->getNom()][$code][Utilitaire::N1_2M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P2M] += 1;
                                         }
                                     } else if ($score_PM_domicile > 0 or $score_PM_exterieur > 0) {
                                         if ($score_PM_domicile > 0) {
                                             $classement[$championnat->getNom()][$code][Utilitaire::D1_1M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P1M] += 1;
                                         } else {
                                             $classement[$championnat->getNom()][$code][Utilitaire::E1_1M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::P1M] += 1;
                                         }
                                     } else if ($score_PM_domicile == 0 and $score_PM_exterieur == 0) {
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB1] += 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::P1M] += 1;
                                     }
 
                                     if ($score_2M_domicile > 0 and $score_2M_exterieur > 0) {
 
                                         if ($score_2M_domicile > $score_2M_exterieur) {
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_2M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D2M] += 1;
                                         } else if ($score_2M_domicile < $score_2M_exterieur) {
                                             $classement[$championnat->getNom()][$code][Utilitaire::E2_2M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D2M] += 1;
                                         } else {
                                             $classement[$championnat->getNom()][$code][Utilitaire::N2_2M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D2M] += 1;
                                         }
                                     } else if ($score_2M_domicile > 0 or $score_2M_exterieur > 0) {
                                         if ($score_2M_domicile > 0) {
                                             $classement[$championnat->getNom()][$code][Utilitaire::D2_1M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D1M] += 1;
                                         } else {
                                             $classement[$championnat->getNom()][$code][Utilitaire::E2_1M] += 1;
+                                            $classement[$championnat->getNom()][$code][Utilitaire::D1M] += 1;
                                         }
                                     } else if ($score_2M_domicile == 0 and $score_2M_exterieur == 0) {
                                         $classement[$championnat->getNom()][$code][Utilitaire::PB2] += 1;
+                                        $classement[$championnat->getNom()][$code][Utilitaire::D1M] += 1;
                                     }
 
                                     // Gestion du nul dans chaque mi-temps ou pas 
@@ -706,6 +766,11 @@ final class TableaudebordController extends AbstractController
                             $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_2M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D1_2M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_E1_2M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_N1_2M] >= Utilitaire::PARI) ? true : false;
                             $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_1M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D1_1M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_E1_1M] >= Utilitaire::PARI) ? true : false;
                             $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_PB] = ($classement[$championnat->getNom()][$key][Utilitaire::P_PB1] >= Utilitaire::PARI) ? true : false;
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_P2M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::P2M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_P1M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::P1M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_P2M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_P2M] >= Utilitaire::PARI) ? true : false;
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_P1M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_P1M] >= Utilitaire::PARI) ? true : false;
+                            
 
                             $classement[$championnat->getNom()][$key][Utilitaire::P_D2_2M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::D2_2M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
                             $classement[$championnat->getNom()][$key][Utilitaire::P_E2_2M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::E2_2M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
@@ -716,6 +781,11 @@ final class TableaudebordController extends AbstractController
                             $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_2M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D2_2M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_E2_2M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_N2_2M] >= Utilitaire::PARI) ? true : false;
                             $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_1M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D2_1M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_E2_1M] >= Utilitaire::PARI) ? true : false;
                             $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_PB] = ($classement[$championnat->getNom()][$key][Utilitaire::P_PB2] >= Utilitaire::PARI) ? true : false;
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_D2M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::D2M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_D1M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::D1M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_D2M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D2M] >= Utilitaire::PARI) ? true : false;
+                            $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_D1M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D1M] >= Utilitaire::PARI) ? true : false;
+                            
                         }
 
                         // Gestion du nul dans chaque mi-temps ou pas : On effectue les calculs sur le but_mi_temps
@@ -783,7 +853,11 @@ final class TableaudebordController extends AbstractController
                                 $classement[$championnat->getNom()][$code][Utilitaire::P_PARI1_PB] or
                                 $classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_2M] or 
                                 $classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_1M] or 
-                                $classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_PB] 
+                                $classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_PB] or
+                                $classement[$championnat->getNom()][$code][Utilitaire::P_PARI1_P2M] or
+                                $classement[$championnat->getNom()][$code][Utilitaire::P_PARI1_P1M] or
+                                $classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_D2M] or
+                                $classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_D1M] 
                                 ) {
                                 $donnees_2EM_O_N[$championnat->getNom()][$cpte]['club']['domicile'] = $id_equipe_domicile;
                                 $donnees_2EM_O_N[$championnat->getNom()][$cpte]['club']['exterieur'] = $id_equipe_exterieur;
@@ -861,6 +935,26 @@ final class TableaudebordController extends AbstractController
                                 if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_PB]) {
                                     $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage_2_PB'] = $classement[$championnat->getNom()][$code][Utilitaire::P_PB2];
                                     $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI2_PB] = Utilitaire::PB2;
+                                }
+
+                                if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI1_P2M]) {
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage_1_P2M'] = $classement[$championnat->getNom()][$code][Utilitaire::P_P2M];
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI1_P2M] = Utilitaire::P2M;
+                                }
+
+                                if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI1_P1M]) {
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage_1_P1M'] = $classement[$championnat->getNom()][$code][Utilitaire::P_P1M];
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI1_P1M] = Utilitaire::P1M;
+                                }
+
+                                if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_D2M]) {
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage_2_D2M'] = $classement[$championnat->getNom()][$code][Utilitaire::P_D2M];
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI2_D2M] = Utilitaire::D2M;
+                                }
+
+                                if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI2_D1M]) {
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte]['pourcentage_2_D1M'] = $classement[$championnat->getNom()][$code][Utilitaire::P_D1M];
+                                    $donnees_2EM_O_N[$championnat->getNom()][$cpte][Utilitaire::P_PARI2_D1M] = Utilitaire::D1M;
                                 }
 
                                 $cpte++;
@@ -1109,6 +1203,11 @@ final class TableaudebordController extends AbstractController
                         $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_2M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D1_2M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_E1_2M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_N1_2M] >= Utilitaire::PARI) ? true : false;
                         $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_1M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D1_1M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_E1_1M] >= Utilitaire::PARI) ? true : false;
                         $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_PB] = ($classement[$championnat->getNom()][$key][Utilitaire::P_PB1] >= Utilitaire::PARI) ? true : false;
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_P2M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::P2M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_P1M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::P1M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_P2M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_P2M] >= Utilitaire::PARI) ? true : false;
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_PARI1_P1M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_P1M] >= Utilitaire::PARI) ? true : false;
+                            
 
                         $classement[$championnat->getNom()][$key][Utilitaire::P_D2_2M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::D2_2M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
                         $classement[$championnat->getNom()][$key][Utilitaire::P_E2_2M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::E2_2M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
@@ -1119,6 +1218,11 @@ final class TableaudebordController extends AbstractController
                         $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_2M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D2_2M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_E2_2M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_N2_2M] >= Utilitaire::PARI) ? true : false;
                         $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_1M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D2_1M] >= Utilitaire::PARI or $classement[$championnat->getNom()][$key][Utilitaire::P_E2_1M] >= Utilitaire::PARI) ? true : false;
                         $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_PB] = ($classement[$championnat->getNom()][$key][Utilitaire::P_PB2] >= Utilitaire::PARI) ? true : false;
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_D2M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::D2M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_D1M] = round(num: ($classement[$championnat->getNom()][$key][Utilitaire::D1M] / $classement[$championnat->getNom()][$key][Utilitaire::TR]) * 100, precision: 0);
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_D2M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D2M] >= Utilitaire::PARI) ? true : false;
+                        $classement[$championnat->getNom()][$key][Utilitaire::P_PARI2_D1M] = ($classement[$championnat->getNom()][$key][Utilitaire::P_D1M] >= Utilitaire::PARI) ? true : false;
+                            
                     }
 
                     // Gestion du nul dans chaque mi-temps ou pas
@@ -1212,6 +1316,26 @@ final class TableaudebordController extends AbstractController
                 if (!empty($stat['pourcentage_2_PB'])) {
                     $retour[$key][$cpt]['pourcentage_2_PB'] = $stat['pourcentage_2_PB'];
                     $retour[$key][$cpt][Utilitaire::P_PARI2_PB] = $stat[Utilitaire::P_PARI2_PB];
+                }
+
+                if (!empty($stat['pourcentage_1_P2M'])) {
+                    $retour[$key][$cpt]['pourcentage_1_P2M'] = $stat['pourcentage_1_P2M'];
+                    $retour[$key][$cpt][Utilitaire::P_PARI1_P2M] = $stat[Utilitaire::P_PARI1_P2M];
+                }
+
+                if (!empty($stat['pourcentage_1_P1M'])) {
+                    $retour[$key][$cpt]['pourcentage_1_P1M'] = $stat['pourcentage_1_P1M'];
+                    $retour[$key][$cpt][Utilitaire::P_PARI1_P1M] = $stat[Utilitaire::P_PARI1_P1M];
+                }
+
+                if (!empty($stat['pourcentage_2_D2M'])) {
+                    $retour[$key][$cpt]['pourcentage_2_D2M'] = $stat['pourcentage_2_D2M'];
+                    $retour[$key][$cpt][Utilitaire::P_PARI2_D2M] = $stat[Utilitaire::P_PARI2_D2M];
+                }
+
+                if (!empty($stat['pourcentage_2_P1M'])) {
+                    $retour[$key][$cpt]['pourcentage_2_D1M'] = $stat['pourcentage_2_D1M'];
+                    $retour[$key][$cpt][Utilitaire::P_PARI2_D1M] = $stat[Utilitaire::P_PARI2_D1M];
                 }
 
                 $cpt++;

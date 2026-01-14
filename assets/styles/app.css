@@ -264,3 +264,7 @@ background: #000;
     border:1px solid green;
     box-shadow: 1px 1px 5px black;
 }
+
+.texte_1em{
+    font-size: 0.7em;
+}

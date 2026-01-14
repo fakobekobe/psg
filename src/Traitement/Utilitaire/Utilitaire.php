@@ -39,6 +39,12 @@ abstract class Utilitaire
     public const PB1 = "PB1"; // Première mi-temps pas de but
     public const P_PB1 = "P_PB1"; // Pourcentage première mi-temps pas de but
     public const P_PARI1_PB = "[80-100%:1-PB]"; // Pourcentage pari première mi-temps, pas de but
+    public const P2M = "P2M"; // Les deux équipes marquent à la première mi-temps
+    public const P_P2M = "%P2M"; // Pourcentage les deux équipes marquent à la première mi-temps
+    public const P1M = "P1M"; // Une seule équipe marque à la première mi-temps
+    public const P_P1M = "%P1M"; // Pourcentage une seule équipe marque à la première mi-temps
+    public const P_PARI1_P2M = "[80-100%:1-P2M]"; // Pourcentage pari les deux équipes marquent à la première mi-temps
+    public const P_PARI1_P1M = "[80-100%:1-P1M]"; // Pourcentage pari une seule équipe marque à la première mi-temps
 
 
     public const D2_2M = "D2_2M"; // Deuxième mi-temps équipe à domicile, les deux équipes marquent
@@ -56,6 +62,12 @@ abstract class Utilitaire
     public const PB2 = "PB2"; // Deuxième mi-temps pas de but
     public const P_PB2 = "P_PB2"; // Pourcentage deuxième mi-temps pas de but
     public const P_PARI2_PB = "[80-100%:2-PB]"; // Pourcentage pari deuxième mi-temps, pas de but
+    public const D2M = "D2M"; // Les deux équipes marquent à la deuxième mi-temps
+    public const P_D2M = "%D2M"; // Pourcentage les deux équipes marquent à la deuxième mi-temps
+    public const D1M = "D1M"; // Une seule équipe marque à la deuxième mi-temps
+    public const P_D1M = "%D1M"; // Pourcentage une seule équipe marque à la deuxième mi-temps
+    public const P_PARI2_D2M = "[80-100%:2-D2M]"; // Pourcentage pari les deux équipes marquent à la deuxième mi-temps
+    public const P_PARI2_D1M = "[80-100%:2-D1M]"; // Pourcentage pari une seule équipe marque à la deuxième mi-temps
 
     
     public const TR = "TR"; 
