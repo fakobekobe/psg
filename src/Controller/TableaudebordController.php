@@ -744,9 +744,9 @@ final class TableaudebordController extends AbstractController
 
                     // On effectue le traitement des match à venir
                     if (
-                        41 == $calendrier['id'] and //$data_2EM_O_N['id_calendrier_precedent']
-                        1 == $saison->getId() and //$data_2EM_O_N['id_saison']
-                        1 == $championnat->getId() //$data_2EM_O_N['id_championnat']
+                        $data_2EM_O_N['id_calendrier_precedent'] == $calendrier['id'] and 
+                        $data_2EM_O_N['id_saison'] == $saison->getId() and 
+                        $data_2EM_O_N['id_championnat'] == $championnat->getId() 
                     ) {
                         // Gestion des 2 équipes marquent ou pas : On effectue les calculs sur le classement
                         foreach ($classement[$championnat->getNom()] as $key => $classe) {
@@ -818,8 +818,7 @@ final class TableaudebordController extends AbstractController
 
                         // On récupère les infos des équipes du match à venir -----
                         // On récupère les rencontres
-                        //$s_rencontres = $repository->rencontres(id_saison: $data_2EM_O_N['id_saison'], id_calendrier: $data_2EM_O_N['id_calendrier']);
-                        $s_rencontres = $repository->rencontres(id_saison: 1, id_calendrier: 42);
+                        $s_rencontres = $repository->rencontres(id_saison: $data_2EM_O_N['id_saison'], id_calendrier: $data_2EM_O_N['id_calendrier']);
 
                         // On parcours les rencontres
                         foreach ($s_rencontres as $s_rencontre) {
@@ -864,8 +863,8 @@ final class TableaudebordController extends AbstractController
                                 $donnees_2EM_O_N[$championnat->getNom()][$cpte]['classement'] = $code;
                                 $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['domicile'] = $rang_domicile;
                                 $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rang']['exterieur'] = $rang_exterieur;
-                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['calendrier'] = 42; //$data_2EM_O_N['id_calendrier'];
-                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1, 42, $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['calendrier'] = $data_2EM_O_N['id_calendrier']; //$data_2EM_O_N['id_calendrier'];
+                                $donnees_2EM_O_N[$championnat->getNom()][$cpte]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier($data_2EM_O_N['id_saison'], $data_2EM_O_N['id_calendrier'], $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
 
                                 if ($classement[$championnat->getNom()][$code][Utilitaire::P_PARI1_2M]) {
                                     if ($classement[$championnat->getNom()][$code][Utilitaire::D1_2M] > $classement[$championnat->getNom()][$code][Utilitaire::E1_2M]) {
@@ -968,8 +967,8 @@ final class TableaudebordController extends AbstractController
                                 $donnees_but_mi_temps[$championnat->getNom()][$cptn]['classement'] = $code;
                                 $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rang']['domicile'] = $rang_domicile;
                                 $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rang']['exterieur'] = $rang_exterieur;
-                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['calendrier'] = 42; //$data_2EM_O_N['id_calendrier'];
-                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1, 42, $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['calendrier'] = $data_2EM_O_N['id_calendrier']; //$data_2EM_O_N['id_calendrier'];
+                                $donnees_but_mi_temps[$championnat->getNom()][$cptn]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier($data_2EM_O_N['id_saison'], $data_2EM_O_N['id_calendrier'], $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
 
                                 if ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::P_PARI_PM]) {
                                     $donnees_but_mi_temps[$championnat->getNom()][$cptn]['pourcentage_PM'] = ($but_mi_temps[$championnat->getNom()][$code][Utilitaire::NPM] > $but_mi_temps[$championnat->getNom()][$code][Utilitaire::BPM]) ? $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PNPM] : $but_mi_temps[$championnat->getNom()][$code][Utilitaire::PBPM];
@@ -992,8 +991,8 @@ final class TableaudebordController extends AbstractController
                                 $donnees_hors_jeu[$championnat->getNom()][$cpth]['classement'] = $code;
                                 $donnees_hors_jeu[$championnat->getNom()][$cpth]['rang']['domicile'] = $rang_domicile;
                                 $donnees_hors_jeu[$championnat->getNom()][$cpth]['rang']['exterieur'] = $rang_exterieur;
-                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['calendrier'] = 42; //$data_2EM_O_N['id_calendrier'];
-                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier(1, 42, $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['calendrier'] = $data_2EM_O_N['id_calendrier']; //$data_2EM_O_N['id_calendrier'];
+                                $donnees_hors_jeu[$championnat->getNom()][$cpth]['rencontre'] = $repository->findRencontreBySaisonByClubByCalendrier($data_2EM_O_N['id_saison'], $data_2EM_O_N['id_calendrier'], $id_equipe_domicile); //$data_2EM_O_N['id_saison'] , $data_2EM_O_N['id_calendrier']
 
                                 if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::P_PARI1]) {
                                     if ($hors_jeu[$championnat->getNom()][$code][Utilitaire::D1] > $hors_jeu[$championnat->getNom()][$code][Utilitaire::E1]) {
