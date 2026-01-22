@@ -1271,6 +1271,7 @@ final class TableaudebordController extends AbstractController
         $cpt = 0;
         foreach ($donnees as $key => $data) {
             foreach ($data as $stat) {
+                if(!$stat['rencontre']) break;
                 $equipe_domicile = $repository->equipe($stat['club']['domicile']);
                 $equipe_exterieur = $repository->equipe($stat['club']['exterieur']);
                 $rencontre = $repository->rencontre($stat['rencontre']);
@@ -1350,6 +1351,7 @@ final class TableaudebordController extends AbstractController
         $cpt = 0;
         foreach ($donnees as $key => $data) {
             foreach ($data as $stat) {
+                if(!$stat['rencontre']) break;
                 $equipe_domicile = $repository->equipe($stat['club']['domicile']);
                 $equipe_exterieur = $repository->equipe($stat['club']['exterieur']);
                 $rencontre = $repository->rencontre($stat['rencontre']);
@@ -1389,6 +1391,7 @@ final class TableaudebordController extends AbstractController
         $cpt = 0;
         foreach ($donnees as $key => $data) {
             foreach ($data as $stat) {
+                if(!$stat['rencontre']) break;
                 $equipe_domicile = $repository->equipe($stat['club']['domicile']);
                 $equipe_exterieur = $repository->equipe($stat['club']['exterieur']);
                 $rencontre = $repository->rencontre($stat['rencontre']);
