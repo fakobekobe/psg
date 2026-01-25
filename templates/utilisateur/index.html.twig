@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Utilisateur' %}
+
+{% block body %}
+	<div
+		class="content-wrapper">
+		
+		<div class="row">
+			<div class="col-sm-6">
+				<h5 class="mb-0 font-weight-bold">Admin > Utilisateur</h5>
+				<p>Gestion des utilisateurs</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-12 d-flex grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<div class="d-flex flex-wrap justify-content-between">
+							<h4 class="card-title mb-3">Liste des utilisateurs</h4>
+							<div class="mb-3">
+								<button class="m-0 font-weight-bold btn btn-secondary btn-sm" data-toggle="modal" data-target="#ajouterBackdrop">
+									<i class="typcn typcn-plus"></i>
+									Ajouter un utilisateur
+								</button>
+
+								<!-- Appel de la fonction d'extension de twig -->
+								{{app_modal_btn(form: form, titre: 'Ajouter un utilisateur') | raw }}
+								<!-- -->
+
+							</div>
+						</div>
+
+						<!-- Début du Tableau -->
+						<div class="table-responsive">
+							<table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th>N°</th>
+										<th>Nom complet</th>
+										<th>Email</th>
+										<th>Est Actif</th>
+										<th>Est Vérifié</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<!-- FIn du Tableau -->
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ asset('js/view/utilisateur.js') }}"></script>
+{% endblock %}

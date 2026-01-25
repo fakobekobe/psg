@@ -11,7 +11,7 @@
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-				<i class="typcn typcn-briefcase menu-icon"></i>
+				<i class="typcn typcn-chart-pie menu-icon"></i>
 				<span class="menu-title">Gestion</span>
 				<i class="typcn typcn-chevron-right menu-arrow"></i>
 			</a>
@@ -80,7 +80,7 @@
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
-				<i class="typcn typcn-cog menu-icon"></i>
+				<i class="typcn typcn-wine menu-icon"></i>
 				<span class="menu-title">Equipe sportive</span>
 				<i class="menu-arrow"></i>
 			</a>
@@ -96,8 +96,37 @@
 			</div>
 		</li>
 		<li class="nav-item">
+			<a class="nav-link" data-toggle="collapse" href="#admin" aria-expanded="false" aria-controls="admin">
+				<i class="typcn typcn-eye-outline menu-icon"></i>
+				<span class="menu-title">Admin</span>
+				<i class="menu-arrow"></i>
+			</a>
+			<div class="collapse" id="admin">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('app_utilisateur') }}">Utilisateur</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_groupe') }#}">Groupe</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_groupe_utilisateur') }#}">Groupe d'utilisateurs</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_page') }#}">Page</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_droit') }#}">Droit</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{#{ path('app_droit_groupe_page') }#}">Droit des Groupes par Page</a>
+					</li>
+				</ul>
+			</div>
+		</li>
+		<li class="nav-item">
 			<a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-				<i class="typcn typcn-chart-pie-outline menu-icon"></i>
+				<i class="typcn typcn-cog-outline menu-icon"></i>
 				<span class="menu-title">Paramètre</span>
 				<i class="menu-arrow"></i>
 			</a>
