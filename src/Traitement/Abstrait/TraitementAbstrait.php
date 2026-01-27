@@ -65,8 +65,7 @@ abstract class TraitementAbstrait implements TraitementInterface
                 {
                     return $this->actionModifierSucces(objet: $donnees[2]?? null);
                 }else{                    
-                    $erreurs = Utilitaire::getErreur(form: $this->form);
-                                    
+                    $erreurs = Utilitaire::getErreur(form: $this->form);                
                     if(!count(value: $erreurs))
                     {
                          return $this->actionModifierSucces(objet: $donnees[2] ?? null);

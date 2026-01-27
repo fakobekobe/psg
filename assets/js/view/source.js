@@ -487,11 +487,11 @@ function action_ajouter(
         suppressionErreurs();
 
         switch (data.code) {
-            case 'SUCCES':                                 
+            case 'SUCCES':                                               
                 traitement_succes();
                 break;
 
-            case 'ECHEC':
+            case 'ECHEC':                
                 APPEL_FONCTION_ECHEC(data.erreurs);
                 break;
 
@@ -553,12 +553,13 @@ function action_ajouter(
             });
             return;
         }
+        
 
         $.each(erreurs, function (key, valeur) {
             // On récupère le champ cible
             let input = $('#' + PREFIX_CHAMP + key);
             input.addClass("is-invalid");
-
+            
             $.each(valeur, function (i, message) {
                 // On créé une div pour afficher le message d'erreur
                 creerDiv(input, message);

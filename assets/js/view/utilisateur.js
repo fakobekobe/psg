@@ -1,6 +1,6 @@
 // Les variables locales
-let P_URL = 'utilisateur', 
-NOM_FORM = P_URL + "_", 
+let P_URL = 'admin/utilisateur', 
+NOM_FORM = "registration_", 
 texteTitre = 'Ajouter un utilisateur';
 
 // Appel des fonctions d'action-------------

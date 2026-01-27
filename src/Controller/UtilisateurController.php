@@ -14,7 +14,7 @@ use App\Form\RegistrationType;
 use App\Traitement\Interface\ControlleurInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[Route(path:'/utilisateur')]
+#[Route(path:'/admin/utilisateur')]
 final class UtilisateurController extends AbstractController
 {
     private const PREFIX_NAME = 'app_utilisateur';
@@ -47,7 +47,7 @@ final class UtilisateurController extends AbstractController
             'form_type',
             $request,             
             $this->em,             
-            userPasswordHasher: $this->userPasswordHasher
+            $this->userPasswordHasher,
         );
 
         if($contenu['reponse'] instanceof Response)
@@ -92,6 +92,7 @@ final class UtilisateurController extends AbstractController
             "form_type",
             $request, 
             $this->em,  
+            $this->userPasswordHasher,
         );       
     }
 
