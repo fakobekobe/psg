@@ -150,4 +150,9 @@ abstract class ControlleurAbstrait implements ControlleurInterface
     {
         return new JsonResponse(data: []);
     }
+
+    public function formulaire(mixed ...$donnees): JsonResponse
+    {
+        return new JsonResponse(data: []);
+    }
 }

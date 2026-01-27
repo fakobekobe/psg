@@ -4,7 +4,7 @@ namespace App\Traitement\Utilitaire;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\Form\FormInterface;
-use App\Entity\User;
+use App\Entity\Utilisateur;
 use ErrorException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -191,7 +191,7 @@ abstract class Utilitaire
                 // Cas du gerant
                 $gerants = $objetRepository->findBy(criteria: ['groupe' => $objet]);
                 foreach ($gerants as $gerant) {
-                    $id_gerants[] = $gerant->getUser()->getId();
+                    $id_gerants[] = $gerant->getUtilisateur()->getId();
                 }
             } elseif ($type == 'page') {
                 // Cas du gerant
@@ -255,7 +255,7 @@ abstract class Utilitaire
      * @param mixed $utilisateurs Tableau des utilisateurs
      * @return void
      */
-    public static function AjouteDroitUtilisateur(int $id_groupe, ServiceEntityRepository $objetRepo, ?array $utilisateurs = null, ?User $utilisateurEnCours = null): void
+    public static function AjouteDroitUtilisateur(int $id_groupe, ServiceEntityRepository $objetRepo, ?array $utilisateurs = null, ?Utilisateur $utilisateurEnCours = null): void
     {
         // On récupère les utilisateurs du groupe au cas ou nous sommes au niveau de Droit par Groupe de Page
         if ($utilisateurs === null) {
@@ -284,7 +284,7 @@ abstract class Utilitaire
         }
     }
 
-    public static function SupprimeDroitUtilisateur(int $id_groupe, ServiceEntityRepository $objetRepo, ?array $utilisateurs = null, ?int $id_droit = null, ?User $utilisateurEnCours = null): void
+    public static function SupprimeDroitUtilisateur(int $id_groupe, ServiceEntityRepository $objetRepo, ?array $utilisateurs = null, ?int $id_droit = null, ?Utilisateur $utilisateurEnCours = null): void
     {
         // On récupère les utilisateurs du groupe au cas ou nous sommes au niveau de Droit par Groupe de Page
         if ($utilisateurs === null) {

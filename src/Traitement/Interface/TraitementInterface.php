@@ -18,6 +18,7 @@ interface TraitementInterface
     public function actionCheck(mixed ...$donnees) : JsonResponse;
     public function actionSupprimer(mixed ...$donnees) : JsonResponse;
     public function actionImprimer(mixed ...$donnees) : JsonResponse;
+    public function actionFormulaire(mixed ...$donnees) : JsonResponse;
 }
 
 

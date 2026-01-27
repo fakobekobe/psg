@@ -12,4 +12,5 @@ interface ControlleurInterface
     public function supprimer(mixed ...$donnees): Response;
     public function select(mixed ...$donnees): Response;
     public function imprimer(mixed ...$donnees): Response;
+    public function formulaire(mixed ...$donnees): Response;
 }

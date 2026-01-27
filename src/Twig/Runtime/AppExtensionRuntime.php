@@ -59,6 +59,38 @@ class AppExtensionRuntime implements RuntimeExtensionInterface
 HTML;
   }
 
+  public function app_modal_show(string $titre, string $html = "getHTMLGroupe"): string
+  {
+    return <<<HTML
+    <!-- Modal -->
+    <div class="modal fade" id="afficherBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="afficherBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h4 class="modal-title text-primary" id="afficherBackdropLabel">$titre</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-form">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            {$this->$html()}
+
+          </div>
+          <div class="modal-footer justify-content-center bg-light">
+            <button type="button" class="btn btn-primary btn-sm" id="annulerafficher" data-dismiss="modal">
+              <i class="typcn typcn-input-checked"></i> 
+              Fermer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fin Modal -->
+
+HTML;
+  }
+
   private function getForm(FormView $form, string $nomFormulaire): string
   {
     return $this->twig->render(name: "_includes/". $nomFormulaire .".html.twig", context: ["form" => $form]);
@@ -108,6 +140,112 @@ HTML;
     }
 
     return $retour;
+  }
+
+  private function getHTMLGroupe(): string
+  {
+    return <<<HTML
+    <div class="row">
+              <div class="col-lg-6 text-right">
+                  <h5>
+                    Nom complet :
+                  </h5>
+              </div>
+              <div class="col-lg-6">
+                <h5 id="d-nomcomplet">
+                  </h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 text-right">
+                  <h5>
+                    Email :
+                  </h5>
+              </div>
+              <div class="col-lg-6">
+                <h5 id="d-email">
+                  </h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 text-right">
+                  <h5>
+                    Est actif :
+                  </h5>
+              </div>
+              <div class="col-lg-6">
+                <h5 id="d-actif">
+                  </h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 text-right">
+                  <h5>
+                    Est vérifié :
+                  </h5>
+              </div>
+              <div class="col-lg-6">
+                <h5 id="d-verifie">
+                  </h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 text-right">
+                  <h5>
+                    Groupes :
+                  </h5>
+              </div>
+              <div class="col-lg-6">
+                <p id="d-groupe" class="m-0 p-0">
+                </p>
+              </div>
+            </div>
+HTML;
+  }
+
+  private function getHTMLUtilisateur(): string
+  {
+    return <<<HTML
+    <div class="row">
+              <div class="col-lg-6 text-right">
+                  <h5>
+                    Groupe :
+                  </h5>
+              </div>
+              <div class="col-lg-6">
+                <h5 id="d-nom">
+                  </h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 text-right">
+                  <h5>
+                    Nombre d'utilisateurs :
+                  </h5>
+              </div>
+              <div class="col-lg-6">
+                <h5 id="d-nombre">
+                  </h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 text-right">
+                  <h5>
+                    Utilisateurs :
+                  </h5>
+              </div>
+              <div class="col-lg-6">
+                <p id="d-utilisateur" class="m-0 p-0">
+                </p>
+              </div>
+            </div>
+HTML;
   }
 
   /*

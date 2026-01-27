@@ -23,6 +23,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction(name: 'app_modal_btn', callable: [AppExtensionRuntime::class, 'app_modal_btn']),
+            new TwigFunction(name: 'app_modal_show', callable: [AppExtensionRuntime::class, 'app_modal_show']),
             new TwigFunction(name: 'puce_alphabet', callable: [AppExtensionRuntime::class, 'puce_alphabet']),
             new TwigFunction(name: 'get_contenu', callable: [AppExtensionRuntime::class, 'get_contenu']),
             new TwigFunction(name: 'app_configuration', callable: [AppExtensionRuntime::class, 'app_configuration']),

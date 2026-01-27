@@ -200,6 +200,11 @@ abstract class TraitementAbstrait implements TraitementInterface
         return new JsonResponse(data: ['code' => self::ECHEC]);
     }
 
+    public function actionFormulaire(mixed ...$donnees) : JsonResponse
+    {
+        return new JsonResponse(data: ['code' => self::SUCCES]);
+    }
+
     protected function chaine_data(mixed ...$donnees): string
     {
         $propriete = "get" . ucfirst(string: $donnees[1]); // $donnees[1] contient le nom de la propriété

@@ -612,7 +612,7 @@ function action_liste(URL, NOM_TABLEAU = 'dataTable') {
         getDateEnre();
 
         switch (data.code) {
-            case 'SUCCES':
+            case 'SUCCES':                
                 traitement_succes(data.html);
                 break;
 
