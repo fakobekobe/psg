@@ -6,73 +6,81 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormFactoryInterface;
-use App\Repository\GroupeRepository;
+use App\Repository\DroitGroupePageRepository; 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Form\GroupeType;
 use App\Traitement\Interface\ControlleurInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-#[Route(path:'/admin/groupe')]
-final class GroupeController extends AbstractController
+#[Route(path: '/admin/droit-groupe-page')]
+final class DroitGroupePageController extends AbstractController
 {
-    private const PREFIX_NAME = 'app_groupe';
-    private const TYPEFORM = GroupeType::class;
-    private GroupeRepository $repository;
+    private const PREFIX_NAME = 'app_droit_groupe_page';
+    private DroitGroupePageRepository $repository;
     private ControlleurInterface $controlleur;
 
     public function __construct(
-        private FormFactoryInterface $form, 
         private EntityManagerInterface $em,
         private ManagerRegistry $registry,
-        )
-    {
-        $this->repository = new GroupeRepository(registry: $this->registry);
+    ){
+        $this->repository = new DroitGroupePageRepository(registry: $this->registry);
         $this->repository->initialiserControlleur();
         $this->controlleur = $this->repository->getControlleur();
     }
 
-    #[Route(path: '', name: self::PREFIX_NAME, methods: ['GET', 'POST'])]
+    #[Route(path: '', name: self::PREFIX_NAME , methods:["GET", "POST"])]
     public function ajouter(Request $request): Response
-    {
+    {              
         /**
          * Cette fonction ajouter du controller permet l'affichage et l'ajout des données
          */
         $contenu = $this->controlleur->ajouter(
             $this->repository, 
-            $this->form,
-            self::TYPEFORM,
-            'form_type',
             $request,             
             $this->em, 
-        );
+        );        
 
         if($contenu['reponse'] instanceof Response)
         {
             return $contenu['reponse'];
         }else{
-            return $this->render(view: 'groupe/index.html.twig', parameters: [
-            'form' => $contenu['form']->createView(),
-        ]);
-        }        
+            return $this->render(view: 'droit_groupe_page/index.html.twig', parameters: [
+            ]);
+        } 
+    }
+
+    #[Route(path: '/formulaire', name: self::PREFIX_NAME . "_formulaire", methods:["POST"])]
+    public function formulaire(Request $request): Response
+    {   
+        /**
+         * Cette fonction formulaire du controller permet l'affichage des formulaires
+         */
+        return $this->controlleur->formulaire(
+            $this->repository, 
+            $this->em,  
+        );       
     }
 
     #[Route(path:'/liste', name: self::PREFIX_NAME . "_liste", methods:["GET"])]
     public function liste(): Response
-    {        
+    {
         /**
          * Cette fonction liste du controller permet la gestion du retour de la liste des objets
          */
         return $this->controlleur->lister($this->repository);
     }
 
-    #[Route(path: '/check/{id}', name: self::PREFIX_NAME . '_check', methods: ["POST"] , requirements: ['id' => '[0-9]+'])]
-    public function check(int $id) : Response
+    #[Route(path: '/check/{id}', name: self::PREFIX_NAME . '_check', methods: ["POST"] ,requirements: ['id' => '[0-9]+'])]
+    public function check(int $id, Request $request) : Response
     {
         /**
-         * Cette méthode liste du controller permet la gestion du chargement des données de la modification du formulaire
+         * Cette méthode check du controller permet la gestion du chargement des données pour la modification du formulaire
          */
-        return $this->controlleur->check( $this->repository, $id);
+        return $this->controlleur->formulaire(
+            $this->repository, 
+            $this->em, 
+            $this->repository->findBy(criteria: ['id' => $id]), 
+        ); 
     }
 
     #[Route(path:'/modifier/{id}', name: self::PREFIX_NAME . "_modifier", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
@@ -83,12 +91,10 @@ final class GroupeController extends AbstractController
          */
         return $this->controlleur->modifier(
             $this->repository, 
-            $id, 
-            $this->form,       
-            self::TYPEFORM,
-            "form_type",
             $request, 
             $this->em,  
+            $id,
+            $this->getUser(),
         );       
     }
 
@@ -103,5 +109,15 @@ final class GroupeController extends AbstractController
             $this->em,  
             $id,
         );
+    }
+
+    #[Route(path:'/afficher', name: self::PREFIX_NAME . "_afficher", methods:["POST"])]
+    public function afficher(Request $request): Response
+    {
+        $id = (int) $request->request->get(key: 'id'); // Id de l'utilisateur
+        /**
+         * Cette fonction afficher du controller permet l'affichage des détails de l'objet
+         */
+        return $this->controlleur->imprimer($this->repository, $id); // afficher
     }
 }

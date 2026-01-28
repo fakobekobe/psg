@@ -13,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Form\DroitType;
 use App\Traitement\Interface\ControlleurInterface;
 
-#[Route(path:'/droit')]
+#[Route(path:'/admin/droit')]
 final class DroitController extends AbstractController
 {
     private const PREFIX_NAME = 'app_droit';

@@ -4,7 +4,7 @@ namespace App\Traitement\Controlleur;
 use App\Traitement\Abstrait\ControlleurAbstrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ControlleurGroupeUtilisateur extends ControlleurAbstrait
+class ControlleurDroitGroupePage extends ControlleurAbstrait
 {
     public function ajouter(mixed ...$donnees): array
     {        
@@ -32,7 +32,7 @@ class ControlleurGroupeUtilisateur extends ControlleurAbstrait
         ($donnees[0])->initialiserTraitement(repository: $donnees[0]); 
 
         // On récupère la liste des objets
-        $liste = ($donnees[0])->getGroupeUtilisateur();
+        $liste = ($donnees[0])->getDroitGroupePage();
         
         return (($donnees[0])->getTraitement())->actionLister($liste);
     }
@@ -42,6 +42,7 @@ class ControlleurGroupeUtilisateur extends ControlleurAbstrait
         // On récupère les données du formulaire (groupe et gerant)
         $objet['data'] = ($donnees[1])->request->all();
         $objet['id'] = $donnees[3];
+        $objet['user'] = $donnees[4];
 
         // On instancie un objet qui hérite de TraitementInterface pour gérer le traitement
         ($donnees[0])->initialiserTraitement(em: $donnees[2], repository: $donnees[0]);
@@ -54,7 +55,7 @@ class ControlleurGroupeUtilisateur extends ControlleurAbstrait
     public function formulaire(mixed ...$donnees): JsonResponse {
         // Initialisation du traitement
         ($donnees[0])->initialiserTraitement(em: $donnees[1], repository: $donnees[0]);
-
+        
         // On appelle la méthode getTraitement qui nous retourne un objet de type traitementInterface
         // Ensuite on appelle la méthode appropriée pour traiter l'action
         return (($donnees[0])->getTraitement())->actionFormulaire($donnees[0], $donnees[2] ?? null);

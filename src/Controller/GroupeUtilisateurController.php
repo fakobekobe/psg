@@ -10,8 +10,9 @@ use App\Repository\GroupeUtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Traitement\Interface\ControlleurInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-#[Route(path: '/groupe-utilisateur')]
+#[Route(path: '/admin/groupe-utilisateur')]
 final class GroupeUtilisateurController extends AbstractController
 {
     private const PREFIX_NAME = 'app_groupe_utilisateur';

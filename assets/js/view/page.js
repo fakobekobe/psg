@@ -1,5 +1,5 @@
 // Les variables locales
-let P_URL = 'page'; // A modifier *******
+let P_URL = 'admin/page'; // A modifier *******
 
 // Définitaion des fonctions Action ajouter
 function action_ajouter(

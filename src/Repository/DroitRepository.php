@@ -41,4 +41,14 @@ class DroitRepository extends ServiceEntityRepository
         $objet = new ControlleurDroit; 
         $this->setControlleur(controlleur: $objet);
     }
+
+    public function droits(): array  
+    {
+        return $this->findAll();
+    }
+
+    public function droit(int $id_droit) : ?Droit
+    {
+        return $this->findOneBy(criteria: ['id' => $id_droit]);
+    }
 }

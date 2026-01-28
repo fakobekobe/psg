@@ -1,5 +1,5 @@
 // Les variables locales
-let P_URL = 'droit', 
+let P_URL = 'admin/droit', 
 NOM_FORM = P_URL + "_", 
 texteTitre = 'Ajouter un droit';
 

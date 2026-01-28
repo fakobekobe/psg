@@ -44,7 +44,7 @@ class PageRepository extends ServiceEntityRepository
 
     public function pages() : array
     {
-        return $this->findBy(criteria: [], orderBy: ['id' => 'DESC']);
+        return $this->findAll();
     }
 
     public function page(int $id_page) : ?Page

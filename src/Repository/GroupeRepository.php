@@ -41,4 +41,14 @@ class GroupeRepository extends ServiceEntityRepository
         $objet = new ControlleurGroupe; 
         $this->setControlleur(controlleur: $objet);
     }
+
+    public function groupes(): array  
+    {
+        return $this->findAll();
+    }
+
+    public function groupe(int $id_groupe) : ?Groupe
+    {
+        return $this->findOneBy(criteria: ['id' => $id_groupe]);
+    }
 }

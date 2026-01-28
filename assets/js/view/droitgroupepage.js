@@ -1,10 +1,11 @@
 // Les variables locales
-const P_URL = 'admin/groupe-utilisateur'; 
+const P_URL = 'admin/droit-groupe-page'; 
 
 // Définition des fonctions d'action-------------
 function formulaire(PARM_URL) {
     const URL = '/' + PARM_URL + '/formulaire';
-    const form = new FormData();
+    let form = new FormData();
+
     fetch(URL, {
         method: 'POST',
         body: form
@@ -15,7 +16,7 @@ function formulaire(PARM_URL) {
     // Fonction de gestion du traitement du retour des données json du fetch
     function traitementJson(data) {
         switch (data.code) {
-            case 'SUCCES':               
+            case 'SUCCES':
                 traitement_succes(data.html);
                 break;
         }
@@ -23,7 +24,8 @@ function formulaire(PARM_URL) {
 
     const traitement_succes = function (html) {
         $('#bloc-groupe').html(html.groupe);
-        $('#bloc-gerant').html(html.utilisateur);
+        $('#bloc-droit').html(html.droit);
+        $('#bloc-page').html(html.page);
     };
 
 }
@@ -32,7 +34,8 @@ function formulaire(PARM_URL) {
 function action_ajouter(
     PREFIX_URL,
     P_GROUPE,
-    P_UTILISATEUR,
+    P_DROIT,
+    P_PAGE,
     NOM_BTN_AJOUTER = 'btn-appliquer-groupe-gerant',
 ) {
     // Les variables globales
@@ -40,7 +43,8 @@ function action_ajouter(
         PREFIX_URL_U = '/' + PREFIX_URL + '/modifier/',
         loader = $('#bloc-loader'),
         form_groupe = $('#' + P_GROUPE),
-        form_utilisateur = $('#' + P_UTILISATEUR);
+        form_droit= $('#' + P_DROIT),
+        form_page = $('#' + P_PAGE);
 
     let btn = $('#' + NOM_BTN_AJOUTER);
 
@@ -50,13 +54,19 @@ function action_ajouter(
         imageChargement(loader, 'flex');
 
         let data = new FormData(form_groupe[0]);
-        let data_u = new FormData(form_utilisateur[0]);
+        let data_droit = new FormData(form_droit[0]);
+        let data_page = new FormData(form_page[0]);
 
-        data_u.delete('cocher_gerant');
-        for (const valeur of data_u.values()) {
-            data.append('gerant[]', valeur);
+        data_droit.delete('cocher_droit');
+        for (const valeur of data_droit.values()) {
+            data.append('droit[]', valeur);
         }
 
+        data_page.delete('cocher_page');
+        for (const valeur of data_page.values()) {
+            data.append('page[]', valeur);
+        }
+        
         if (id_modifier) {
             URL = PREFIX_URL_U + id_modifier;
         }
@@ -75,11 +85,11 @@ function action_ajouter(
         imageChargement(loader, 'none');
 
         switch (data.code) {
-            case 'SUCCES':                               
+            case 'SUCCES':
                 traitement_succes();
                 break;
 
-            case 'ECHEC':                
+            case 'ECHEC':
                 traitement_echec(data.erreurs);
                 break;
         }
@@ -104,6 +114,9 @@ function action_ajouter(
             timer: 1500
         });
 
+        // On initialise le texte du bouton
+        $('#btn-appliquer-groupe-gerant span[class=text]').text('Appliquer la sélection');
+
         // Exécution de la fonction de l'action liste
         action_liste(PREFIX_URL);
 
@@ -123,10 +136,11 @@ function action_check(PARM_URL, P_TABLE = "dataTable") {
     let table = $('#' + P_TABLE);
 
     table.on('click', '.editBtn', function (e) {
-
+            
         // On décoche la champs
         decocher_checkbox('cocher_groupe');
-        decocher_checkbox('cocher_gerant');
+        decocher_checkbox('cocher_droit');
+        decocher_checkbox('cocher_page');
 
         let $form = new FormData();
         const id = this.dataset.id;
@@ -154,7 +168,8 @@ function action_check(PARM_URL, P_TABLE = "dataTable") {
             id_modifier = id;
             $('#btn-appliquer-groupe-gerant span[class=text]').text('Modifier la sélection');
             $('#bloc-groupe').html(html.groupe);
-            $('#bloc-gerant').html(html.utilisateur);
+            $('#bloc-droit').html(html.droit);
+            $('#bloc-page').html(html.page);
         }
 
     });
@@ -166,7 +181,8 @@ formulaire(P_URL);
 
 // Cocher et décocher les cases 
 check_box('cocher_groupe');
-check_box('cocher_gerant');
+check_box('cocher_droit');
+check_box('cocher_page');
 
 // Annuler la sélection
 $('#btn-annuler-groupe-gerant').on('click', function (e) {
@@ -174,39 +190,19 @@ $('#btn-annuler-groupe-gerant').on('click', function (e) {
     id_modifier = 0;
     $('#btn-appliquer-groupe-gerant span[class=text]').text('Appliquer la sélection');
     decocher_checkbox('cocher_groupe');
-    decocher_checkbox('cocher_gerant');
+    decocher_checkbox('cocher_droit');
+    decocher_checkbox('cocher_page');
 });
 
 // Exécution de la fonction de l'action liste
 action_liste(P_URL);
 
 // Exécution de la fonction de l'action ajouter
-action_ajouter(P_URL, 'form-bloc-groupe', 'form-bloc-gerant');
+action_ajouter(P_URL, 'form-bloc-groupe', 'form-bloc-droit', 'form-bloc-page');
 
 // Exécution de la fonction de l'action supprimer
 action_supprimer(P_URL);
 
 // Exécution de la fonction de l'action check
 action_check(P_URL);
-
-// Exécution de la fonction de l'action afficher
-// Définition des fonctions
-let traitement_succes_afficher = function (objet) {
-
-    let nom = $('#d-nom'),
-        nombre = $('#d-nombre'),
-        utilisateur = $('#d-utilisateur'),
-        liste = "<ul>";
-
-    nom.html(objet.nom);
-    nombre.html(objet.utilisateurs.length);
-
-    objet.utilisateurs.forEach(function (valeur, key) {
-        liste += '<li>' + valeur + '</li>'
-    });
-    
-    liste += "</ul>";
-    utilisateur.html(liste);
-};
-action_afficher(P_URL, traitement_succes_afficher);
 

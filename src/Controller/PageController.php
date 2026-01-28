@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Traitement\Interface\ControlleurInterface;
 
-#[Route(path:'/page')]
+#[Route(path:'/admin/page')]
 final class PageController extends AbstractController
 {
     private const PREFIX_NAME = 'app_page';

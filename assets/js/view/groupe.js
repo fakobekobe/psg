@@ -1,5 +1,5 @@
 // Les variables locales
-let P_URL = 'groupe', 
+let P_URL = 'admin/groupe', 
 NOM_FORM = P_URL + "_", 
 texteTitre = 'Ajouter un groupe';
 

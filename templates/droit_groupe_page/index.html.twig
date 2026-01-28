@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Droit des groupes par page
+{% endblock %}
+
+{% block body %}
+	<div class="content-wrapper">
+
+		<div class="row">
+			<div class="col-sm-6">
+				<h5 class="mb-0 font-weight-bold" id="titre">Admin > Droit des groupes par page</h5>
+				<p class="mb-4 mt-3">
+					Cette page vous permet la gestion des droits des groupes par page.<br/>
+					Le droit des groupes par page vous permet :
+					<br/>
+					- D'ajouter des droits à un ou plusieurs groupes selon une ou plusieurs pages<br/>
+					- De retirer des droits à un ou plusieurs groupes selon une ou plusieurs pages
+				</p>
+			</div>			
+		</div>
+
+		<div
+			class="row">
+			<!-- Bloc des groupes -->
+			<div class="col-md-12 col-sm-12">
+				<div
+					class="card shadow mb-4">
+					<!-- Entête du bloc - Accordion -->
+					<a href="#blocgroupe" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="blocgroupe">
+						<h4 class="m-0 font-weight-bold text-primary">
+							<i class="typcn typcn-group h3"></i>
+							LISTE DES GROUPES</h4>
+					</a>
+					<!-- Contenu du bloc - Collapse -->
+					<div class="collapse show" id="blocgroupe">
+						<div class="card-body">
+							<form method="post" id="form-bloc-groupe">
+								<div class="form-group mb-3">
+									<div class="custom-control custom-checkbox small">
+										<input type="checkbox" class="custom-control-input" name="cocher_groupe" id="cocher_groupe">
+										<label class="custom-control-label" for="cocher_groupe">
+											<strong>Tout cocher</strong>
+										</label>
+										<hr class="m-0">
+									</div>
+								</div>
+
+								<div id="bloc-groupe"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Bloc des droit -->
+			<div class="col-md-12 col-sm-12">
+				<div
+					class="card shadow mb-4">
+					<!-- Entête du bloc - Accordion -->
+					<a href="#blocdroit" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="blocdroit">
+						<h4 class="m-0 font-weight-bold text-primary">
+							<i class="typcn typcn-input-checked h3"></i>
+							LISTE DES DROITS
+						</h4>
+					</a>
+					<!-- Contenu du bloc - Collapse -->
+					<div class="collapse show" id="blocdroit">
+						<div class="card-body">
+							<form method="post" id="form-bloc-droit">
+								<div class="form-group mb-3">
+									<div class="custom-control custom-checkbox small">
+										<input type="checkbox" class="custom-control-input" name="cocher_droit" id="cocher_droit">
+										<label class="custom-control-label" for="cocher_droit">
+											<strong>Tout cocher</strong>
+										</label>
+										<hr class="m-0">
+									</div>
+								</div>
+
+								<div id="bloc-droit"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+            <!-- Bloc des pages / controlleur -->
+			<div class="col-md-12 col-sm-12">
+				<div
+					class="card shadow mb-4">
+					<!-- Entête du bloc - Accordion -->
+					<a href="#blocpage" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="blocpage">
+						<h4 class="m-0 font-weight-bold text-primary">
+							<i class="typcn typcn-book h3"></i>
+							LISTE DES PAGES
+						</h4>
+					</a>
+					<!-- Contenu du bloc - Collapse -->
+					<div class="collapse show" id="blocpage">
+						<div class="card-body">
+							<form method="post" id="form-bloc-page">
+								<div class="form-group mb-3">
+									<div class="custom-control custom-checkbox small">
+										<input type="checkbox" class="custom-control-input" name="cocher_page" id="cocher_page">
+										<label class="custom-control-label" for="cocher_page">
+											<strong>Tout cocher</strong>
+										</label>
+										<hr class="m-0">
+									</div>
+								</div>
+
+								<div id="bloc-page"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Bloc des boutons -->
+			<div class="col-lg-12 mb-5">
+				<div
+					class="row mx-5 justify-content-between">
+					<!--Bouton appliquer -->
+					<div class="col-lg-4">
+						<a href="#" class="btn btn-success" id="btn-appliquer-groupe-gerant">
+							<i class="typcn typcn-input-checked"></i>
+							<span class="text">Appliquer la sélection</span>
+						</a>
+					</div>
+
+					<!--Bouton annuler -->
+					<div class="col-lg-4">
+						<a href="#" class="btn btn-danger" id="btn-annuler-groupe-gerant">
+							<i class="typcn typcn-times"></i>
+							Annuler la sélection
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Bloc du tableau -->
+			<div class="col-md-12 col-sm-12">
+				<div
+					class="card shadow mb-4">
+					<!-- Entête du bloc - Accordion -->
+					<a href="#bloctableau" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="bloctableau">
+						<h4 class="m-0 font-weight-bold text-primary">
+							<i class="typcn typcn-input-checked h3"></i>
+							LISTE DES DROITS DES GROUPES PAR PAGE
+						</h4>
+					</a>
+					<!-- Contenu du bloc - Collapse -->
+					<div class="collapse show" id="bloctableau">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+											<th>N°</th>
+                                            <th>Groupe</th>
+                                            <th>Droit</th>
+                                            <th>Nombre de page</th>
+                                            <th>Actions</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ asset('js/view/droitgroupepage.js') }}"></script>
+{% endblock %}
