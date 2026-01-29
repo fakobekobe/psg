@@ -10,16 +10,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path:'/bunker')]
 final class BunkerController extends AbstractController
 {
     private const PREFIX_NAME = 'app_bunker';
+    private const PAGE = '_bunker';
     private StatistiqueRepository $statistique_repository;
 
     public function __construct(
@@ -31,6 +32,7 @@ final class BunkerController extends AbstractController
     }
 
     #[Route(path: '', name: self::PREFIX_NAME, methods: ['GET'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function index(Request $request): Response
     {
         $form_analyse = $this->formulaire(
@@ -44,6 +46,7 @@ final class BunkerController extends AbstractController
     }
 
     #[Route(path: '/classement', name: self::PREFIX_NAME . '_classement', methods: ['POST'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function classement(Request $request): Response
     {
         // Les variables

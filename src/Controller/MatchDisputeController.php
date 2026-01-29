@@ -13,11 +13,13 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Form\MatchDisputeType;
 use App\Form\MatchType;
 use App\Traitement\Interface\ControlleurInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path:'/match')]
 final class MatchDisputeController extends AbstractController
 {
     private const PREFIX_NAME = 'app_match';
+    private const PAGE = '_matchdispute';
     private const TYPEFORM = MatchDisputeType::class;
     private MatchDisputeRepository $repository;
     private ControlleurInterface $controlleur;
@@ -34,6 +36,7 @@ final class MatchDisputeController extends AbstractController
     }
 
     #[Route(path: '', name: self::PREFIX_NAME, methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function ajouter(Request $request): Response
     {
         /**
@@ -62,6 +65,7 @@ final class MatchDisputeController extends AbstractController
     }
 
     #[Route(path:'/liste/{id_calendrier}/{id_saison}', name: self::PREFIX_NAME . "_liste", methods:["GET"], requirements: ['id_calendrier' => '[0-9]+', 'id_saison' => '[0-9]+'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function liste(int $id_calendrier, int $id_saison): Response
     {        
         /**
@@ -80,6 +84,7 @@ final class MatchDisputeController extends AbstractController
     }
 
     #[Route(path:'/supprimer/{id}', name: self::PREFIX_NAME . "_supprimer", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "supprimer" . self::PAGE)]
     public function supprimer(int $id): Response
     {
         /**
@@ -123,6 +128,7 @@ final class MatchDisputeController extends AbstractController
     }
 
     #[Route(path:'/supprimer_statistique/{id_rencontre}/{id_periode}', name: self::PREFIX_NAME . "_supprimer_statistique", methods: ["POST"], requirements: ['id_rencontre' => '[0-9]+', 'id_periode' => '[0-9]+'])]
+    #[IsGranted(attribute: "supprimer" . self::PAGE)]
     public function supprimer_statistique(int $id_rencontre, int $id_periode): Response
     {
         /**

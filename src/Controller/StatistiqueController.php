@@ -11,11 +11,13 @@ use App\Repository\StatistiqueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Traitement\Interface\ControlleurInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path:'/statistique')]
 final class StatistiqueController extends AbstractController
 {
     private const PREFIX_NAME = 'app_statistique';
+    private const PAGE = '_statistique';
     private StatistiqueRepository $repository;
     private ControlleurInterface $controlleur;
 
@@ -31,6 +33,7 @@ final class StatistiqueController extends AbstractController
     }
 
     #[Route(path: '', name: self::PREFIX_NAME, methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function ajouter(Request $request): Response
     {
         /**
@@ -42,6 +45,7 @@ final class StatistiqueController extends AbstractController
     }
 
     #[Route(path:'/liste/{id_rencontre}', name: self::PREFIX_NAME . "_liste", methods:["GET"], requirements: ['id_rencontre' => '[0-9]+'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function liste(int $id_rencontre): Response
     {        
         /**
@@ -51,6 +55,7 @@ final class StatistiqueController extends AbstractController
     }
 
     #[Route(path:'/check/{id_rencontre}/{id_periode}', name: self::PREFIX_NAME . "_check", methods: ["POST"], requirements: ['id_rencontre' => '[0-9]+', 'id_periode' => '[0-9]+'])]
+    #[IsGranted(attribute: "modifier" . self::PAGE)]
     public function check(int $id_rencontre, int $id_periode): Response
     {
         /**
@@ -64,6 +69,7 @@ final class StatistiqueController extends AbstractController
     }
 
     #[Route(path:'/modifier/{id_rencontre}/{id_periode}', name: self::PREFIX_NAME . "_modifier", methods: ["POST"], requirements: ['id_rencontre' => '[0-9]+', 'id_periode' => '[0-9]+'])]
+    #[IsGranted(attribute: "modifier" . self::PAGE)]
     public function modifier(Request $request, int $id_rencontre, int $id_periode): Response
     {
         /**
@@ -79,6 +85,7 @@ final class StatistiqueController extends AbstractController
     }
 
     #[Route(path:'/supprimer/{id_rencontre}/{id_periode}', name: self::PREFIX_NAME . "_supprimer", methods: ["POST"], requirements: ['id_rencontre' => '[0-9]+', 'id_periode' => '[0-9]+'])]
+    #[IsGranted(attribute: "supprimer" . self::PAGE)]
     public function supprimer(int $id_rencontre, int $id_periode): Response
     {
         /**

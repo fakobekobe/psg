@@ -1,0 +1,36 @@
+{% extends '_layout/_template_admin.html.twig' %}
+
+{% block title %}Erreur
+{% endblock %}
+
+{% block body %}
+	<div class="col-lg-6 d-none d-lg-block text-center px-5">
+		<h5 class="mt-5 text-success">Bienvenue sur le Paris Sportif Gagnant (PSG)</h1>
+		<div>
+			<img src="{{ asset('images/Logo_psg.png') }}" alt="Logo_psg"/>
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<div class="p-5">
+			<div class="text-center">
+				<h1 class="h4 text-gray-900 mb-4">ERREUR</h1>
+			</div>
+			<div>
+				<p class="text-center">
+					{% if (status_code == 404) %}
+						Cette page n'existe pas.
+					{% elseif (status_code == 500) %}
+						Une erreur interne a été détectée.
+					{% elseif (status_code == 403) %}
+						Vous ne disposez pas les droits d'accès.
+					{% else %}
+						Erreur détectée.
+					{% endif %}
+				</p>
+				<p class="text-center">
+					<a href="{{path('app_tableaudebord')}}">Aller à la page d'accueil</a>
+				</p>
+			</div>
+		</div>
+	</div>
+{% endblock %}

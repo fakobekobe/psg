@@ -1,0 +1,47 @@
+{% extends '_layout/_template_admin.html.twig' %}
+
+{% block title %}Se connecter
+{% endblock %}
+
+{% block body %}
+	<div class="col-lg-6 d-none d-lg-block text-center px-5">
+		<h5 class="mt-5" style="color:#f2125e;">Bienvenue sur le Paris Sportif Gagnant (PSG)</h1>
+		<div>
+			<img src="{{ asset('images/Logo_psg.png') }}" alt="Logo-psg" />
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<div class="p-5">
+			<div class="text-center">
+				<h1 class="h4 text-gray-900 mb-4">SE CONNECTER</h1>
+			</div>
+			<form class="user" method="post" action="/" id="connexion">
+				{% if error %}
+					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+				{% endif %}
+				<div class="form-group">
+					<input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email" value="{{ last_username }}" autocomplete="email" autofocus required>
+				</div>
+				<div class="form-group">
+					<input type="password" name="password" class="form-control form-control-user" id="password" placeholder="Mot de passe" autocomplete="current-password" required>
+				</div>
+				<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+				<div class="form-group">
+					<div class="custom-control custom-checkbox small">
+						<input type="checkbox" class="custom-control-input" name="_remember_me" id="check">
+						<label class="custom-control-label" for="check">
+							Se souvenir de moi ?
+						</label>
+					</div>
+				</div>
+				<button class="btn btn-user btn-block" id="btn-connexion" style="background-color:#f2125e;color:white;">
+					Se connecter
+				</button>
+			</form>
+			<hr>
+			<div class="text-center">
+				<a href="{#{ path('app_forgot_password_request') }#}" style="cursor:pointer;" class="small">Mot de passe oublié ?</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}

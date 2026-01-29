@@ -8,10 +8,12 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route(path: '/')]
+#[Route(path: '/tableau-de-bord')]
 final class TableaudebordController extends AbstractController
 {
+    private const PAGE = '_tableaudebord';
     private StatistiqueRepository $statistique_repository;
 
     public function __construct(
@@ -21,6 +23,7 @@ final class TableaudebordController extends AbstractController
     }
 
     #[Route(path: '', name: 'app_tableaudebord')]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function index(): Response
     {
         // Les variables

@@ -10,11 +10,13 @@ use App\Repository\PageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Traitement\Interface\ControlleurInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path:'/admin/page')]
 final class PageController extends AbstractController
 {
     private const PREFIX_NAME = 'app_page';
+    private const PAGE = '_page';
     private PageRepository $repository;
     private ControlleurInterface $controlleur;
 
@@ -29,6 +31,7 @@ final class PageController extends AbstractController
     }
 
     #[Route(path: '', name: self::PREFIX_NAME, methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function ajouter(Request $request): Response
     {
         /**
@@ -49,6 +52,7 @@ final class PageController extends AbstractController
     }
 
     #[Route(path:'/liste', name: self::PREFIX_NAME . "_liste", methods:["GET"])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function liste(): Response
     {        
         /**

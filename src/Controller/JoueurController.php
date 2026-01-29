@@ -12,11 +12,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Form\JoueurType;
 use App\Traitement\Interface\ControlleurInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path:'/joueur')]
 final class JoueurController extends AbstractController
 {
     private const PREFIX_NAME = 'app_joueur';
+    private const PAGE = '_joueur';
     private const TYPEFORM = JoueurType::class;
     private JoueurRepository $repository;
     private ControlleurInterface $controlleur;
@@ -33,6 +35,7 @@ final class JoueurController extends AbstractController
     }
 
     #[Route(path: '', name: self::PREFIX_NAME, methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function ajouter(Request $request): Response
     {
         /**
@@ -66,6 +69,7 @@ final class JoueurController extends AbstractController
     }
 
     #[Route(path:'/liste', name: self::PREFIX_NAME . "_liste", methods:["GET"])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function liste(): Response
     {        
         /**
@@ -75,6 +79,7 @@ final class JoueurController extends AbstractController
     }
 
     #[Route(path: '/check/{id}', name: self::PREFIX_NAME . '_check', methods: ["POST"] , requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "modifier" . self::PAGE)]
     public function check(int $id) : Response
     {
         /**
@@ -84,6 +89,7 @@ final class JoueurController extends AbstractController
     }
 
     #[Route(path:'/modifier/{id}', name: self::PREFIX_NAME . "_modifier", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "modifier" . self::PAGE)]
     public function modifier(Request $request, int $id) : Response
     {
         /**
@@ -109,6 +115,7 @@ final class JoueurController extends AbstractController
     }
 
     #[Route(path:'/supprimer/{id}', name: self::PREFIX_NAME . "_supprimer", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "supprimer" . self::PAGE)]
     public function supprimer(int $id): Response
     {
         /**

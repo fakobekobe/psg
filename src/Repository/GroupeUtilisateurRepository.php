@@ -149,10 +149,10 @@ class GroupeUtilisateurRepository extends ServiceEntityRepository
     /**
      * @see DroitGroupePageRepository::getDroitsPagesByGroupe
      */
-    /*public function getDroitsPagesByGroupe(int $id_groupe, ?int $id_droit = null) : array
+    public function getDroitsPagesByGroupe(int $id_groupe, ?int $id_droit = null) : array
     {
         $this->setRepository(repository: new DroitGroupePageRepository(registry: $this->registry));
         return $this->getRepository()->getDroitsPagesByGroupe(id_groupe: $id_groupe, id_droit: $id_droit);
-    }*/
+    }
 
 }

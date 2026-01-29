@@ -12,11 +12,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Form\PeriodeType;
 use App\Traitement\Interface\ControlleurInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path:'/periode')]
 final class PeriodeController extends AbstractController
 {
     private const PREFIX_NAME = 'app_periode';
+    private const PAGE = '_periode';
     private const TYPEFORM = PeriodeType::class;
     private PeriodeRepository $repository;
     private ControlleurInterface $controlleur;
@@ -33,6 +35,7 @@ final class PeriodeController extends AbstractController
     }
 
     #[Route(path: '', name: self::PREFIX_NAME, methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function ajouter(Request $request): Response
     {
         /**
@@ -58,6 +61,7 @@ final class PeriodeController extends AbstractController
     }
 
     #[Route(path:'/liste', name: self::PREFIX_NAME . "_liste", methods:["GET"])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function liste(): Response
     {        
         /**
@@ -67,6 +71,7 @@ final class PeriodeController extends AbstractController
     }
 
     #[Route(path: '/check/{id}', name: self::PREFIX_NAME . '_check', methods: ["POST"] , requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "modifier" . self::PAGE)]
     public function check(int $id) : Response
     {
         /**
@@ -76,6 +81,7 @@ final class PeriodeController extends AbstractController
     }
 
     #[Route(path:'/modifier/{id}', name: self::PREFIX_NAME . "_modifier", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "modifier" . self::PAGE)]
     public function modifier(Request $request, int $id) : Response
     {
         /**
@@ -93,6 +99,7 @@ final class PeriodeController extends AbstractController
     }
 
     #[Route(path:'/supprimer/{id}', name: self::PREFIX_NAME . "_supprimer", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "supprimer" . self::PAGE)]
     public function supprimer(int $id): Response
     {
         /**

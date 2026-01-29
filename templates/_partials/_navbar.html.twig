@@ -31,7 +31,7 @@
 						Mot de passe
 					</a>
 					<div>
-						<form method="post" action="{#{ path('app_logout') }#}">
+						<form method="post" action="{{ path('app_logout') }}">
 							<input type="hidden" name="_csrf_token" value="{{csrf_token('logout')}}">
 							<button class="dropdown-item">
 								<i class="typcn typcn-power text-primary"></i>

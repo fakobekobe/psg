@@ -13,11 +13,13 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Form\RegistrationType;
 use App\Traitement\Interface\ControlleurInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path:'/admin/utilisateur')]
 final class UtilisateurController extends AbstractController
 {
     private const PREFIX_NAME = 'app_utilisateur';
+    private const PAGE = '_utilisateur';
     private const TYPEFORM = RegistrationType::class;
     private UtilisateurRepository $repository;
     private ControlleurInterface $controlleur;
@@ -35,6 +37,7 @@ final class UtilisateurController extends AbstractController
     }
 
     #[Route(path: '', name: self::PREFIX_NAME, methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function ajouter(Request $request): Response
     {
         /**
@@ -61,6 +64,7 @@ final class UtilisateurController extends AbstractController
     }
 
     #[Route(path:'/liste', name: self::PREFIX_NAME . "_liste", methods:["GET"])]
+    #[IsGranted(attribute: "ajouter" . self::PAGE)]
     public function liste(): Response
     {        
         /**
@@ -70,6 +74,7 @@ final class UtilisateurController extends AbstractController
     }
 
     #[Route(path: '/check/{id}', name: self::PREFIX_NAME . '_check', methods: ["POST"] , requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "modifier" . self::PAGE)]
     public function check(int $id) : Response
     {
         /**
@@ -79,6 +84,7 @@ final class UtilisateurController extends AbstractController
     }
 
     #[Route(path:'/modifier/{id}', name: self::PREFIX_NAME . "_modifier", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "modifier" . self::PAGE)]
     public function modifier(Request $request, int $id) : Response
     {
         /**
@@ -97,6 +103,7 @@ final class UtilisateurController extends AbstractController
     }
 
     #[Route(path:'/supprimer/{id}', name: self::PREFIX_NAME . "_supprimer", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
+    #[IsGranted(attribute: "supprimer" . self::PAGE)]
     public function supprimer(int $id): Response
     {
         /**
