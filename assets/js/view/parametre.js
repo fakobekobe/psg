@@ -1,5 +1,5 @@
 // Les variables locales
-let P_URL = 'configuration',
+let P_URL = 'parametre',
     NOM_FORM = P_URL + '_';
 
 

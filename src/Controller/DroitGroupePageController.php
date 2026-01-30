@@ -102,13 +102,19 @@ final class DroitGroupePageController extends AbstractController
         /**
          * Cette méthode modifier du controller permet la modification du formulaire
          */
-        return $this->controlleur->modifier(
+        $contenu = $this->controlleur->modifier(
             $this->repository, 
             $request, 
             $this->em,  
             $id,
             $this->getUser(),
-        );       
+        ); 
+        
+        // On reconnecte l'utilisateur déconnecté
+            $utilisateur = $this->getUser();
+            $this->tokenStorage->setToken(token: null);
+            $this->tokenStorage->setToken(token: new UsernamePasswordToken(user: $utilisateur, firewallName: 'main', roles: $utilisateur->getRoles()));            
+            return $contenu;
     }
 
     #[Route(path:'/supprimer/{id}', name: self::PREFIX_NAME . "_supprimer", methods: ["POST"], requirements: ['id' => '[0-9]+'])]
