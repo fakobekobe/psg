@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Traitement\Interface\ControlleurInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 #[Route(path: '/admin/droit-groupe-page')]
 final class DroitGroupePageController extends AbstractController
@@ -23,6 +26,7 @@ final class DroitGroupePageController extends AbstractController
     public function __construct(
         private EntityManagerInterface $em,
         private ManagerRegistry $registry,
+        private TokenStorageInterface $tokenStorage,
     ){
         $this->repository = new DroitGroupePageRepository(registry: $this->registry);
         $this->repository->initialiserControlleur();
@@ -44,6 +48,10 @@ final class DroitGroupePageController extends AbstractController
 
         if($contenu['reponse'] instanceof Response)
         {
+            // On reconnecte l'utilisateur déconnecté
+            $utilisateur = $this->getUser();
+            $this->tokenStorage->setToken(token: null);
+            $this->tokenStorage->setToken(token: new UsernamePasswordToken(user: $utilisateur, firewallName: 'main', roles: $utilisateur->getRoles()));            
             return $contenu['reponse'];
         }else{
             return $this->render(view: 'droit_groupe_page/index.html.twig', parameters: [
@@ -110,11 +118,17 @@ final class DroitGroupePageController extends AbstractController
         /**
          * Cette méthode du controller permet la suppression d'un objet
          */
-        return $this->controlleur->supprimer(
+        $retour = $this->controlleur->supprimer(
             $this->repository, 
             $this->em,  
             $id,
         );
+
+        // On reconnecte l'utilisateur déconnecté
+        $utilisateur = $this->getUser();
+        $this->tokenStorage->setToken(token: null);
+        $this->tokenStorage->setToken(token: new UsernamePasswordToken(user: $utilisateur, firewallName: 'main', roles: $utilisateur->getRoles()));
+        return $retour;
     }
 
     #[Route(path:'/afficher', name: self::PREFIX_NAME . "_afficher", methods:["POST"])]

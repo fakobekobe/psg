@@ -667,7 +667,7 @@ function action_supprimer(URL, NOM_TABLEAU = 'dataTable', ACTUALISER_MATRICULE =
 
     const traitementJson = function (data) {
         switch (data.code) {
-            case 'SUCCES':
+            case 'SUCCES':                
                 traitement_succes(data.message);
                 break;
 

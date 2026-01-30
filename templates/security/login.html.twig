@@ -5,9 +5,9 @@
 
 {% block body %}
 	<div class="col-lg-6 d-none d-lg-block text-center px-5">
-		<h5 class="mt-5" style="color:#f2125e;">Bienvenue sur le Paris Sportif Gagnant (PSG)</h1>
+		<h5 class="mt-5" style="color:#000;">Bienvenue sur le Paris Sportif Gagnant (PSG)</h1>
 		<div>
-			<img src="{{ asset('images/Logo_psg.png') }}" alt="Logo-psg" />
+			<img src="{{ asset('images/Logo_psg.png') }}"  style="border-radius:10px 10px;" alt="Logo-psg" />
 		</div>
 	</div>
 	<div class="col-lg-6">
@@ -44,4 +44,8 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block script %}
+	<script src="{{ asset('js/view/login.js') }}"></script>
 {% endblock %}

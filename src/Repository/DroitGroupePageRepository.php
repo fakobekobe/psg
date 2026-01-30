@@ -35,7 +35,8 @@ class DroitGroupePageRepository extends ServiceEntityRepository
     public function initialiserTraitement(
         ?EntityManagerInterface $em = null, 
         ?FormInterface $form = null, 
-        ?ServiceEntityRepository $repository = null): void
+        ?ServiceEntityRepository $repository = null,
+        ): void
     {
         $objet = new TraitementDroitGroupePage(em: $em, form: $form, repository: $repository); 
         $this->setTraitement(traitement: $objet);

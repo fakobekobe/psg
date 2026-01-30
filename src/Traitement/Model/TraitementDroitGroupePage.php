@@ -14,8 +14,7 @@ class TraitementDroitGroupePage extends TraitementAbstrait
     public function __construct(
         protected ?EntityManagerInterface $em = null,
         protected ?FormInterface $form = null,
-        protected ?ServiceEntityRepository $repository = null
-        
+        protected ?ServiceEntityRepository $repository = null,
         )
     {
         parent::__construct(em: $this->em, form: $this->form, repository: $this->repository);

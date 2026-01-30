@@ -7,6 +7,8 @@ use Symfony\Component\Form\FormInterface;
 use App\Entity\Utilisateur;
 use ErrorException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 abstract class Utilitaire
 {
@@ -17,12 +19,12 @@ abstract class Utilitaire
     public const EXTENSIONS_DONNEES = ['jpg', 'jpeg', 'png', 'gif', 'tiff', 'jfif', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'mp4', 'mp3', 'movie'];
     public const TAILLE_IMAGE = 10000000; // 10Mo
     public const TAILLE_FICHIER = 100000000; // 100Mo
-    public const UPLOAD_ERR_OK = 0; 
-    public const VICTOIRE = 1; 
-    public const NUL = 2; 
-    public const DEFAITE = 3; 
-    public const POINT_VICTOIRE = 3; 
-    public const POINT_NUL = 1; 
+    public const UPLOAD_ERR_OK = 0;
+    public const VICTOIRE = 1;
+    public const NUL = 2;
+    public const DEFAITE = 3;
+    public const POINT_VICTOIRE = 3;
+    public const POINT_NUL = 1;
 
     public const D1_2M = "D1_2M"; // Première mi-temps équipe à domicile, les deux équipes marquent
     public const E1_2M = "E1_2M"; // Première mi-temps équipe à l'extérieur, les deux équipes marquent
@@ -69,19 +71,19 @@ abstract class Utilitaire
     public const P_PARI2_D2M = "[80-100%:2-D2M]"; // Pourcentage pari les deux équipes marquent à la deuxième mi-temps
     public const P_PARI2_D1M = "[80-100%:2-D1M]"; // Pourcentage pari une seule équipe marque à la deuxième mi-temps
 
-    
-    public const TR = "TR"; 
-    public const P_PARI = "[80-100%]"; 
-    public const PARI = 80; 
+
+    public const TR = "TR";
+    public const P_PARI = "[80-100%]";
+    public const PARI = 80;
 
     public const NPM = "NPM"; // Nul première mi-temps
     public const BPM = "BPM"; // But première mi-temps
     public const N2M = "N2M"; // Nul deuxème mi-temps
     public const B2M = "B2M"; // But deuxème mi-temps
     public const PNPM = "%NPM";
-    public const PBPM = "%BPM"; 
-    public const PN2M = "%N2M"; 
-    public const PB2M = "%B2M"; 
+    public const PBPM = "%BPM";
+    public const PN2M = "%N2M";
+    public const PB2M = "%B2M";
     public const P_PARI_PM = "[80-100%:PM]"; // Pourcentage de pari première mi-temps
     public const P_PARI_2M = "[80-100%:2M]"; // Pourcentage de pari deuxième mi-temps
 
@@ -146,7 +148,6 @@ abstract class Utilitaire
                 $selected = "selected";
             $value = ucfirst(string: $o[$libelle]);
             $options .= "<option value=\"{$o['id']}\" $selected>$value</option>";
-
         }
 
         return $options;
@@ -200,7 +201,6 @@ abstract class Utilitaire
                     $id_pages[] = $page->getPage()->getId();
                 }
             }
-
         }
 
         foreach ($tableau as $data) {
@@ -219,7 +219,6 @@ abstract class Utilitaire
                     // Cas du gerant
                     $checked = in_array(needle: $data->getId(), haystack: $id_pages) ? 'checked' : '';
                 }
-
             }
 
             $reference = $input_name . $data->getId();
@@ -266,7 +265,6 @@ abstract class Utilitaire
         $droitsPages = $objetRepo->getDroitsPagesByGroupe(id_groupe: $id_groupe);
 
         foreach ($utilisateurs as $user) {
-            if(!empty($utilisateurEnCours) and $user->getId() == $utilisateurEnCours->getId()) continue; // Pour éviter les erreurs
             $roles = [];
             foreach ($droitsPages as $droit) {
                 $droitpage = strtolower(string: $droit['droit'] . '_' . $droit['page']);
@@ -284,8 +282,17 @@ abstract class Utilitaire
         }
     }
 
-    public static function SupprimeDroitUtilisateur(int $id_groupe, ServiceEntityRepository $objetRepo, ?array $utilisateurs = null, ?int $id_droit = null, ?Utilisateur $utilisateurEnCours = null): void
+    public static function SupprimeDroitUtilisateur(
+        int $id_groupe, 
+        ServiceEntityRepository $objetRepo, 
+        ?array $utilisateurs = null, 
+        ?int $id_droit = null, 
+        ?Utilisateur $utilisateurEnCours = null,
+        ): void
     {
+        // les variables
+        $user_existe = false;
+
         // On récupère les utilisateurs du groupe au cas ou nous sommes au niveau de Droit par Groupe de Page
         if ($utilisateurs === null) {
             $utilisateurs = $objetRepo->getUtilisateursByGroupe(id_groupe: $id_groupe);
@@ -294,13 +301,11 @@ abstract class Utilitaire
         // On récupère la liste des droit par page selon le groupe
         $droitsPages = $objetRepo->getDroitsPagesByGroupe(id_groupe: $id_groupe, id_droit: $id_droit);
         $listeDroitpage = [];
-        foreach ($droitsPages as $droit) 
-        {
+        foreach ($droitsPages as $droit) {
             $listeDroitpage[] = strtolower(string: $droit['droit'] . '_' . $droit['page']);
         }
 
         foreach ($utilisateurs as $user) {
-            if(!empty($utilisateurEnCours) and $user->getId() == $utilisateurEnCours->getId()) continue;
             $roles = $user->getRoles();
             $copieRoles = $roles;
 
@@ -323,9 +328,9 @@ abstract class Utilitaire
      * getPathImage permet de retourner le chemin absolue du fichier images qui sert de sauvegarde des images
      * @return string
      */
-    public static function getPathImage() : string
+    public static function getPathImage(): string
     {
-        return dirname(path: __DIR__,levels: 3) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'images';
+        return dirname(path: __DIR__, levels: 3) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'images';
     }
 
     /**
@@ -336,31 +341,27 @@ abstract class Utilitaire
      * @param int $taille Taille maximum autorisée
      * @return string|null Nouveau Nom du fichier à sauvegarder dans la base de données
      */
-    public static function verifier_images(?UploadedFile $image, string $path, array $extensions,  int $taille) : ?string
+    public static function verifier_images(?UploadedFile $image, string $path, array $extensions,  int $taille): ?string
     {
-        if(!$image) return null;
+        if (!$image) return null;
         $fichier = '';
         $date = new \DateTime();
 
-        if($image->isValid())
-        {
-            if($image->getError() === static::UPLOAD_ERR_OK)
-            {
+        if ($image->isValid()) {
+            if ($image->getError() === static::UPLOAD_ERR_OK) {
                 //Pas d'erreur
-                if($image->getSize() <= $taille)
-                {
+                if ($image->getSize() <= $taille) {
                     $date_i = $date->format(format: 'Ymd_Hisu');
                     $nom_fichier = pathinfo(path: $image->getClientOriginalName(), flags: PATHINFO_FILENAME);
                     $nom_extension = pathinfo(path: $image->getClientOriginalName(), flags: PATHINFO_EXTENSION);
-                    if( in_array(needle: strtolower(string: $nom_extension), haystack: $extensions))
-                    {
-                        $fichier = $nom_fichier . '_'. $date_i .'.'. $nom_extension;
+                    if (in_array(needle: strtolower(string: $nom_extension), haystack: $extensions)) {
+                        $fichier = $nom_fichier . '_' . $date_i . '.' . $nom_extension;
                         static::sauvegarde_images(nom_fichier: $fichier, image: $image->getPathname(), path: $path);
                     }
                 }
             }
         }
-        
+
         return $fichier ?: null;
     }
 
@@ -371,17 +372,17 @@ abstract class Utilitaire
      * @param string $path Chemin absolue pour la sauvegarde du fichier
      * @return void
      */
-    private static function sauvegarde_images(string $nom_fichier, string $image, string $path) : void
+    private static function sauvegarde_images(string $nom_fichier, string $image, string $path): void
     {
         $nom = $path . DIRECTORY_SEPARATOR . $nom_fichier;
         move_uploaded_file(from: $image, to: $nom);
     }
 
-    public static function supprime_image(string $path) : void
+    public static function supprime_image(string $path): void
     {
-        try{
+        try {
             unlink(filename: $path);
-        }catch(ErrorException $e){            
+        } catch (ErrorException $e) {
         }
     }
 
@@ -396,44 +397,38 @@ abstract class Utilitaire
      * Par défaut titre = true.
      * @return string[][] Liste de tableau
      */
-    public static function csv_tableau(string $fichier, string $separateur = ';', bool $titre = true) : array
+    public static function csv_tableau(string $fichier, string $separateur = ';', bool $titre = true): array
     {
         $liste = [];
         $data = file(filename: $fichier);
-        if($data)
-        {
+        if ($data) {
             // On supprime la première ligne qui contient le titre
-            if($titre) unset($data[0]);
-            foreach($data as $ligne)
-            {
+            if ($titre) unset($data[0]);
+            foreach ($data as $ligne) {
                 $liste[] = explode(separator: $separateur, string: trim(string: $ligne));
             }
         }
-        
+
         return $liste;
     }
 
-    public static function verifier_fichier(?UploadedFile $fichier, array $extensions,  int $taille) : ?string
+    public static function verifier_fichier(?UploadedFile $fichier, array $extensions,  int $taille): ?string
     {
-        if(!$fichier) return null;
+        if (!$fichier) return null;
         $retour = null;
 
-        if($fichier->isValid())
-        {
-            if($fichier->getError() === static::UPLOAD_ERR_OK)
-            {
+        if ($fichier->isValid()) {
+            if ($fichier->getError() === static::UPLOAD_ERR_OK) {
                 //Pas d'erreur
-                if($fichier->getSize() <= $taille)
-                {
+                if ($fichier->getSize() <= $taille) {
                     $nom_extension = pathinfo(path: $fichier->getClientOriginalName(), flags: PATHINFO_EXTENSION);
-                    if( in_array(needle: strtolower(string: $nom_extension), haystack: $extensions))
-                    {
+                    if (in_array(needle: strtolower(string: $nom_extension), haystack: $extensions)) {
                         $retour = $fichier->getPathname();
                     }
                 }
             }
         }
-        
+
         return $retour;
     }
 
@@ -444,13 +439,12 @@ abstract class Utilitaire
      * @return array[] le tableau retourné est un nouveau tableau des données sources sans doublons
      */
 
-    public static function tableau_unique(array $data, string $key) : array
-    {        
+    public static function tableau_unique(array $data, string $key): array
+    {
         $tid = [];
         $tindice = [];
         $cpt = 0;
-        foreach($data as $value)
-        {
+        foreach ($data as $value) {
             $tid[] = $value[$key];
             $tindice[] = $cpt;
             $cpt++;
@@ -460,11 +454,9 @@ abstract class Utilitaire
         $tkey[] = $tid[0];
 
         $cpt = 0;
-        foreach($tid as $value)
-        {
+        foreach ($tid as $value) {
             $cle = array_search(needle: $value, haystack: $tkey);
-            if($cle === false )
-            {
+            if ($cle === false) {
                 $tkey[] = $value;
                 $tdata[] = $data[$tindice[$cpt]];
             }
@@ -474,38 +466,37 @@ abstract class Utilitaire
         return $tdata;
     }
 
-    public static function telecharger_fichier(string $id, string $url = "joueur", string $texte = "", string $taille = "h1") : string
+    public static function telecharger_fichier(string $id, string $url = "joueur", string $texte = "", string $taille = "h1"): string
     {
         return <<<HTML
         <a href="/{$url}/telecharger/{$id}" class="text-info {$taille}" title="Télécharger le fichier"><i class="typcn typcn-folder"></i> {$texte}</a>
-HTML; 
+HTML;
     }
 
-    public static function afficher_image(string $id, string $url = "joueur", string $path = "") : string
+    public static function afficher_image(string $id, string $url = "joueur", string $path = ""): string
     {
         return <<<HTML
         <a href="/{$url}/telecharger/{$id}" class="text-info" title="Télécharger l'image">
             <img src="/images/{$path}" class="img_80" />
         </a>
-HTML; 
+HTML;
     }
 
-    public static function afficher_image_circulaire(?string $path = "", string $class ="img_30") : string
+    public static function afficher_image_circulaire(?string $path = "", string $class = "img_30"): string
     {
         $path = $path ?? self::logo_defaut();
         return <<<HTML
         <img src="/images/{$path}" class="{$class}" />
-HTML; 
+HTML;
     }
 
-    public static function checkbox_rencontre(array $datas) : string
+    public static function checkbox_rencontre(array $datas): string
     {
         $retour = "";
         $cpt = 1;
         $total = count(value: $datas);
 
-        foreach($datas as $data)
-        {
+        foreach ($datas as $data) {
             $retour .= <<<HTML
             <div class="row pt-2">
                 <div class="col-lg-4">
@@ -533,18 +524,17 @@ HTML;
             $cpt++;
         }
 
-        return $retour;        
+        return $retour;
     }
 
-    public static function checkbox_club(array $datas, string $name) : string
+    public static function checkbox_club(array $datas, string $name): string
     {
         $retour = "";
         $cpt = 1;
         $total = count(value: $datas);
         $logo = "";
 
-        foreach($datas as $data)
-        {
+        foreach ($datas as $data) {
             $logo = Utilitaire::afficher_image_circulaire(path: $data->getEquipe()->getLogo());
 
             $retour .= <<<HTML
@@ -568,10 +558,10 @@ HTML;
             $cpt++;
         }
 
-        return $retour;        
+        return $retour;
     }
 
-    private static function logo_defaut() : string
+    private static function logo_defaut(): string
     {
         return "logo_defaut.png";
     }
@@ -587,15 +577,14 @@ HTML;
      */
     public static function tableau_portion(array $donnees, int $nombre, bool $sens = false): array
     {
-        $total = count(value: $donnees); 
+        $total = count(value: $donnees);
 
-        if($nombre >= $total) return $donnees;
+        if ($nombre >= $total) return $donnees;
 
         $debut = $sens ? 0 : ($total - $nombre);
         $fin = $sens ? $nombre  : $total;
         $retour = [];
-        for($i = $debut; $i < $fin; $i++)
-        {
+        for ($i = $debut; $i < $fin; $i++) {
             $retour[] = $donnees[$i];
         }
 
@@ -605,22 +594,28 @@ HTML;
     public static function categorie_classement(int $rang_domicile, int $rang_exterieur): string
     {
         $groupe_domicile = Utilitaire::classement(rang: $rang_domicile);
-        $groupe_exterieur = Utilitaire::classement(rang: $rang_exterieur);        
+        $groupe_exterieur = Utilitaire::classement(rang: $rang_exterieur);
 
         return $groupe_domicile . "-" . $groupe_exterieur;
     }
 
-    public static function classement(int $rang) : string
+    public static function classement(int $rang): string
     {
         $groupe = "";
-        switch(true)
-        {
-            case in_array(needle: $rang, haystack: range(start: 1,end: 5)): $groupe = "1"; break;
-            case in_array(needle: $rang, haystack: range(start: 6,end: 10)): $groupe = "2"; break;
-            case in_array(needle: $rang, haystack: range(start: 11,end: 15)): $groupe = "3"; break;
-            case in_array(needle: $rang, haystack: range(start: 15,end: 20)): $groupe = "4"; break;
+        switch (true) {
+            case in_array(needle: $rang, haystack: range(start: 1, end: 5)):
+                $groupe = "1";
+                break;
+            case in_array(needle: $rang, haystack: range(start: 6, end: 10)):
+                $groupe = "2";
+                break;
+            case in_array(needle: $rang, haystack: range(start: 11, end: 15)):
+                $groupe = "3";
+                break;
+            case in_array(needle: $rang, haystack: range(start: 15, end: 20)):
+                $groupe = "4";
+                break;
         }
         return $groupe;
     }
-
 }
