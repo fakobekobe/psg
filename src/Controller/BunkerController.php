@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Parametre;
 use App\Form\MatchDisputeType;
 use App\Repository\StatistiqueRepository;
 use App\Src\Traitement\Utilitaire\HtmlVue;
 use App\Traitement\Utilitaire\Utilitaire;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -47,13 +49,14 @@ final class BunkerController extends AbstractController
 
     #[Route(path: '/classement', name: self::PREFIX_NAME . '_classement', methods: ['POST'])]
     #[IsGranted(attribute: "ajouter" . self::PAGE)]
-    public function classement(Request $request): Response
+    public function classement(Request $request, EntityManagerInterface $em): Response
     {
         // Les variables
-        $id_preponderance_domicile = 1;
-        $id_preponderance_exterieur = 2;
-        $id_periode_premiere_mt = 1;
-        $id_periode_deuxieme_mt = 2;
+        $repo_parametre = $em->getRepository(className: Parametre::class);
+        $id_preponderance_domicile = $repo_parametre->getDomicile();
+        $id_preponderance_exterieur = $repo_parametre->getExterieur();
+        $id_periode_premiere_mt = $repo_parametre->getPremiereMT();
+        $id_periode_deuxieme_mt = $repo_parametre->getSecondeMT();
 
         $reponse = $request->request->all()['match_dispute'];  
         $saison = (int) $reponse['saison']; 

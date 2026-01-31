@@ -227,4 +227,10 @@ class MatchDisputeRepository extends ServiceEntityRepository
 
         return $retour ? $retour[0]['id'] : null;
     }
+
+    public function getParametre() : ?ParametreRepository
+    {
+        $this->setRepository(repository: new ParametreRepository(registry: $this->registry));
+        return $this->getRepository();
+    }
 }

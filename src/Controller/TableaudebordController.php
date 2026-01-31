@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Parametre;
 use App\Repository\StatistiqueRepository;
 use App\Traitement\Utilitaire\Utilitaire;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,13 +26,14 @@ final class TableaudebordController extends AbstractController
 
     #[Route(path: '', name: 'app_tableaudebord')]
     #[IsGranted(attribute: "ajouter" . self::PAGE)]
-    public function index(): Response
+    public function index(EntityManagerInterface $em): Response
     {
         // Les variables
-        $id_preponderance_domicile = 1;
-        $id_preponderance_exterieur = 2;
-        $id_periode_premiere_mt = 1;
-        $id_periode_deuxieme_mt = 2;
+        $repo_parametre = $em->getRepository(className: Parametre::class);
+        $id_preponderance_domicile = $repo_parametre->getDomicile();
+        $id_preponderance_exterieur = $repo_parametre->getExterieur();
+        $id_periode_premiere_mt = $repo_parametre->getPremiereMT();
+        $id_periode_deuxieme_mt = $repo_parametre->getSecondeMT();
 
         $stat = $this->stat_classement(
             $this->statistique_repository,

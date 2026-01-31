@@ -106,9 +106,10 @@ class ControlleurMatchDispute extends ControlleurAbstrait
 
     public function periode(mixed ...$donnees): JsonResponse
     {
-        // Les variables à charger avec les valeurs de la configuration depuis le repository
-        $id_preponderance_domicile = 1;
-        $id_preponderance_exterieur = 2;
+        // Les variables à charger avec les valeurs du paramètre depuis le repository
+        $repo_parametre = ($donnees[0])->getParametre();
+        $id_preponderance_domicile = $repo_parametre->getDomicile();
+        $id_preponderance_exterieur = $repo_parametre->getExterieur();
         $data = [];
 
         // On récupère la liste des matchs selon l'id_rencontre

@@ -2,6 +2,7 @@
 
 namespace App\Traitement\Model;
 
+use App\Entity\Parametre;
 use App\Traitement\Abstrait\TraitementAbstrait;
 use App\Traitement\Utilitaire\Utilitaire;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,9 +23,10 @@ class TraitementStatistique extends TraitementAbstrait
 
     protected function getObjet(mixed ...$donnees): array
     {
-        // Les variables à charger avec les valeurs de la configuration depuis le repository
-        $id_preponderance_domicile = 1;
-        $id_preponderance_exterieur = 2;
+        // Les variables à charger avec les valeurs du paramètre depuis le repository
+        $repo_parametre = $this->em->getRepository(className: Parametre::class);
+        $id_preponderance_domicile = $repo_parametre->getDomicile();
+        $id_preponderance_exterieur = $repo_parametre->getExterieur();
 
         foreach($donnees[0] as $statistique)
         {

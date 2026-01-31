@@ -2,6 +2,7 @@
 
 namespace App\Traitement\Model;
 
+use App\Entity\Parametre;
 use App\Traitement\Abstrait\TraitementAbstrait;
 use App\Traitement\Utilitaire\Utilitaire;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,9 +28,10 @@ class TraitementMatchDispute extends TraitementAbstrait
 
     protected function chaine_data(mixed ...$donnees): string
     {
-        // Les variables à charger avec les valeurs de la configuration depuis le repository
-        $id_preponderance_domicile = 1;
-        $id_preponderance_exterieur = 2;
+        // Les variables à charger avec les valeurs des paramètres depuis le repository
+        $repo_parametre = $this->em->getRepository(className: Parametre::class);
+        $id_preponderance_domicile = $repo_parametre->getDomicile();
+        $id_preponderance_exterieur = $repo_parametre->getExterieur();
 
         $tab = "";
         $i = 0;
@@ -94,9 +96,10 @@ HTML;
 
     protected function actionAjouterSucces(mixed ...$donnees): JsonResponse
     {
-        // Les variables à charger avec les valeurs de la configuration depuis le repository
-        $id_preponderance_domicile = 1;
-        $id_preponderance_exterieur = 2;
+        // Les variables à charger avec les valeurs du paramètre depuis le repository
+        $repo_parametre = $this->em->getRepository(className: Parametre::class);
+        $id_preponderance_domicile = $repo_parametre->getDomicile();
+        $id_preponderance_exterieur = $repo_parametre->getExterieur();
 
         $id_rencontre = $donnees['donnees'][1]['id_rencontre'];
         $id_domicile = $donnees['donnees'][1]['id_domicile'];
