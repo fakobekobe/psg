@@ -86,7 +86,7 @@ class ControlleurMatchDispute extends ControlleurAbstrait
     public function lister(mixed ...$donnees): JsonResponse
     {
         // On instancie un objet qui hérite de TraitementInterface pour gérer le traitement
-        ($donnees[0])->initialiserTraitement(repository: $donnees[0]);
+        ($donnees[0])->initialiserTraitement(repository: $donnees[0], em: $donnees[3]);
 
         // On récupère la liste des objets
         $liste = ($donnees[0])->findMatchByCalendrier(id_calendrier: $donnees[1], id_saison: $donnees[2]);
