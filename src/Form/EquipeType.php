@@ -29,7 +29,7 @@ class EquipeType extends AbstractType
                 ],
             ])
             ->add(child: 'nom', type:TextType::class, options:[
-                'trim' => false,
+                'trim' => true,
                 'label' => false,
                 'attr' => [
                     'placeholder' => "Nom de l'équipe",
