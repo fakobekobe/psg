@@ -146,6 +146,15 @@ class ControlleurStatistique extends ControlleurAbstrait
         return (($donnees[0])->getTraitement())->actionLister($data);
     }  
 
+    public function check(mixed ...$donnees): JsonResponse
+    {
+        // On instancie un objet qui hérite de TraitementInterface pour gérer le traitement
+        ($donnees[0])->initialiserTraitement(repository: $donnees[0], em: $donnees[3]);
+
+        // Ensuite on appelle la méthode appropriée pour traiter l'action
+        return ($donnees[0])->getTraitement()->actionCheck($donnees[1], $donnees[2]);
+    }
+
     public function modifier(mixed ...$donnees): JsonResponse
     {
         // Les variables à charger avec les valeurs de la configuration depuis le repository

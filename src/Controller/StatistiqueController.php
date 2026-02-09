@@ -65,6 +65,7 @@ final class StatistiqueController extends AbstractController
             $this->repository, 
             $id_rencontre,
             $id_periode,
+            $this->em
         );
     }
 

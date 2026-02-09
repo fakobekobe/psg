@@ -111,30 +111,6 @@ class TraitementStatistique extends TraitementAbstrait
     </div>
 HTML;
     }
-/*
-    public function actionModifier(mixed ...$donnees): JsonResponse
-    {
-        if ($donnees[0]) {
-            return $this->actionModifierSucces(objet: [$donnees[1], $donnees[2]]);
-        } else {
-            return $this->actionModifierEchec(erreurs: Utilitaire::getErreur(form: $this->form));
-        }
-    }
-
-    public function actionModifierSucces(mixed $objet = null): JsonResponse
-    {
-        $saisonJoueur = $this->repository->findSaisonJoueur(($objet[0])->getEquipeSaison()->getSaison()->getId(), ($objet[0])->getJoueur()->getId());
-        if ($saisonJoueur and $objet[1] != $saisonJoueur) {
-            return new JsonResponse(data: [
-                'code' => self::EXCEPTION,
-                'exception' => "Ce joueur est déjà transféré dans un club"
-            ]);
-        }
-
-        $this->em->flush();
-        return new JsonResponse(data: ['code' => self::SUCCES]);
-    }
-*/
 
     public function actionCheck(mixed ...$donnees) : JsonResponse
     {
