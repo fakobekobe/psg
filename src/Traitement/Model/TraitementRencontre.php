@@ -72,7 +72,7 @@ class TraitementRencontre extends TraitementAbstrait
         $this->em->persist(object: $data);
         $this->em->flush();
         return new JsonResponse(data: [
-            'code' => self::SUCCES,
+            'code' => self::SUCCES
         ]);
     }
 

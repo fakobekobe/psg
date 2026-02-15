@@ -61,8 +61,8 @@ final class RencontreController extends AbstractController
             return $contenu['reponse'];
         }else{
             return $this->render(view: 'rencontre/index.html.twig', parameters: [
-            'form' => $contenu['form']->createView(),
-        ]);
+                'form' => $contenu['form']->createView(),
+            ]);
         }        
     }
 
